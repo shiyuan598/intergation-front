@@ -4,6 +4,7 @@ import { Button, Input, Form, Toast } from 'antd-mobile';
 import {Spin} from "antd";
 import { user as userApi } from "../../api";
 import { UserContext } from '../../context';
+import "./mobile.scss";
 import "./style.scss";
 
 export default function App() {
@@ -54,7 +55,7 @@ export default function App() {
             <div className="logo"></div>
             <div className='login'>
                 <Spin spinning={loading}>
-                    <h2 className='title'>车辆资源管理系统</h2>
+                    <h2 className='title'>软件集成平台</h2>
                     <Form
                         onFinish={onFinish}
                         layout='horizontal'

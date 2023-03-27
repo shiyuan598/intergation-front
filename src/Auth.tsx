@@ -39,6 +39,7 @@ function App() {
   }, [setUserInfo]);
 
   const authRoute = () => {
+    console.info("001");
     if (userInfo.role) {
       return "/main";
     } else {

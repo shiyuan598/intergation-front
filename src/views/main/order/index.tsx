@@ -3,7 +3,6 @@ import { Input, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import orderStyle from './order.module.scss';
-import BookingModal from "../vehicle/booking";
 import { ModalContext } from '../../../context';
 import { isAdmin } from "../../../common/user";
 
@@ -27,9 +26,6 @@ export default function App() {
                 <Button type="primary" icon={<PlusOutlined />} onClick={apply} >预订车辆</Button>
                 {!isAdmin() && <Button type="primary" onClick={() => {setShowAll(!showAll)}} >{showAll ? "显示个人订单" : "显示全部订单"}</Button>}
                 <Search placeholder="输入关键字后按Enter键查询" onSearch={onSearch} enterButton />
-                <ModalContext.Provider value={{ modalShow, setModalShow }}>
-                    {modalShow && <BookingModal></BookingModal>}
-                </ModalContext.Provider>
             </div>
             <List keyword={keyword} showAll={showAll}></List>
         </div>

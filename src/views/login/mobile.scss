@@ -1,0 +1,96 @@
+.mobile {
+    background: #1a1a1a;
+    height: 100%;
+    width: 100%;
+}
+
+:root:root {
+    --adm-font-size-1: 12px;
+    --adm-font-size-2: 13px;
+    --adm-font-size-3: 14px;
+    --adm-font-size-4: 15px;
+    --adm-font-size-5: 16px;
+    --adm-font-size-6: 17px;
+    --adm-font-size-7: 18px;
+    --adm-font-size-8: 19px;
+    --adm-font-size-9: 20px;
+    --adm-font-size-10: 21px;
+
+    --adm-color-text: #ffffff;
+    --adm-color-text-secondary: #f5f5f5;
+    --adm-color-weak: #eeeeee;
+    --adm-color-light: #5e5e5e;
+    --adm-color-border: #3a3a3a;
+    --adm-color-box: #3a3a3a;
+    --adm-color-background: #222222;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    .title {
+        padding: 12px 8px;
+        font-size: 20px;
+    }
+
+    .avatar {
+        padding: 0 12px;
+        font-size: 24px;
+        align-self: center;
+        .name {
+            font-size: 16px;
+            vertical-align: 3px;
+        }
+    }
+}
+
+.adm-list-item {
+    line-height: 2;
+}
+
+.adm-tag {
+    font-size: 16px;
+}
+
+.order-operation {
+    margin: 20px 0;
+
+    .adm-button.adm-button-large {
+        height: 100px;
+        width: 100px;
+    }
+}
+
+.adm-divider-horizontal {
+    font-size: 18px;
+}
+
+.button-container .adm-auto-center {
+   margin-top: 8px;
+}
+
+.data-tag-container {
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.data-tag {
+    margin-bottom: 20px;
+    text-align: center;
+
+    .text {
+        font-size: 18px;
+        height: 1.5em;
+    }
+
+    .desc {
+        font-size: 16px;
+        color: #5e5e5e;
+    }
+}
+
+.data-tag+.data-tag {
+    margin-left: 24px;
+}
