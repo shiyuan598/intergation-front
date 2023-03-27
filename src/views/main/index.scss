@@ -1,0 +1,185 @@
+@import '~antd/dist/antd.dark.css';
+
+.ant-tag {
+  font-size: 14px;
+}
+
+.ant-timeline.ant-timeline-label .ant-timeline-item-label {
+  width: calc(35% - 12px);
+}
+
+.ant-timeline.ant-timeline-label .ant-timeline-item-head,
+.ant-timeline.ant-timeline-label .ant-timeline-item-tail {
+  left: 35%
+}
+
+.ant-timeline.ant-timeline-label .ant-timeline-item-left .ant-timeline-item-content {
+  left: calc(35% - 4px);
+  width: calc(65% - 14px);
+}
+
+.custom-form .ant-input-number-group-wrapper {
+  width: 100%;
+}
+
+.image-modal {
+  .image-switch-arrow {
+    font-size: 36px;
+    position: absolute;
+    top: 45%;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(226, 225, 225);
+    }
+  }
+
+  .image-switch-arrow-disabled {
+    cursor: not-allowed;
+    color: rgb(226, 225, 225);
+  }
+
+  .left-switch-arrow {
+    left: 30px;
+  }
+
+  .right-switch-arrow {
+    right: 30px;
+  }
+}
+
+.video-modal {
+
+  /* 所有控件 */
+  video::-webkit-media-controls-enclosure {
+    display: none;
+  }
+
+  /* 进度条 */
+  video::-webkit-media-controls-timeline {
+    display: none;
+  }
+
+  video::-webkit-media-controls-current-time-display {
+    display: none;
+  }
+
+  /* 音量按钮 */
+  video::-webkit-media-controls-mute-button {
+    display: none;
+  }
+
+  video::-webkit-media-controls-toggle-closed-captions-button {
+    display: none;
+  }
+
+  /* 音量的控制条 */
+  video::-webkit-media-controls-volume-slider {
+    display: none;
+  }
+
+  /*  播放按钮 */
+  video::-webkit-media-controls-play-button {
+    display: none;
+  }
+}
+
+body {
+  background: #1a1a1a;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+ul,
+ol,
+li {
+  list-style: none;
+  padding: 0;
+}
+
+.desktop {
+  height: 100%;
+  width: 100%;
+
+  min-width: 800px;
+
+  color: rgba(255, 255, 255, 0.85);
+
+  main {
+    height: calc(100% - 48px);
+    display: flex;
+  }
+
+  .content {
+    flex: 1;
+    padding: 16px 20px;
+    overflow: auto;
+  }
+}
+
+/* 滚动条 */
+*::-webkit-scrollbar {
+  height: 6px;
+  background-color: #2a2a2a;
+  width: 6px;
+}
+
+
+*::-webkit-scrollbar-thumb {
+  -moz-border-radius: 1px;
+  -webkit-border-radius: 1px;
+  border-radius: 1px;
+  background-color: #3a3a3a;
+}
+
+// modal
+// calendar
+.custom-calendar .ant-picker-calendar-mode-switch {
+  display: none !important;
+}
+
+.userInfo {
+  min-width: 60px;
+  text-align: right;
+
+  div {
+    padding: 5px 3px;
+    text-transform: uppercase;
+  }
+
+  .logout:hover {
+    color: #1677ff;
+    cursor: pointer;
+  }
+
+  div+div {
+    border-top: 1px solid rgb(93, 93, 93);
+  }
+}
+
+// 修改map popup样式
+.minemap-popup-content {
+  padding: 1px 8px 0;
+  background-color: #313d4f;
+}
+.minemap-popup-anchor-top .minemap-popup-tip {
+  border-bottom-color: #313d4f;
+}
+.minemap-popup-anchor-right .minemap-popup-tip {
+  border-left-color: #313d4f;
+}
+.minemap-popup-anchor-bottom .minemap-popup-tip {
+  border-top-color: #313d4f;
+}
+.minemap-popup-anchor-left .minemap-popup-tip {
+  border-right-color: #313d4f;
+}

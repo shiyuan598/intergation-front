@@ -1,0 +1,19 @@
+.tools {
+    margin-bottom: 16px;
+    display: flex;
+    :global(.ant-input-group-wrapper) {
+        width: 320px !important;
+        margin-left: auto;
+    }
+    button + button {
+        margin-left: 20px;
+    }
+}
+
+:global(.ant-table-cell) a + a {
+    margin-left: 10px;
+}
+
+:global(.ant-table-thead) > tr > th {
+    background-color: #1a1a1a;
+}

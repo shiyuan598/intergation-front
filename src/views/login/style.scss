@@ -1,0 +1,44 @@
+.logo {
+    position: fixed;
+    left: 20px;
+    width: 300px;
+    height: 100px;
+    background: url('../../assets/zhito.png') no-repeat left top / contain;
+}
+
+.login {
+    width: 300px;
+    position: absolute;
+    left: 50%;
+    margin-top: 100px;
+    transform: translateX(-50%);
+
+    .adm-list-item-content-prefix {
+        width: 100px;
+    }
+
+    .title {
+        text-align: center;
+        margin: 20px 0 40px;
+    }
+
+    .tip {
+        padding-left: 16px;
+        color: rgb(140, 140, 140);
+    }
+
+    .footer-btn {
+        text-align: center;
+
+        .register-btn::after {
+            content: "";
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1px;
+            height: 16px;
+            background: #aaa;
+        }
+    }
+}

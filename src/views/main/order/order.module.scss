@@ -1,0 +1,10 @@
+@import "../../../style/index.scss";
+
+.list {
+    :global(.status) {
+        cursor: pointer;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+.optionContainer {
+    display: flex;
+
+    .option+.option {
+        margin-left: 14px;
+    }
+
+    .label {
+        font-size: 14px;
+        padding-right: 4px;
+    }
+
+    // :global(.ant-select-selector) {
+    //     padding: 0 24px 0 4px;
+    // }
+
+    // :global(.ant-select-selection-overflow) {
+    //     height: 30px;
+    //     line-height: 30px;
+    // }
+
+    // :global(.ant-select-selection-overflow-item:nth-of-type(n + 2)) {
+    //     display: none;
+    // }
+
+    // :global(.ant-select-multiple .ant-select-selection-item-remove > .anticon) {
+    //     vertical-align: -1px;
+    // }
+}
