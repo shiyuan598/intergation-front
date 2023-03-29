@@ -8,9 +8,9 @@ import "./index.scss";
 localStorage.setItem(
     "userInfo",
     JSON.stringify({
-        id: 29,
+        id: 1,
         name: "超级用户",
-        role: 3,
+        role: 1,
         telephone: "13161507755",
         token: "2023032902085784707394775",
         username: "SuperVip"

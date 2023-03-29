@@ -18,17 +18,17 @@ function App() {
 
     const history = useHistory();
     const location = useLocation();
-    useEffect(() => {
-        // 判断如果userInfo和本地存储中均无用户信息时就跳转到登录页
-        let data = localStorage.getItem("userInfo");
-        let { pathname } = location;
-        let nologinRoutes = ["/login", "/register", "/resetPassword"];
-        if (!(userInfo as { username: string })?.username && !JSON.parse(data as string)?.username) {
-            if (!nologinRoutes.includes(pathname)) {
-                history.push("/login");
-            }
-        }
-    }, [userInfo, history]);
+    // useEffect(() => {
+    //     // 判断如果userInfo和本地存储中均无用户信息时就跳转到登录页
+    //     let data = localStorage.getItem("userInfo");
+    //     let { pathname } = location;
+    //     let nologinRoutes = ["/login", "/register", "/resetPassword"];
+    //     if (!(userInfo as { username: string })?.username && !JSON.parse(data as string)?.username) {
+    //         if (!nologinRoutes.includes(pathname)) {
+    //             history.push("/login");
+    //         }
+    //     }
+    // }, [userInfo, history]);
 
     useEffect(() => {
         // 初始化时从本地存储读取用户信息

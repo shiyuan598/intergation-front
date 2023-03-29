@@ -166,6 +166,19 @@ li {
   }
 }
 
+// 一行两列的表单
+.form-item-flex {
+  .ant-form-item {
+    display: inline-block;
+    width: 50%;
+    .ant-form-item-label {
+      min-width: 30%;
+    }
+    .ant-form-item-control {
+      min-width: 70%;
+    }
+  }
+}
 // 修改map popup样式
 .minemap-popup-content {
   padding: 1px 8px 0;

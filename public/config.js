@@ -1,4 +1,5 @@
-const baseUrl = "https://trucks.zhito.com:9023";
+const baseUrl = "";
 window.globalConfig = Object.freeze({
-    api: baseUrl + "/api"
+    // api: baseUrl + "/api"
+    api: ""
 });

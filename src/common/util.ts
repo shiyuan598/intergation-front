@@ -14,3 +14,12 @@ export const throttle = (fn: Function, delay: number = 1000) => {
         }, delay);
     };
 };
+
+export const saveFile = (v: string, name: string) => {
+    let blob = new Blob([v]);
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+};

@@ -25,7 +25,7 @@ export default function HeaderComp() {
   return (
     <div className={headerStyle.header}>
       <div className={headerStyle.logo}></div>
-      <div className={headerStyle.menu}>车辆资源管理系统</div>
+      <div className={headerStyle.menu}>软件集成平台</div>
       <Popover
         placement="leftTop"
         content={

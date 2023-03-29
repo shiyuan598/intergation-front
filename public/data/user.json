@@ -1,0 +1,91 @@
+{
+    "code": 0,
+    "data": [
+        {
+            "id": 1,
+            "name": "管理员",
+            "role": 1,
+            "roleName": "管理员",
+            "telephone": "0",
+            "username": "admin"
+        },
+        {
+            "id": 8,
+            "name": "运营",
+            "role": 1,
+            "roleName": "管理员",
+            "telephone": "18001554855",
+            "username": "ZDYY001"
+        },
+        {
+            "id": 9,
+            "name": "张永安",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "15366208496",
+            "username": "张永安"
+        },
+        {
+            "id": 10,
+            "name": "王大学",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "13770175934",
+            "username": "王大学"
+        },
+        {
+            "id": 11,
+            "name": "尹者东",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "15262658679",
+            "username": "尹者东"
+        },
+        {
+            "id": 12,
+            "name": "宋庆伟",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "13279371589",
+            "username": "宋庆伟"
+        },
+        {
+            "id": 13,
+            "name": "张文强",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "18351109227",
+            "username": "张文强"
+        },
+        {
+            "id": 14,
+            "name": "高振连",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "15866918688",
+            "username": "高振连"
+        },
+        {
+            "id": 15,
+            "name": "管仕虎",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "13955030746",
+            "username": "管仕虎"
+        },
+        {
+            "id": 16,
+            "name": "路兵",
+            "role": 2,
+            "roleName": "司机",
+            "telephone": "13731768770",
+            "username": "路兵"
+        }
+    ],
+    "msg": "成功",
+    "pagination": {
+        "current": 1,
+        "pageSize": 10,
+        "total": 58
+    }
+}

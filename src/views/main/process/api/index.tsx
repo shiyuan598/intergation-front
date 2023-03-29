@@ -1,11 +1,13 @@
 import React, { useState, Fragment, useEffect, useContext } from "react";
 import { Input, Button, Table, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import style from "./process.module.scss";
-import { isAdmin } from "../../../common/user";
-import { saveFile } from "../../../common/util";
+import style from "../process.module.scss";
+import { isAdmin } from "../../../../common/user";
+import { saveFile } from "../../../../common/util";
 import type { ColumnsType } from "antd/es/table";
-import { apiProcess } from "../../../api";
+import { apiProcess } from "../../../../api";
+import { ModalContext } from "../../../../context";
+import AddApiModal from "./addApi";
 
 const { Search } = Input;
 
@@ -23,6 +25,7 @@ interface DataType {
 }
 
 export default function Api() {
+    const [modalShow, setModalShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any>([]);
     const [sorter, setSorter] = useState<any>(null);
@@ -31,10 +34,12 @@ export default function Api() {
     const [curRow, setCurRow] = useState<DataType | null>(null);
     const [keyword, setKeyword] = useState<string>("");
 
-    const createApiIntegration = () => {};
+    const createApi = () => {
+        setModalShow(true);
+    };
     const exportConfig = (e: any, v: any) => {
         console.info(v.moduleInfo);
-        saveFile(v.moduleInfo, "配置参数.json")
+        saveFile(v.moduleInfo, "配置参数.json");
     };
     const edit = (e: any, v: any) => {};
 
@@ -169,9 +174,14 @@ export default function Api() {
         <>
             <div className={style.tools}>
                 {isAdmin() && (
-                    <Button type="primary" icon={<PlusOutlined />} onClick={createApiIntegration}>
-                        创建接口集成
-                    </Button>
+                    <>
+                        <Button type="primary" icon={<PlusOutlined />} onClick={createApi}>
+                            创建接口集成
+                        </Button>
+                        <ModalContext.Provider value={{ modalShow, setModalShow }}>
+                            {modalShow && <AddApiModal />}
+                        </ModalContext.Provider>
+                    </>
                 )}
                 <Search placeholder="输入关键字后按Enter键查询" onSearch={onSearch} enterButton />
             </div>

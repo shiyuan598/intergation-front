@@ -1,0 +1,35 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": [
+        {
+            "id": 1,
+            "project": "GSL4",
+            "version": "v2.3.2",
+            "description": "构建应用v2.3.2",
+            "creator": "u01",
+            "createTime": "2023-03-28 11:27:34",
+            "updateTime": "2023-03-28 11:27:34",
+            "status": 1,
+            "moduleInfo": "{\"m1\":\"v1.1\",\"m2\":\"v1.4\",\"m3\":\"v2.1.2\"}",
+            "statusName": "准备中"
+        },
+        {
+            "id": 2,
+            "project": "GSL4",
+            "version": "v2.3.3",
+            "description": "构建应用v2.3.3",
+            "creator": "u01",
+            "createTime": "2023-03-28 11:27:34",
+            "updateTime": "2023-03-28 11:27:34",
+            "status": 1,
+            "moduleInfo": "{\"m1\":\"v1.1\",\"m2\":\"v1.4\",\"m3\":\"v2.1.2\"}",
+            "statusName": "准备中"
+        }
+    ],
+    "pagination": {
+        "current": 1,
+        "pageSize": 10,
+        "total": 2
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": [
+        {
+            "id": 1,
+            "name": "GSL3",
+            "platform": "x86",
+            "updateTime": "2023-03-28 11:27:34",
+            "maintainer": "tom"
+        },
+        {
+            "id": 2,
+            "name": "GSL4",
+            "platform": "x86",
+            "updateTime": "2023-03-28 11:27:34",
+            "maintainer": "tom"
+        }
+    ],
+    "pagination": {
+        "current": 1,
+        "pageSize": 10,
+        "total": 2
+    }
+}
