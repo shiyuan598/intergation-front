@@ -8,7 +8,7 @@ export const throttle = (fn: Function, delay: number = 1000) => {
     return (...args: any) => {
         if (timer) {
             clearTimeout(timer);
-        } 
+        }
         timer = setTimeout(() => {
             fn(...args);
         }, delay);

@@ -1,6 +1,6 @@
 import { get, post, del } from "./fetchTool";
 
-function getVehicle(pageNo: number, name = "", order = "", seq= "") {
+function getVehicle(pageNo: number, name = "", order = "", seq = "") {
     return get("/vehicle/list", {
         pageNo,
         name: encodeURIComponent(name),

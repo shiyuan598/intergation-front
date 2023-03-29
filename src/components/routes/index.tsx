@@ -1,19 +1,22 @@
-import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import Order from '../../views/main/order/index';
-import Version from '../../views/main/version/index';
-import User from '../../views/main/user/index';
+import React from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import Process from "../../views/main/process/index";
+import Project from "../../views/main/project/index";
+import Module from "../../views/main/project/module";
+import Todo from "../../views/main/todo/index";
+import User from "../../views/main/user/index";
 
 function RouteList() {
     return (
         <Switch>
-            <Route path="/main/order" render={() => (<Order />)}></Route>
-            <Route path="/main/version" render={() => (<Version />)}></Route>
-            <Route path="/main/user" render={() => (<User />)}></Route>
-            <Redirect from="/main" to="/main/order"></Redirect>
+            <Route path="/main/process" render={() => <Process />}></Route>
+            <Route path="/main/project" render={() => <Project />}></Route>
+            <Route path="/main/module" render={() => <Module />}></Route>
+            <Route path="/main/todo" render={() => <Todo />}></Route>
+            <Route path="/main/user" render={() => <User />}></Route>
+            <Redirect from="/main" to="/main/user"></Redirect>
         </Switch>
     );
 }
 
 export default React.memo(RouteList);
-

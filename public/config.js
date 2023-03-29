@@ -1,4 +1,4 @@
-const baseUrl = "http://172.16.18.223:9023";
+const baseUrl = "https://trucks.zhito.com:9023";
 window.globalConfig = Object.freeze({
     api: baseUrl + "/api"
 });

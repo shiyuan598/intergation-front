@@ -24,9 +24,9 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('订单管理', '/main/order', <ScheduleOutlined />),
-  getItem('统计分析', '/main/statis', <LineChartOutlined />),
-  getItem('版本管理', '/main/version', <FileProtectOutlined />),
+  getItem('流程管理', '/main/process', <ScheduleOutlined />),
+  getItem('项目管理', '/main/project', <FileProtectOutlined />),
+  getItem('待办中心', '/main/todo', <FileProtectOutlined />),
   getItem('用户管理', '/main/user', <TeamOutlined />)
 ];
 

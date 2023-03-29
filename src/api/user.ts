@@ -1,6 +1,6 @@
 import { get, post, del } from "./fetchTool";
 
-function getUser(pageNo: number, name: string="", order = "", seq= "") {
+function getUser(pageNo: number, name: string = "", order = "", seq = "") {
     return get("/user/list", {
         pageNo,
         name: encodeURIComponent(name),
