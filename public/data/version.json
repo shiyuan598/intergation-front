@@ -1,0 +1,36 @@
+{
+    "code": 0,
+    "msg": "成功",
+    "data": [
+        {
+            "id": 1,
+            "project": 1,
+            "name": "v3.4.5"
+        },
+        {
+            "id": 2,
+            "project": 1,
+            "name": "v3.4.3"
+        },
+        {
+            "id": 3,
+            "project": 1,
+            "name": "v3.2.1"
+        },
+        {
+            "id": 4,
+            "project": 1,
+            "name": "v2.5.4"
+        },{
+            "id": 5,
+            "project": 1,
+            "name": "v2.3.6"
+        },
+        {
+            "id": 6,
+            "project": 1,
+            "name": "v2.1.4"
+          
+        }
+    ]
+}

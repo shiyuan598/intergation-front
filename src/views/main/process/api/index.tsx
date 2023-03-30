@@ -6,7 +6,7 @@ import { isAdmin } from "../../../../common/user";
 import { saveFile } from "../../../../common/util";
 import type { ColumnsType } from "antd/es/table";
 import { apiProcess } from "../../../../api";
-import { ModalContext } from "../../../../context";
+import { ModalContext, DataContext } from "../../../../context";
 import AddApiModal from "./addApi";
 
 const { Search } = Input;
@@ -33,6 +33,10 @@ export default function Api() {
     const [pagination, setPagination] = useState({});
     const [curRow, setCurRow] = useState<DataType | null>(null);
     const [keyword, setKeyword] = useState<string>("");
+    const { apiProcessNum } = useContext(DataContext) as {
+        apiProcessNum: number;
+        setApiProcessNum: Function;
+    };
 
     const createApi = () => {
         setModalShow(true);
@@ -169,7 +173,7 @@ export default function Api() {
 
     useEffect(() => {
         getData(pageNo, keyword, sorter);
-    }, [pageNo, keyword, sorter]);
+    }, [pageNo, keyword, sorter, apiProcessNum]);
     return (
         <>
             <div className={style.tools}>

@@ -11,12 +11,16 @@ export const ModalContext:
 
 export const DataContext:
     | {
-          vehicleNum?: number;
-          noticeNum?: number;
-          orderNum?: number;
-          setVehicleNum?: Function;
-          setNoticeNum?: Function;
-          setOrderNum?: Function;
+          apiProcessNum?: number;
+          setApiProcessNum?: Function;
+          appProcessNum?: number;
+          setAppProcessNum?: Function;
+          projectNum?: number;
+          setProjectNum?: Function;
+          moduleNum?: number;
+          setModuleNum?: Function;
+          todoNum?: number;
+          setTodoNum?: Function;
           userNum?: number;
           setUserNum?: Function;
       }

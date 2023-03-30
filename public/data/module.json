@@ -5,47 +5,47 @@
         {
             "id": 1,
             "project": 1,
-            "name": "地图",
-            "gitlab": "zhito.gitlab.com/map",
+            "name": "drivers",
+            "gitlab": "zhito.gitlab.com/drivers",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
             "id": 2,
             "project": 1,
-            "name": "定位",
-            "gitlab": "zhito.gitlab.com/location",
+            "name": "zloc",
+            "gitlab": "zhito.gitlab.com/zloc",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
             "id": 3,
-            "project": 2,
-            "name": "地图",
-            "gitlab": "zhito.gitlab.com/map",
+            "project": 1,
+            "name": "zmap",
+            "gitlab": "zhito.gitlab.com/zmap",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
             "id": 4,
-            "project": 2,
-            "name": "定位",
-            "gitlab": "zhito.gitlab.com/location",
+            "project": 1,
+            "name": "perception_camera_obs",
+            "gitlab": "zhito.gitlab.com/perception_camera_obs",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },{
             "id": 5,
-            "project": 2,
-            "name": "视觉",
-            "gitlab": "zhito.gitlab.com/map",
+            "project": 1,
+            "name": "perception_radar",
+            "gitlab": "zhito.gitlab.com/perception_radar",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
             "id": 6,
-            "project": 2,
-            "name": "融合",
-            "gitlab": "zhito.gitlab.com/location",
+            "project": 1,
+            "name": "perception_lidar",
+            "gitlab": "zhito.gitlab.com/perception_lidar",
             "updateTime": "2023-03-28 11:27:34",
             "maintainer": "tom"
         }
@@ -53,6 +53,6 @@
     "pagination": {
         "current": 1,
         "pageSize": 10,
-        "total": 2
+        "total": 9
     }
 }
