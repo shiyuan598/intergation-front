@@ -6,24 +6,26 @@
             "id": 1,
             "project": "GSL4",
             "version": "v2.3.2",
+            "build_type": 1,
             "description": "构建接口v2.3.2",
             "creator": "u01",
             "createTime": "2023-03-28 11:27:34",
             "updateTime": "2023-03-28 11:27:34",
             "status": 1,
-            "moduleInfo": "{\"m1\":\"v1.1\",\"m2\":\"v1.4\",\"m3\":\"v2.1.2\"}",
+            "modules": "{\n        \"drivers\": {\n            \"url\": \"zhito.gitlab.com/drivers\",\n            \"version\": \"v3.4.5\"\n        },\n        \"zmap\": {\n            \"url\": \"zhito.gitlab.com/zmap\",\n            \"version\": \"v3.2.1\"\n        },\n        \"perception_radar\": {\n            \"url\": \"zhito.gitlab.com/perception_radar\",\n            \"version\": \"v2.3.6\"\n        }\n    }",
             "statusName": "准备中"
         },
         {
             "id": 2,
             "project": "GSL4",
             "version": "v2.3.3",
+            "build_type": 2,
             "description": "构建接口v2.3.3",
             "creator": "u01",
             "createTime": "2023-03-28 11:27:34",
             "updateTime": "2023-03-28 11:27:34",
             "status": 1,
-            "moduleInfo": "{\"m1\":\"v1.1\",\"m2\":\"v1.4\",\"m3\":\"v2.1.2\"}",
+            "modules": "{\n        \"drivers\": {\n            \"url\": \"zhito.gitlab.com/drivers\",\n            \"version\": \"v3.4.5\"\n        },\n        \"zmap\": {\n            \"url\": \"zhito.gitlab.com/zmap\",\n            \"version\": \"v3.2.1\"\n        }\n    }",
             "statusName": "准备中"
         }
     ],

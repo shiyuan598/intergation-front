@@ -6,26 +6,26 @@ import { project as projectApi, module as moduleApi } from "../../../../api";
 
 const { Option } = Select;
 
-const App = () => {
+const App = (props: any = {}) => {
+    const { data } = props;
+    let initial:any = {};
+    if (data) {
+        initial = {
+            ...data,
+            modules: {}
+        }
+        const modules = JSON.parse(data.modules);
+        Object.keys(modules).forEach((key) => {
+            initial["module." + key] = true;
+            initial["version." + key] = modules[key].version;
+        });
+    }
     const { modalShow, setModalShow } = useContext(ModalContext) as {
         modalShow: boolean;
         setModalShow: Function;
         curRow: object;
         setCurRow: Function;
     };
-    const initial = {
-        project: 1,
-        version: "v2.4.4",
-        build_type: 1,
-        description: "来一打",
-        "module.drivers": true,
-        "version.drivers": "v3.4.5",
-        "module.zmap": true,
-        "version.zmap": "v3.2.1",
-        "module.perception_radar": true,
-        "version.perception_radar": "v2.3.6"
-    };
-    const [initialValues, setInitialValues] = useState(initial);
     const [projectList, setProjectList] = useState([] as { id: number; name: string }[]);
     const [moduleList, setModuleList] = useState([] as { id: number; name: string; versions: { name: string }[] }[]);
     const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
@@ -38,27 +38,25 @@ const App = () => {
     const [form] = Form.useForm();
 
     useEffect(() => {
+        // 获取所有的project
         projectApi.list(1).then((v) => {
             setProjectList(v.data);
         });
-        if (initialValues.project) {
-            projectSelectChange(initialValues.project);
+        // 如果初始化时编辑模式，就主动触发一下模块查询
+        if (initial.project) {
+            projectSelectChange(initial.project);
         }
-    }, [initialValues.project]);
+    }, []);
 
     const projectSelectChange = (v: any) => {
-        console.info("project change");
         setModuleLoading(true);
         moduleApi.list(1).then((m) => {
-            console.info("modules:", m.data);
             // 默认选择所有模块
-            m.data.forEach((item: any) => form.setFieldValue(item.name, true));
+            !data && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             setTimeout(() => {
                 Promise.all(m.data.map(() => moduleApi.version()))
                     .then((r) => {
-                        console.info("versions:", r);
                         r.forEach((v, i) => (m.data[i].versions = v.data));
-                        console.info(m.data);
                         setModuleList(m.data);
                     })
                     .finally(() => setModuleLoading(false));
@@ -86,7 +84,6 @@ const App = () => {
     };
 
     const onFinish = (values: any) => {
-        console.info(values, JSON.stringify(values));
         // 生成模块配置参数：
         // 识别出所有的模块属性及其对应的版本号
         let res: any = { modules: {} };
@@ -106,7 +103,7 @@ const App = () => {
                 res[k] = values[k];
             }
         });
-        console.info("res:", res, "\n\n", JSON.stringify(res, null, 4));
+        console.info("res:", res, "\n\n", JSON.stringify({ modules: JSON.stringify(res, null, 4) }, null, 4));
         // 接口集成数据处理流程：
         // 1.把module.以及version.开头的属性都放入moduleInfo中, 需要增加url属性，转为字符串存入数据库，
         // 如果没有勾选会忽略掉, 不用担心单独选择了版本号而没有勾选模块的情况
@@ -164,7 +161,7 @@ const App = () => {
             <Modal
                 width={740}
                 destroyOnClose={true}
-                title="创建接口集成"
+                title={`${data? '编辑': '创建'}接口集成`}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -178,14 +175,14 @@ const App = () => {
                         labelCol={{ span: 3 }}
                         wrapperCol={{ span: 6 }}
                         onFinish={onFinish}
-                        initialValues={initialValues}
+                        initialValues={initial}
                         autoComplete="off">
                         <Form.Item
                             label="项目"
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select placeholder="请选择项目" allowClear onChange={projectSelectChange}>
+                            <Select disabled={!!data} placeholder="请选择项目" allowClear onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}

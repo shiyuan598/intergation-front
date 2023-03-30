@@ -15,12 +15,13 @@ interface DataType {
     id: number;
     project: string;
     version: string;
+    build_type: string;
     description: string;
     creator: string;
     createTime: string;
     updateTime: string;
     status: number;
-    moduleInfo: object;
+    modules: object;
     statusName: string;
 }
 
@@ -39,13 +40,28 @@ export default function Api() {
     };
 
     const createApi = () => {
+        setCurRow(null);
         setModalShow(true);
     };
     const exportConfig = (e: any, v: any) => {
-        console.info(v.moduleInfo);
-        saveFile(v.moduleInfo, "配置参数.json");
+        saveFile(
+            JSON.stringify(
+                {
+                    project: v.project,
+                    version: v.version,
+                    build_type: v.build_type,
+                    modules: JSON.parse(v.modules)
+                },
+                null,
+                4
+            ),
+            `${v.project}_${v.version}.json`
+        );
     };
-    const edit = (e: any, v: any) => {};
+    const edit = (e: any, v: any) => {
+        setCurRow(v);
+        setModalShow(true);
+    };
 
     const onSearch = (value: string) => {
         setKeyword(value);
@@ -100,8 +116,8 @@ export default function Api() {
             title: "模块配置",
             width: 170,
             ellipsis: true,
-            dataIndex: "moduleInfo",
-            key: "moduleInfo"
+            dataIndex: "modules",
+            key: "modules"
         },
         {
             title: "状态",
@@ -183,7 +199,7 @@ export default function Api() {
                             创建接口集成
                         </Button>
                         <ModalContext.Provider value={{ modalShow, setModalShow }}>
-                            {modalShow && <AddApiModal />}
+                            {modalShow && <AddApiModal data={curRow} />}
                         </ModalContext.Provider>
                     </>
                 )}
