@@ -86,8 +86,8 @@ export default function App() {
         },
         {
             title: "更新时间",
-            dataIndex: "updateTime",
-            key: "updateTime",
+            dataIndex: "update_time",
+            key: "update_time",
             sorter: true
         },
         {

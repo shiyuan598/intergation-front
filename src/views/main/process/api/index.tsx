@@ -16,13 +16,13 @@ interface DataType {
     project: string;
     version: string;
     build_type: string;
-    description: string;
+    release_note: string;
     creator: string;
-    createTime: string;
-    updateTime: string;
+    create_time: string;
+    update_time: string;
     status: number;
     modules: object;
-    statusName: string;
+    status_name: string;
 }
 
 export default function Api() {
@@ -89,8 +89,8 @@ export default function Api() {
             title: "描述",
             width: 120,
             ellipsis: true,
-            dataIndex: "description",
-            key: "description"
+            dataIndex: "release_note",
+            key: "release_note"
         },
         {
             title: "创建者",
@@ -103,15 +103,15 @@ export default function Api() {
         {
             title: "创建时间",
             width: 170,
-            dataIndex: "createTime",
-            key: "createTime",
+            dataIndex: "create_time",
+            key: "create_time",
             sorter: true
         },
         {
             title: "更新时间",
             width: 170,
-            dataIndex: "updateTime",
-            key: "updateTime",
+            dataIndex: "update_time",
+            key: "update_time",
             sorter: true
         },
         {
@@ -125,8 +125,8 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            dataIndex: "statusName",
-            key: "statusName",
+            dataIndex: "status_name",
+            key: "status_name",
             sorter: true
         },
         isAdmin()

@@ -204,7 +204,7 @@ const App = (props: any = {}) => {
                                 <Option value={3}>Debug Info</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item name="description" label="描述">
+                        <Form.Item name="release_note" label="描述">
                             <Input placeholder="请输入描述" />
                         </Form.Item>
 

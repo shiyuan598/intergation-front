@@ -1,0 +1,70 @@
+{
+    "project" : "GSL4",
+    "version" : "feature/zhito_l4_cicd",
+    "build_type" : "RelWithDebInfo",
+    "map_version" : "v1040.14_tcp_gcj",
+
+    "config" : {
+        "url" : "git@gitlab.zhito.com:ai/config_parameter.git"
+    },
+
+    "base" : {
+        "message_group" : {
+            "url" : "git@gitlab.zhito.com:ai/message_group.git"
+        },
+        "common" : {
+            "url" : "git@gitlab.zhito.com:ai/zhito_common.git"
+        },
+        "map" : {
+            "url" : "git@gitlab.zhito.com:ai/map_module.git"
+        },
+        "zlam_common" : {
+            "url" : "git@gitlab.zhito.com:zlam/zlam_common.git"
+        },
+        "perception_common" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_common.git"
+        },
+        "pnc" : {
+            "url" : "git@gitlab.zhito.com:ai/pnc.git"
+        }
+    },
+
+    "modules" : {
+        "drivers" : {
+            "url" : "git@gitlab.zhito.com:drivers/drivers.git"
+        },
+        "zloc" : {
+            "url" : "git@gitlab.zhito.com:zloc/zloc.git"
+        },
+        "zmap" : {
+            "url" : "git@gitlab.zhito.com:zlam/zmap.git"
+        },
+        "perception_camera_obs" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_camera_obs.git"
+        },
+        "perception_radar" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_radar.git"
+        },
+        "perception_lidar" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_lidar.git"
+        },
+        "perception_fusion" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_fusion.git"
+        },
+        "perception_camera" : {
+            "url" : "git@gitlab.zhito.com:ai/perception_camera.git"
+        },
+        "prediction" : {
+            "url" : "git@gitlab.zhito.com:prediction/prediction.git"
+        },
+        "routing" : {
+            "url" : "git@gitlab.zhito.com:routing/routing.git"
+        },
+        "planning" : {
+            "url" : "git@gitlab.zhito.com:planning/planning.git"
+        },
+        "control" : {
+            "url" : "git@gitlab.zhito.com:control/control.git"
+        }
+    }
+}

@@ -7,7 +7,7 @@
             "project": 1,
             "name": "drivers",
             "gitlab": "git@gitlab.zhito.com:drivers/drivers.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
@@ -15,7 +15,7 @@
             "project": 1,
             "name": "zloc",
             "gitlab": "git@gitlab.zhito.com:zloc/zloc.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
@@ -23,7 +23,7 @@
             "project": 1,
             "name": "zmap",
             "gitlab": "git@gitlab.zhito.com:zlam/zmap.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
@@ -31,14 +31,14 @@
             "project": 1,
             "name": "perception_camera_obs",
             "gitlab": "git@gitlab.zhito.com:ai/perception_camera_obs.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },{
             "id": 5,
             "project": 1,
             "name": "perception_radar",
             "gitlab": "git@gitlab.zhito.com:ai/perception_radar.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         },
         {
@@ -46,7 +46,7 @@
             "project": 1,
             "name": "perception_lidar",
             "gitlab": "git@gitlab.zhito.com:ai/perception_lidar.git",
-            "updateTime": "2023-03-28 11:27:34",
+            "update_time": "2023-03-28 11:27:34",
             "maintainer": "tom"
         }
     ],

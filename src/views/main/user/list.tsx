@@ -13,7 +13,7 @@ interface DataType {
     username: string;
     name: string;
     role: number;
-    roleName: string;
+    role_name: string;
     telephone: number;
 }
 
@@ -66,8 +66,8 @@ const App = (props: { keyword: string }) => {
         },
         {
             title: "角色",
-            dataIndex: "roleName",
-            key: "roleName",
+            dataIndex: "role_name",
+            key: "role_name",
             sorter: true
         },
         {
