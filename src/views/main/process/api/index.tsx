@@ -44,6 +44,7 @@ export default function Api() {
         setModalShow(true);
     };
     const exportConfig = (e: any, v: any) => {
+        e.stopPropagation();
         saveFile(
             JSON.stringify(
                 {
@@ -59,6 +60,7 @@ export default function Api() {
         );
     };
     const edit = (e: any, v: any) => {
+        e.stopPropagation();
         setCurRow(v);
         setModalShow(true);
     };
