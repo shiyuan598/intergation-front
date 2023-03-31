@@ -116,7 +116,7 @@ export default function App() {
                             编辑
                         </a>
                         <a href="#!" onClick={(e) => show(e, v)}>
-                            查看
+                            查看模块
                         </a>
                     </Fragment>
                 );
