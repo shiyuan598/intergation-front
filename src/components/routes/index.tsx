@@ -14,7 +14,7 @@ function RouteList() {
             <Route path="/main/module" render={() => <Module />}></Route>
             <Route path="/main/todo" render={() => <Todo />}></Route>
             <Route path="/main/user" render={() => <User />}></Route>
-            <Redirect from="/main" to="/main/user"></Redirect>
+            <Redirect from="/main" to="/main/process"></Redirect>
         </Switch>
     );
 }
