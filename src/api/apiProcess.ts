@@ -1,7 +1,7 @@
 import { get, post, del } from "./fetchTool";
 
 function list(pageNo: number, name: string = "", order = "", seq = "") {
-    return get("/data/api_process.json", {
+    return get("/api_process/list", {
         pageNo,
         name: encodeURIComponent(name),
         order,
@@ -9,16 +9,20 @@ function list(pageNo: number, name: string = "", order = "", seq = "") {
     });
 }
 
-function add(values: { [propName: string]: string | number }) {
-    return post("/process/api/add", values);
+function create(values: { [propName: string]: string | number }) {
+    return post("/api_process/create", values);
 }
 
 function edit(values: { [propName: string]: string | number }) {
-    return post("/process/api/update", values);
+    return post("/api_process/edit", values);
+}
+
+function update(values: { [propName: string]: string | number }) {
+    return post("/api_process/update_module", values);
 }
 
 function remove(id: string) {
-    return del("/process/api/delete", {
+    return del("/api_process/delete", {
         id
     });
 }
@@ -27,6 +31,7 @@ function remove(id: string) {
 export default {
     list,
     edit,
-    add,
+    create,
+    update,
     remove
 };

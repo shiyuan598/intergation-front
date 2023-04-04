@@ -92,8 +92,8 @@ export default function App() {
         },
         {
             title: "负责人",
-            dataIndex: "maintainer",
-            key: "maintainer",
+            dataIndex: "owner",
+            key: "owner",
             sorter: true
         },
         {

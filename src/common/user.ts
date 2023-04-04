@@ -7,6 +7,6 @@ export const isAdmin = () => {
 };
 
 export const getUserInfo = () => {
-    let data = localStorage.getItem("userInfo");
-    return data;
+    let data = localStorage.getItem("userInfo") || "{}";
+    return JSON.parse(data);
 };

@@ -2,19 +2,20 @@
 import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
-import { project as projectApi, module as moduleApi } from "../../../../api";
+import { apiProcess as apiProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
+import { getUserInfo } from "../../../../common/user";
 
 const { Option } = Select;
 
 const App = (props: any = {}) => {
-    const { data } = props;
-    let initial:any = {};
-    if (data) {
+    const { data: editFormData } = props;
+    let initial: any = {};
+    if (editFormData) {
         initial = {
-            ...data,
+            ...editFormData,
             modules: {}
-        }
-        const modules = JSON.parse(data.modules);
+        };
+        const modules = JSON.parse(editFormData.modules);
         Object.keys(modules).forEach((key) => {
             initial["module." + key] = true;
             initial["version." + key] = modules[key].version;
@@ -26,7 +27,7 @@ const App = (props: any = {}) => {
         curRow: object;
         setCurRow: Function;
     };
-    const [projectList, setProjectList] = useState([] as { id: number; name: string }[]);
+    const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
     const [moduleList, setModuleList] = useState([] as { id: number; name: string; versions: { name: string }[] }[]);
     const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
         apiProcessNum: number;
@@ -39,7 +40,7 @@ const App = (props: any = {}) => {
 
     useEffect(() => {
         // 获取所有的project
-        projectApi.list(1).then((v) => {
+        projectApi.listAll().then((v) => {
             setProjectList(v.data);
         });
         // 如果初始化时编辑模式，就主动触发一下模块查询
@@ -50,24 +51,34 @@ const App = (props: any = {}) => {
 
     const projectSelectChange = (v: any) => {
         setModuleLoading(true);
-        moduleApi.list(1).then((m) => {
+        projectApi.modulesAll(v).then((m) => {
             // 默认选择所有模块
-            !data && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
-            setTimeout(() => {
-                Promise.all(m.data.map(() => moduleApi.version()))
-                    .then((r) => {
-                        r.forEach((v, i) => (m.data[i].versions = v.data));
-                        setModuleList(m.data);
-                    })
-                    .finally(() => setModuleLoading(false));
-            }, 3000);
+            !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            // 获取所有模块的branch/tag
+            toolsApi
+                .getGitBranchesTagsOfMultiProjects(m.data.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .then((r) => {
+                    const branches_tags = r.data;
+                    const modules = m.data.map((v: any) => {
+                        const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
+                        return {
+                            ...v,
+                            versions: [
+                                ...branches_tags[project_name_with_namespace].branch,
+                                ...branches_tags[project_name_with_namespace].tag
+                            ]
+                        };
+                    });
+                    setModuleList(modules);
+                })
+                .finally(() => setModuleLoading(false));
         });
     };
 
-    const getUrlByName = (name: string, moduleList: any[]) => {
+    const getGitUrlByName = (name: string, moduleList: any[]) => {
         let match = moduleList.find((v) => v.name === name);
         if (match) {
-            return match.gitlab;
+            return match.git;
         }
         return "";
     };
@@ -93,7 +104,7 @@ const App = (props: any = {}) => {
                     // 选择了该模块则添加到结果中并记录版本号
                     let name = k.substring("module.".length);
                     res.modules[name] = {
-                        url: getUrlByName(name, moduleList),
+                        url: getGitUrlByName(name, moduleList),
                         version: values["version." + name] || ""
                     };
                 }
@@ -103,15 +114,19 @@ const App = (props: any = {}) => {
                 res[k] = values[k];
             }
         });
-        console.info("res:", res, "\n\n", JSON.stringify({ modules: JSON.stringify(res, null, 4) }, null, 4));
+        res.modules = JSON.stringify(res.modules, null, 4);
+        res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
+        res.creator = getUserInfo().id;
+        console.info("res:", res);
+        // console.info("res:", res, "\n\n", JSON.stringify({ modules: JSON.stringify(res, null, 4) }, null, 4));
         // 接口集成数据处理流程：
         // 1.把module.以及version.开头的属性都放入moduleInfo中, 需要增加url属性，转为字符串存入数据库，
         // 如果没有勾选会忽略掉, 不用担心单独选择了版本号而没有勾选模块的情况
         // 2.导出时提取模块配置, 再加上其他如project/version/build_type属性，同时忽略moduleInfo属性（moduleInfo: undefined）
         // 4.编辑时把moduleInfo中的name/url提取到外层，用于数据回显，再把moduleInfo: undefined，
         setLoading(true);
-        projectApi
-            .add(values)
+        apiProcessApi
+            .create(res)
             .then((v) => {
                 if (v.code === 0) {
                     setModalShow(false);
@@ -161,7 +176,7 @@ const App = (props: any = {}) => {
             <Modal
                 width={740}
                 destroyOnClose={true}
-                title={`${data? '编辑': '创建'}接口集成`}
+                title={`${editFormData ? "编辑" : "创建"}接口集成`}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -182,7 +197,11 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select disabled={!!data} placeholder="请选择项目" allowClear onChange={projectSelectChange}>
+                            <Select
+                                disabled={!!editFormData}
+                                placeholder="请选择项目"
+                                allowClear
+                                onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}
@@ -204,8 +223,12 @@ const App = (props: any = {}) => {
                                 <Option value={3}>Debug Info</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item name="release_note" label="描述">
-                            <Input placeholder="请输入描述" />
+                        <Form.Item
+                            name="release_note"
+                            label="Release Note"
+                            required={true}
+                            rules={[{ required: true, message: "请输入Release Note" }]}>
+                            <Input placeholder="请输入Release Note" />
                         </Form.Item>
 
                         <Spin spinning={moduleLoading}>
@@ -224,8 +247,8 @@ const App = (props: any = {}) => {
                                     <Form.Item name={"version." + item.name} label="版本号">
                                         <Select placeholder="请选择版本号" allowClear>
                                             {item.versions.map((v) => (
-                                                <Option key={v.name} value={v.name}>
-                                                    {v.name}
+                                                <Option key={item.name + v} value={v}>
+                                                    {v + ""}
                                                 </Option>
                                             ))}
                                         </Select>

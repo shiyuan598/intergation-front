@@ -7,7 +7,7 @@ import style from "./project.module.scss";
 import showDeleteConfirm from "../../../components/common/deleteConfirm";
 import { ModalContext, DataContext } from "../../../context";
 import { isAdmin } from "../../../common/user";
-import { module as moduleApi } from "../../../api";
+import { project as projectApi, module as moduleApi } from "../../../api";
 
 const { Search } = Input;
 
@@ -24,7 +24,7 @@ export default function App() {
     const [modalShow, setModalShow] = useState(false);
     const [keyword, setKeyword] = useState<string>("");
     const history = useHistory();
-    const [routeParam, setRouteParam] = useState<any>(null);
+    const [routeParam, setRouteParam] = useState<any>(history.location.state);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -85,8 +85,8 @@ export default function App() {
         },
         {
             title: "GitLab",
-            dataIndex: "gitlab",
-            key: "gitlab",
+            dataIndex: "git",
+            key: "git",
             sorter: true
         },
         {
@@ -97,8 +97,8 @@ export default function App() {
         },
         {
             title: "负责人",
-            dataIndex: "maintainer",
-            key: "maintainer",
+            dataIndex: "owner",
+            key: "owner",
             sorter: true
         },
         {
@@ -126,11 +126,11 @@ export default function App() {
         }
     ];
 
-    const getData = (pageNo: number, name: string = "", sorter: any) => {
+    const getData = (projectId: number, pageNo: number, name: string = "", sorter: any) => {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
-        moduleApi
-            .list(1)
+        projectApi
+            .modules(projectId, 1)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);
@@ -159,7 +159,7 @@ export default function App() {
         setPageNo(pageNo);
     };
 
-    // 初始化选择的车牌号
+    // 初始化routeParam
     useEffect(() => {
         const routeParam = history.location.state;
         setRouteParam(routeParam);
@@ -168,11 +168,11 @@ export default function App() {
     // 搜索条件变化时页码重置为1
     useEffect(() => {
         setPageNo(1);
-    }, [keyword]);
+    }, [routeParam, keyword]);
 
     useEffect(() => {
-        getData(pageNo, keyword, sorter);
-    }, [pageNo, userNum, keyword, sorter]);
+        getData(routeParam.id, pageNo, keyword, sorter);
+    }, [routeParam, pageNo, userNum, keyword, sorter]);
 
     const onSearch = (value: string) => {
         setKeyword(value);

@@ -125,8 +125,8 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            dataIndex: "status_name",
-            key: "status_name",
+            dataIndex: "state",
+            key: "state_name",
             sorter: true
         },
         isAdmin()
