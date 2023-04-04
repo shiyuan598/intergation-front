@@ -56,7 +56,7 @@ export default function Api() {
                 null,
                 4
             ),
-            `${v.project}_${v.version}.json`
+            `${v.project_name}_${v.version}.json`
         );
     };
     const edit = (e: any, v: any) => {
@@ -73,8 +73,8 @@ export default function Api() {
             title: "项目",
             width: 120,
             ellipsis: true,
-            dataIndex: "project",
-            key: "project",
+            dataIndex: "project_name",
+            key: "project_name",
             sorter: true
         },
         {
@@ -125,7 +125,7 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            dataIndex: "state",
+            dataIndex: "state_name",
             key: "state_name",
             sorter: true
         },

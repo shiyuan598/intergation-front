@@ -98,6 +98,7 @@ const App = (props: any = {}) => {
         // 生成模块配置参数：
         // 识别出所有的模块属性及其对应的版本号
         let res: any = { modules: {} };
+        let state = 1;
         Object.keys(values).forEach((k) => {
             if (k.startsWith("module.")) {
                 if (values[k]) {
@@ -107,6 +108,9 @@ const App = (props: any = {}) => {
                         url: getGitUrlByName(name, moduleList),
                         version: values["version." + name] || ""
                     };
+                    if (!!res.modules[name].version) {
+                        state = 0;
+                    }
                 }
             } else if (k.startsWith("version.")) {
                 // pass
@@ -114,20 +118,27 @@ const App = (props: any = {}) => {
                 res[k] = values[k];
             }
         });
+
+        res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
         res.creator = getUserInfo().id;
-        console.info("res:", res);
-        // console.info("res:", res, "\n\n", JSON.stringify({ modules: JSON.stringify(res, null, 4) }, null, 4));
         // 接口集成数据处理流程：
         // 1.把module.以及version.开头的属性都放入moduleInfo中, 需要增加url属性，转为字符串存入数据库，
         // 如果没有勾选会忽略掉, 不用担心单独选择了版本号而没有勾选模块的情况
         // 2.导出时提取模块配置, 再加上其他如project/version/build_type属性，同时忽略moduleInfo属性（moduleInfo: undefined）
         // 4.编辑时把moduleInfo中的name/url提取到外层，用于数据回显，再把moduleInfo: undefined，
         setLoading(true);
-        apiProcessApi
-            .create(res)
-            .then((v) => {
+        let p = null;
+        if (editFormData) {
+            p = apiProcessApi.edit({
+                id: initial.id,
+                ...res
+            });
+        } else {
+            p = apiProcessApi.create(res);
+        }
+        p.then((v) => {
                 if (v.code === 0) {
                     setModalShow(false);
                     form.resetFields();
@@ -155,19 +166,6 @@ const App = (props: any = {}) => {
             // }
             // TODO:
             // 版本号不能重复
-
-            // userApi
-            //     .checkNoExist(value)
-            //     .then((v) => {
-            //         if (v.data) {
-            //             resolve("");
-            //         } else {
-            //             reject("用户名已存在");
-            //         }
-            //     })
-            //     .catch(() => {
-            //         reject("验证用户名出错");
-            //     });
         });
     };
 
@@ -203,7 +201,7 @@ const App = (props: any = {}) => {
                                 allowClear
                                 onChange={projectSelectChange}>
                                 {projectList.map((item) => (
-                                    <Option key={item.id} value={item.id}>
+                                    <Option key={item.id} value={item.id + ""}>
                                         {item.name}
                                     </Option>
                                 ))}
@@ -218,9 +216,9 @@ const App = (props: any = {}) => {
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
                             <Select placeholder="请选择构建类型" allowClear>
-                                <Option value={1}>Debug</Option>
-                                <Option value={2}>Build</Option>
-                                <Option value={3}>Debug Info</Option>
+                                <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
+                                <Option value={"Release"}>Release</Option>
+                                <Option value={"Debug"}>Debug</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
