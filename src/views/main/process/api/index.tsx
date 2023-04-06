@@ -51,7 +51,7 @@ export default function Api() {
                     project: v.project,
                     version: v.version,
                     build_type: v.build_type,
-                    modules: JSON.parse(v.modules)
+                    modules: pickModuleInfo(v.modules)
                 },
                 null,
                 4
@@ -59,6 +59,17 @@ export default function Api() {
             `${v.project_name}_${v.version}.json`
         );
     };
+    const pickModuleInfo = (modulesStr: string) => {
+        let modules = JSON.parse(modulesStr);
+        let res: any = {};
+        Object.keys(modules).forEach((k) => {
+            res[k] = {
+                url: modules[k].url,
+                version: modules[k].version || "",
+            }
+        });
+        return res;
+    }
     const edit = (e: any, v: any) => {
         e.stopPropagation();
         setCurRow(v);

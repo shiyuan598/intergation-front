@@ -2,7 +2,6 @@ import React from "react";
 import ApiList from "./api/index";
 import AppList from "./appIntegration";
 import { Tabs } from "antd";
-// import style from "./process.module.scss";
 
 export default function App() {
     return (

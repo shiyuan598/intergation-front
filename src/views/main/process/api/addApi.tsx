@@ -51,7 +51,8 @@ const App = (props: any = {}) => {
 
     const projectSelectChange = (v: any) => {
         setModuleLoading(true);
-        projectApi.modulesAll(v).then((m) => {
+        projectApi.modulesAll(v, 0).then((m) => {
+            console.info();
             // 默认选择所有模块
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
@@ -75,12 +76,15 @@ const App = (props: any = {}) => {
         });
     };
 
-    const getGitUrlByName = (name: string, moduleList: any[]) => {
+    const getModuleInfo =(name: string, moduleList: any[]) => {
         let match = moduleList.find((v) => v.name === name);
         if (match) {
-            return match.git;
+            return {
+                url: match.git,
+                owner: match.owner
+            };
         }
-        return "";
+        return null;
     };
 
     const handleOk = () => {
@@ -105,7 +109,7 @@ const App = (props: any = {}) => {
                     // 选择了该模块则添加到结果中并记录版本号
                     let name = k.substring("module.".length);
                     res.modules[name] = {
-                        url: getGitUrlByName(name, moduleList),
+                        ...getModuleInfo(name, moduleList),
                         version: values["version." + name] || ""
                     };
                     if (!!res.modules[name].version) {
@@ -124,10 +128,10 @@ const App = (props: any = {}) => {
         res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
         res.creator = getUserInfo().id;
         // 接口集成数据处理流程：
-        // 1.把module.以及version.开头的属性都放入moduleInfo中, 需要增加url属性，转为字符串存入数据库，
+        // 1.把module.以及version.开头的属性都放入modules中, 需要增加url属性，转为字符串存入数据库，
         // 如果没有勾选会忽略掉, 不用担心单独选择了版本号而没有勾选模块的情况
-        // 2.导出时提取模块配置, 再加上其他如project/version/build_type属性，同时忽略moduleInfo属性（moduleInfo: undefined）
-        // 4.编辑时把moduleInfo中的name/url提取到外层，用于数据回显，再把moduleInfo: undefined，
+        // 2.导出时提取模块配置, 再加上其他如project/version/build_type属性，重置modules属性
+        // 4.编辑时把modules中的name/url提取到外层作为initial，用于数据回显，再把modules: {}
         setLoading(true);
         let p = null;
         if (editFormData) {

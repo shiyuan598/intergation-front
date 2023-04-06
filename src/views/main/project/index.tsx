@@ -128,7 +128,7 @@ export default function App() {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
         projectApi
-            .list(1)
+            .list(pageNo, name, order, seq)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);

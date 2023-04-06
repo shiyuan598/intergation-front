@@ -84,6 +84,12 @@ export default function App() {
             sorter: true
         },
         {
+            title: "集成类型",
+            dataIndex: "type_name",
+            key: "type_name",
+            sorter: true
+        },
+        {
             title: "GitLab",
             dataIndex: "git",
             key: "git",
@@ -130,7 +136,7 @@ export default function App() {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
         projectApi
-            .modules(projectId, 1)
+            .modules(projectId, pageNo, name, order, seq)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);
