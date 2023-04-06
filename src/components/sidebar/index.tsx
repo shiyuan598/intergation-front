@@ -39,7 +39,7 @@ const App: React.FC = () => {
 
   const [selected, setSelected] = useState("");
   useEffect(() => {
-    let pathName = location.pathname === "/" ? "/home" : location.pathname;
+    let pathName = location.pathname === "/main/module" ? "/main/project" : location.pathname;
     setSelected(pathName);
   }, [location]);
   

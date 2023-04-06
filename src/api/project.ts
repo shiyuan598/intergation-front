@@ -22,7 +22,7 @@ function modules(projectId: number, pageNo: number, name: string = "", order = "
     });
 }
 
-function modulesAll(projectId: number, type:number=0) {
+function modulesAll(projectId: number, type: number = 0) {
     return get(`/project/${projectId}/module_all/${type}`);
 }
 

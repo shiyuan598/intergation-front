@@ -2,7 +2,7 @@
 import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
-import { apiProcess as apiProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
+import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
 import { getUserInfo } from "../../../../common/user";
 
 const { Option } = Select;
@@ -29,9 +29,9 @@ const App = (props: any = {}) => {
     };
     const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
     const [moduleList, setModuleList] = useState([] as { id: number; name: string; versions: { name: string }[] }[]);
-    const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
-        apiProcessNum: number;
-        setApiProcessNum: Function;
+    const { appProcessNum, setAppProcessNum } = useContext(DataContext) as {
+        appProcessNum: number;
+        setAppProcessNum: Function;
     };
     const [loading, setLoading] = useState(false); // loading
     const [moduleLoading, setModuleLoading] = useState(false); // loading
@@ -51,7 +51,7 @@ const App = (props: any = {}) => {
 
     const projectSelectChange = (v: any) => {
         setModuleLoading(true);
-        projectApi.modulesAll(v, 0).then((m) => {
+        projectApi.modulesAll(v, 1).then((m) => {
             // 默认选择所有模块
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
@@ -98,6 +98,7 @@ const App = (props: any = {}) => {
     };
 
     const onFinish = (values: any) => {
+        console.info("values:", values);
         // 生成模块配置参数：
         // 识别出所有的模块属性及其对应的版本号
         let res: any = { modules: {} };
@@ -109,43 +110,40 @@ const App = (props: any = {}) => {
                     let name = k.substring("module.".length);
                     res.modules[name] = {
                         ...getModuleInfo(name, moduleList),
-                        version: values["version." + name] || ""
+                        version: values["version." + name] || "",
+                        release_note: values["release_note." + name] || ""
                     };
+                    // 如果版本信息有为空的项，状态设为0
                     if (!!res.modules[name].version) {
                         state = 0;
                     }
                 }
-            } else if (k.startsWith("version.")) {
+            } else if (k.startsWith("version.") || k.startsWith("release_note.")) {
                 // pass
             } else {
                 res[k] = values[k];
             }
         });
-
+        console.info(res.modules);
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
         res.creator = getUserInfo().id;
-        // 接口集成数据处理流程：
-        // 1.把module.以及version.开头的属性都放入modules中, 需要增加url属性，转为字符串存入数据库，
-        // 如果没有勾选会忽略掉, 不用担心单独选择了版本号而没有勾选模块的情况
-        // 2.导出时提取模块配置, 再加上其他如project/version/build_type属性，重置modules属性
-        // 4.编辑时把modules中的name/url提取到外层作为initial，用于数据回显，再把modules: {}
         setLoading(true);
         let p = null;
         if (editFormData) {
-            p = apiProcessApi.edit({
+            p = appProcessApi.edit({
                 id: initial.id,
                 ...res
             });
         } else {
-            p = apiProcessApi.create(res);
+            p = appProcessApi.create(res);
         }
         p.then((v) => {
             if (v.code === 0) {
                 setModalShow(false);
                 form.resetFields();
-                setApiProcessNum(apiProcessNum + 1);
+                setAppProcessNum(appProcessNum + 1);
             } else {
                 message.error(v.msg);
             }
@@ -176,7 +174,7 @@ const App = (props: any = {}) => {
             <Modal
                 width={740}
                 destroyOnClose={true}
-                title={`${editFormData ? "编辑" : "创建"}接口集成`}
+                title={`${editFormData ? "编辑" : "创建"}应用集成`}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -190,7 +188,7 @@ const App = (props: any = {}) => {
                         labelCol={{ span: 3 }}
                         wrapperCol={{ span: 6 }}
                         onFinish={onFinish}
-                        initialValues={initial}
+                        initialValues={{ ...initial, "release_note.zmap": Math.random(), "release_note.zloc": Math.random() }}
                         autoComplete="off">
                         <Form.Item
                             label="项目"
@@ -224,11 +222,15 @@ const App = (props: any = {}) => {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="release_note"
-                            label="Release Note"
+                            name="api_version"
+                            label="接口版本"
                             required={true}
-                            rules={[{ required: true, message: "请输入Release Note" }]}>
-                            <Input placeholder="请输入Release Note" />
+                            rules={[{ required: true, message: "请选择接口版本" }]}>
+                            <Select placeholder="请选择接口版本" allowClear>
+                                <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
+                                <Option value={"Release"}>Release</Option>
+                                <Option value={"Debug"}>Debug</Option>
+                            </Select>
                         </Form.Item>
 
                         <Spin spinning={moduleLoading}>
@@ -251,6 +253,13 @@ const App = (props: any = {}) => {
                                                 </Option>
                                             ))}
                                         </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        style={{ width: 0, height: 0 }}
+                                        name={"release_note." + item.name}
+                                        required={true}
+                                        label="Release Note">
+                                        <Input hidden placeholder="release note" />
                                     </Form.Item>
                                 </Form.Item>
                             ))}
