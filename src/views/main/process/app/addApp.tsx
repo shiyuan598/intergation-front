@@ -282,7 +282,7 @@ const App = (props: any = {}) => {
                                         <Checkbox disabled>{item.name}</Checkbox>
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" allowClear>
+                                        <Select placeholder="请选择版本号" showSearch allowClear>
                                             {item.tags.length && (
                                                 <OptGroup label="Tag">
                                                     {item.tags.map((v) => (
@@ -324,7 +324,7 @@ const App = (props: any = {}) => {
                                         <Checkbox>{item.name}</Checkbox>
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" allowClear>
+                                        <Select placeholder="请选择版本号" showSearch allowClear>
                                             {item.tags.length && (
                                                 <OptGroup label="Tag">
                                                     {item.tags.map((v) => (

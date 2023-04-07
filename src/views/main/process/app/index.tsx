@@ -111,21 +111,21 @@ export default function Api() {
             key: "version",
             sorter: true
         },
-        {
-            title: "接口版本号",
-            width: 120,
-            ellipsis: true,
-            dataIndex: "api_version",
-            key: "api_version",
-            sorter: true
-        },
         // {
-        //     title: "描述",
+        //     title: "接口版本号",
         //     width: 120,
         //     ellipsis: true,
-        //     dataIndex: "release_note",
-        //     key: "release_note"
+        //     dataIndex: "api_version",
+        //     key: "api_version",
+        //     sorter: true
         // },
+        {
+            title: "描述",
+            width: 120,
+            ellipsis: true,
+            dataIndex: "release_note",
+            key: "release_note"
+        },
         {
             title: "创建者",
             width: 120,
@@ -163,7 +163,7 @@ export default function Api() {
             sorter: true,
             render: (v: DataType) => {
                 if (v.state === 0) {
-                    return <Tag color="#666">{v.state_name}</Tag>;
+                    return <Tag color="#666666">{v.state_name}</Tag>;
                 } else if (v.state === 1) {
                     return <Tag color="#48D1CC">{v.state_name}</Tag>;
                 } else if (v.state === 2) {
