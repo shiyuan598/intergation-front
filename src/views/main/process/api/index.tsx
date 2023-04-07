@@ -48,7 +48,7 @@ export default function Api() {
         saveFile(
             JSON.stringify(
                 {
-                    project: v.project,
+                    project: v.project_name,
                     version: v.version,
                     build_type: v.build_type,
                     modules: pickModuleInfo(v.modules)
@@ -84,7 +84,7 @@ export default function Api() {
                 job: v.job,
                 parameters: JSON.stringify(
                     {
-                        project: v.project,
+                        project: v.project_name,
                         version: v.version,
                         build_type: v.build_type,
                         modules: pickModuleInfo(v.modules)
