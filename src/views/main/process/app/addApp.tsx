@@ -80,24 +80,23 @@ const App = (props: any = {}) => {
         }
         setModuleLoading(true);
         // 获取所有模块信息
-        projectApi.modulesAll(v, 1).then((m) => {
+        projectApi.modulesAll(v).then((raw) => {
+            const rawData = raw.data.filter((item: any) => item.type !== 1);
+
             // 默认选择所有模块
-            !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            !editFormData &&
+                rawData.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(m.data.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .getGitBranchesTagsOfMultiProjects(rawData.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
-                    const modules = m.data.map((v: any) => {
+                    const modules = rawData.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
                             tags: branches_tags[project_name_with_namespace].tag,
-                            branches: branches_tags[project_name_with_namespace].branch,
-                            versions: [
-                                ...branches_tags[project_name_with_namespace].branch,
-                                ...branches_tags[project_name_with_namespace].tag
-                            ]
+                            branches: branches_tags[project_name_with_namespace].branch
                         };
                     });
                     setModuleList(modules);
@@ -110,6 +109,7 @@ const App = (props: any = {}) => {
         let match = moduleList.find((v) => v.name === name);
         if (match) {
             return {
+                type: match.type,
                 url: match.git,
                 owner: match.owner
             };
@@ -229,10 +229,7 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select
-                                disabled={!!editFormData}
-                                placeholder="请选择项目"
-                                onChange={projectSelectChange}>
+                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id + ""}>
                                         {item.name}
@@ -254,7 +251,7 @@ const App = (props: any = {}) => {
                                 <Option value={"Debug"}>Debug</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             name="api_version"
                             label="接口版本"
                             required={true}
@@ -266,13 +263,59 @@ const App = (props: any = {}) => {
                                     </Option>
                                 ))}
                             </Select>
+                        </Form.Item> */}
+
+                        <Form.Item name="desc" label="描述">
+                            <Input placeholder="请输入描述" />
                         </Form.Item>
 
                         <Spin spinning={moduleLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                                Base信息
+                            </Divider>
+                            {moduleList.filter((item:any) => item.type === 0).map((item) => (
+                                <Form.Item key={item.id} noStyle>
+                                    <Form.Item
+                                        name={"module." + item.name}
+                                        valuePropName="checked"
+                                        style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
+                                        <Checkbox disabled>{item.name}</Checkbox>
+                                    </Form.Item>
+                                    <Form.Item name={"version." + item.name} label="版本号">
+                                        <Select placeholder="请选择版本号" allowClear>
+                                            {item.tags.length && (
+                                                <OptGroup label="Tag">
+                                                    {item.tags.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
+                                            {item.branches.length && (
+                                                <OptGroup label="Branch">
+                                                    {item.branches.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
+                                        </Select>
+                                    </Form.Item>
+                                    {/* <Form.Item
+                                        style={{ width: 0, height: 0 }}
+                                        name={"release_note." + item.name}
+                                        required={true}
+                                        label="Release Note">
+                                        <Input hidden placeholder="release note" />
+                                    </Form.Item> */}
+                                </Form.Item>
+                            ))}
+                            <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模块信息
                             </Divider>
-                            {moduleList.map((item) => (
+                            {moduleList.filter((item:any) => item.type === 2).map((item) => (
                                 <Form.Item key={item.id} noStyle>
                                     <Form.Item
                                         name={"module." + item.name}

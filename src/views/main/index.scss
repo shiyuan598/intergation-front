@@ -14,6 +14,15 @@
   font-size: 14px;
 }
 
+// 禁用的checkbox
+.ant-checkbox-disabled + span {
+  color: rgba(255, 255, 255, 0.8);
+}
+.ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: rgba(255, 255, 255, 0.8);
+  animation-name: none;
+}
+
 .ant-timeline.ant-timeline-label .ant-timeline-item-label {
   width: calc(35% - 12px);
 }

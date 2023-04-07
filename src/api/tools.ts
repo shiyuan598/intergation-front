@@ -18,7 +18,7 @@ function getGitBranchesTagsOfMultiProjects(projects = "[]") {
     });
 }
 
-function jenkinsBuildJob(values: { [propName: string]: string | number }) {
+function jenkinsBuildJob(values: { [propName: string]: string | number | object }) {
     return post("/jenkins/build_job", values);
 }
 

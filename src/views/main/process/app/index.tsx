@@ -14,6 +14,7 @@ const { Search } = Input;
 interface DataType {
     id: number;
     project: string;
+    project_name: string;
     version: string;
     build_type: string;
     api_version: string;
@@ -21,7 +22,7 @@ interface DataType {
     create_time: string;
     update_time: string;
     state: number;
-    modules: object;
+    modules: string;
     state_name: string;
 }
 
@@ -45,30 +46,31 @@ export default function Api() {
     };
     const exportConfig = (e: any, v: any) => {
         e.stopPropagation();
-        saveFile(
-            JSON.stringify(
-                {
-                    project: v.project_name,
-                    version: v.version,
-                    build_type: v.build_type,
-                    modules: pickModuleInfo(v.modules)
-                },
-                null,
-                4
-            ),
-            `${v.project_name}_${v.version}.json`
-        );
+        saveFile(JSON.stringify(generatorBuildConfig(v), null, 4), `${v.project_name}_${v.version}.json`);
     };
-    const pickModuleInfo = (modulesStr: string) => {
-        let modules = JSON.parse(modulesStr);
-        let res: any = {};
+    const generatorBuildConfig = (v: DataType) => {
+        let modules = JSON.parse(v.modules);
+        let base: any = {};
+        let common: any = {};
         Object.keys(modules).forEach((k) => {
-            res[k] = {
+            let item = {
                 url: modules[k].url,
                 version: modules[k].version || ""
             };
+            if (modules[k].type === 0) {
+                base[k] = item;
+            } else if (modules[k].type === 2) {
+                common[k] = item;
+            }
         });
-        return res;
+
+        return {
+            project: v.project_name,
+            version: v.version,
+            build_type: v.build_type,
+            base,
+            modules: common
+        };
     };
     const edit = (e: any, v: any) => {
         e.stopPropagation();
@@ -82,16 +84,7 @@ export default function Api() {
                 process_type: 1,
                 process_id: v.id,
                 job: v.job,
-                parameters: JSON.stringify(
-                    {
-                        project: v.project_name,
-                        version: v.version,
-                        build_type: v.build_type,
-                        modules: pickModuleInfo(v.modules)
-                    },
-                    null,
-                    4
-                )
+                parameters: generatorBuildConfig(v)
             })
             .then(() => {
                 setAppProcessNum(appProcessNum + 1);

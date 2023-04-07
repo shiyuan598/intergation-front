@@ -82,16 +82,12 @@ export default function Api() {
                 process_type: 1,
                 process_id: v.id,
                 job: v.job,
-                parameters: JSON.stringify(
-                    {
-                        project: v.project_name,
-                        version: v.version,
-                        build_type: v.build_type,
-                        modules: pickModuleInfo(v.modules)
-                    },
-                    null,
-                    4
-                )
+                parameters: {
+                    project: v.project_name,
+                    version: v.version,
+                    build_type: v.build_type,
+                    modules: pickModuleInfo(v.modules)
+                }
             })
             .then(() => {
                 setApiProcessNum(apiProcessNum + 1);

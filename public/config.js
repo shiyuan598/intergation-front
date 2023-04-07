@@ -1,4 +1,4 @@
-const baseUrl = "";
+const baseUrl = "http://172.16.12.84:9002";
 window.globalConfig = Object.freeze({
     api: baseUrl + "/api",
     jenkins: {

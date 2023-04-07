@@ -60,7 +60,7 @@ export const get = (url: string, params?: { [propName: string]: string | number 
     });
 };
 
-export const post = (url: string, params?: { [propName: string]: string | number }) => {
+export const post = (url: string, params?: { [propName: string]: string | number | object }) => {
     return fetch(baseUrl + url, {
         method: "POST",
         headers: {
