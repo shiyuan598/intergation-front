@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useEffect, useContext } from "react";
-import { Input, Button, Table, message, Tag } from "antd";
+import { Modal, Input, Button, Table, message, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import ReactJSONViewer from "react-json-view";
 import style from "../process.module.scss";
 import { getUserInfo, isAdmin } from "../../../../common/user";
 import { saveFile } from "../../../../common/util";
@@ -21,7 +22,7 @@ interface DataType {
     create_time: string;
     update_time: string;
     state: number;
-    modules: object;
+    modules: string;
     state_name: string;
 }
 
@@ -34,6 +35,8 @@ export default function Api() {
     const [pagination, setPagination] = useState({});
     const [curRow, setCurRow] = useState<DataType | null>(null);
     const [keyword, setKeyword] = useState<string>("");
+    const [moduleInfoVisible, setModuleInfoVisible] = useState(false);
+    const [moduleInfo, setModuleInfo] = useState({});
     const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
         apiProcessNum: number;
         setApiProcessNum: Function;
@@ -147,8 +150,21 @@ export default function Api() {
             title: "模块配置",
             width: 170,
             ellipsis: true,
-            dataIndex: "modules",
-            key: "modules"
+            // dataIndex: "modules",
+            key: "modules",
+            render: (v: DataType) => {
+                return (
+                    <Tag
+                        color="#1677ff"
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => {
+                            setModuleInfo(JSON.parse(v.modules));
+                            setModuleInfoVisible(true);
+                        }}>
+                        查看
+                    </Tag>
+                );
+            }
         },
         {
             title: "状态",
@@ -273,6 +289,16 @@ export default function Api() {
                 dataSource={data}
                 onChange={onChange}
             />
+            <Modal
+                width={700}
+                title="模块配置信息"
+                open={moduleInfoVisible}
+                footer={null}
+                onCancel={() => {
+                    setModuleInfoVisible(false);
+                }}>
+                <ReactJSONViewer displayDataTypes={false} theme="ashes" src={moduleInfo}></ReactJSONViewer>
+            </Modal>
         </>
     );
 }
