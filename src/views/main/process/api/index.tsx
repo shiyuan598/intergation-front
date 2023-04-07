@@ -1,11 +1,11 @@
 import React, { useState, Fragment, useEffect, useContext } from "react";
-import { Input, Button, Table, message } from "antd";
+import { Input, Button, Table, message, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import style from "../process.module.scss";
-import { isAdmin } from "../../../../common/user";
+import { getUserInfo, isAdmin } from "../../../../common/user";
 import { saveFile } from "../../../../common/util";
 import type { ColumnsType } from "antd/es/table";
-import { apiProcess } from "../../../../api";
+import { apiProcess, tools as toolsApi } from "../../../../api";
 import { ModalContext, DataContext } from "../../../../context";
 import AddApiModal from "./addApi";
 
@@ -20,9 +20,9 @@ interface DataType {
     creator: string;
     create_time: string;
     update_time: string;
-    status: number;
+    state: number;
     modules: object;
-    status_name: string;
+    state_name: string;
 }
 
 export default function Api() {
@@ -34,7 +34,7 @@ export default function Api() {
     const [pagination, setPagination] = useState({});
     const [curRow, setCurRow] = useState<DataType | null>(null);
     const [keyword, setKeyword] = useState<string>("");
-    const { apiProcessNum } = useContext(DataContext) as {
+    const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
         apiProcessNum: number;
         setApiProcessNum: Function;
     };
@@ -65,15 +65,37 @@ export default function Api() {
         Object.keys(modules).forEach((k) => {
             res[k] = {
                 url: modules[k].url,
-                version: modules[k].version || "",
-            }
+                version: modules[k].version || ""
+            };
         });
         return res;
-    }
+    };
     const edit = (e: any, v: any) => {
         e.stopPropagation();
         setCurRow(v);
         setModalShow(true);
+    };
+    const trigger = (e: any, v: any) => {
+        e.stopPropagation();
+        toolsApi
+            .jenkinsBuildJob({
+                process_type: 1,
+                process_id: v.id,
+                job: v.job,
+                parameters: JSON.stringify(
+                    {
+                        project: v.project,
+                        version: v.version,
+                        build_type: v.build_type,
+                        modules: pickModuleInfo(v.modules)
+                    },
+                    null,
+                    4
+                )
+            })
+            .then(() => {
+                setApiProcessNum(apiProcessNum + 1);
+            });
     };
 
     const onSearch = (value: string) => {
@@ -136,30 +158,55 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            dataIndex: "state_name",
             key: "state_name",
-            sorter: true
+            sorter: true,
+            render: (v: DataType) => {
+                if (v.state === 0) {
+                    return <Tag color="#666">{v.state_name}</Tag>;
+                } else if (v.state === 1) {
+                    return <Tag color="#48D1CC">{v.state_name}</Tag>;
+                } else if (v.state === 2) {
+                    return <Tag color="#1677ff">{v.state_name}</Tag>;
+                } else if (v.state === 3) {
+                    return <Tag color="#00b578">{v.state_name}</Tag>;
+                } else if (v.state === 4) {
+                    return <Tag color="#ff3141">{v.state_name}</Tag>;
+                } else if (v.state === 5) {
+                    return <Tag color="#ff8f1f">{v.state_name}</Tag>;
+                }
+            }
         },
-        isAdmin()
-            ? {
-                  title: "操作",
-                  width: 120,
-                  dataIndex: "",
-                  key: "x",
-                  render: (v: DataType) => {
-                      return (
-                          <Fragment>
-                              <a href="#!" onClick={(e) => exportConfig(e, v)}>
-                                  导出
-                              </a>
-                              <a href="#!" onClick={(e) => edit(e, v)}>
-                                  编辑
-                              </a>
-                          </Fragment>
-                      );
-                  }
-              }
-            : {}
+        {
+            title: "操作",
+            width: 120,
+            dataIndex: "",
+            key: "x",
+            render: (v: DataType) => {
+                return (
+                    <Fragment>
+                        {v.state > 0 && (
+                            <a href="#!" onClick={(e) => exportConfig(e, v)}>
+                                导出
+                            </a>
+                        )}
+                        {getUserInfo().id === Number(v.creator) && (
+                            <>
+                                {v.state === 0 && (
+                                    <a href="#!" onClick={(e) => edit(e, v)}>
+                                        编辑
+                                    </a>
+                                )}
+                                {v.state === 1 && (
+                                    <a href="#!" onClick={(e) => trigger(e, v)}>
+                                        执行
+                                    </a>
+                                )}
+                            </>
+                        )}
+                    </Fragment>
+                );
+            }
+        }
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {

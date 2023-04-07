@@ -2,4 +2,4 @@
 npm run build
 
 2.拷贝文件到服务器
-scp -r build/ zhito@172.16.18.223:/home/zhito/car_manager_platform/vehicle-resource-frontend
+scp -r build/ zhito@172.16.18.223:/home/zhito/app/

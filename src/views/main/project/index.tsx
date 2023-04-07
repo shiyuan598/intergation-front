@@ -85,6 +85,18 @@ export default function App() {
             sorter: true
         },
         {
+            title: "Job",
+            dataIndex: "job_name",
+            key: "job_name",
+            sorter: true
+        },
+        {
+            title: "Artifactory",
+            dataIndex: "artifacts_path",
+            key: "artifacts_path",
+            sorter: true
+        },
+        {
             title: "更新时间",
             dataIndex: "update_time",
             key: "update_time",

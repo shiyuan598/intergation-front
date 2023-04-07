@@ -3,9 +3,9 @@ import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "an
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
 import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
-import { getUserInfo } from "../../../../common/user";
+import { getUserInfo, isAdmin } from "../../../../common/user";
 
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 
 const App = (props: any = {}) => {
     const { data: editFormData } = props;
@@ -27,8 +27,19 @@ const App = (props: any = {}) => {
         curRow: object;
         setCurRow: Function;
     };
-    const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
-    const [moduleList, setModuleList] = useState([] as { id: number; name: string; versions: { name: string }[] }[]);
+    const [projectList, setProjectList] = useState(
+        [] as { id: number; name: string; job_name: string; artifacts_path: string }[]
+    );
+    const [project, setProject] = useState();
+    const [apiVersionList, setApiVersionList] = useState([] as string[]);
+    const [moduleList, setModuleList] = useState(
+        [] as {
+            id: number;
+            name: string;
+            tags: { name: string }[];
+            branches: { name: string }[];
+        }[]
+    );
     const { appProcessNum, setAppProcessNum } = useContext(DataContext) as {
         appProcessNum: number;
         setAppProcessNum: Function;
@@ -49,8 +60,26 @@ const App = (props: any = {}) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (!project) {
+            return;
+        }
+        // 获取所有的接口版本
+        let path = projectList.find((item) => item.id === Number(project))?.artifacts_path;
+        console.info(project, path);
+        path &&
+            toolsApi.getArtifactFiles(path).then((v) => {
+                setApiVersionList(v.data);
+            });
+    }, [projectList, project]);
+
     const projectSelectChange = (v: any) => {
+        setProject(v);
+        if (!v) {
+            return;
+        }
         setModuleLoading(true);
+        // 获取所有模块信息
         projectApi.modulesAll(v, 1).then((m) => {
             // 默认选择所有模块
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
@@ -63,6 +92,8 @@ const App = (props: any = {}) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
+                            tags: branches_tags[project_name_with_namespace].tag,
+                            branches: branches_tags[project_name_with_namespace].branch,
                             versions: [
                                 ...branches_tags[project_name_with_namespace].branch,
                                 ...branches_tags[project_name_with_namespace].tag
@@ -98,7 +129,6 @@ const App = (props: any = {}) => {
     };
 
     const onFinish = (values: any) => {
-        console.info("values:", values);
         // 生成模块配置参数：
         // 识别出所有的模块属性及其对应的版本号
         let res: any = { modules: {} };
@@ -114,7 +144,7 @@ const App = (props: any = {}) => {
                         release_note: values["release_note." + name] || ""
                     };
                     // 如果版本信息有为空的项，状态设为0
-                    if (!!res.modules[name].version) {
+                    if (!res.modules[name].version) {
                         state = 0;
                     }
                 }
@@ -124,11 +154,11 @@ const App = (props: any = {}) => {
                 res[k] = values[k];
             }
         });
-        console.info(res.modules);
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
-        res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
+        res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
         res.creator = getUserInfo().id;
+        res.type = isAdmin() ? 1 : 2;
         setLoading(true);
         let p = null;
         if (editFormData) {
@@ -188,7 +218,11 @@ const App = (props: any = {}) => {
                         labelCol={{ span: 3 }}
                         wrapperCol={{ span: 6 }}
                         onFinish={onFinish}
-                        initialValues={{ ...initial, "release_note.zmap": Math.random(), "release_note.zloc": Math.random() }}
+                        initialValues={{
+                            ...initial,
+                            "release_note.zmap": Math.random(),
+                            "release_note.zloc": Math.random()
+                        }}
                         autoComplete="off">
                         <Form.Item
                             label="项目"
@@ -198,7 +232,6 @@ const App = (props: any = {}) => {
                             <Select
                                 disabled={!!editFormData}
                                 placeholder="请选择项目"
-                                allowClear
                                 onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id + ""}>
@@ -215,7 +248,7 @@ const App = (props: any = {}) => {
                             label="构建类型"
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
-                            <Select placeholder="请选择构建类型" allowClear>
+                            <Select placeholder="请选择构建类型">
                                 <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
                                 <Option value={"Release"}>Release</Option>
                                 <Option value={"Debug"}>Debug</Option>
@@ -226,10 +259,12 @@ const App = (props: any = {}) => {
                             label="接口版本"
                             required={true}
                             rules={[{ required: true, message: "请选择接口版本" }]}>
-                            <Select placeholder="请选择接口版本" allowClear>
-                                <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
-                                <Option value={"Release"}>Release</Option>
-                                <Option value={"Debug"}>Debug</Option>
+                            <Select placeholder="请选择接口版本">
+                                {apiVersionList.map((v) => (
+                                    <Option key={v} value={v}>
+                                        {v}
+                                    </Option>
+                                ))}
                             </Select>
                         </Form.Item>
 
@@ -247,11 +282,24 @@ const App = (props: any = {}) => {
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
                                         <Select placeholder="请选择版本号" allowClear>
-                                            {item.versions.map((v) => (
-                                                <Option key={item.name + v} value={v}>
-                                                    {v + ""}
-                                                </Option>
-                                            ))}
+                                            {item.tags.length && (
+                                                <OptGroup label="Tag">
+                                                    {item.tags.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
+                                            {item.branches.length && (
+                                                <OptGroup label="Branch">
+                                                    {item.branches.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
                                         </Select>
                                     </Form.Item>
                                     <Form.Item

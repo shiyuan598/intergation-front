@@ -5,7 +5,7 @@ import { ModalContext, DataContext } from "../../../../context";
 import { apiProcess as apiProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
 import { getUserInfo } from "../../../../common/user";
 
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 
 const App = (props: any = {}) => {
     const { data: editFormData } = props;
@@ -28,7 +28,9 @@ const App = (props: any = {}) => {
         setCurRow: Function;
     };
     const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
-    const [moduleList, setModuleList] = useState([] as { id: number; name: string; versions: { name: string }[] }[]);
+    const [moduleList, setModuleList] = useState(
+        [] as { id: number; name: string; tags: { name: string }[]; branches: { name: string }[] }[]
+    );
     const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
         apiProcessNum: number;
         setApiProcessNum: Function;
@@ -63,10 +65,8 @@ const App = (props: any = {}) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
-                            versions: [
-                                ...branches_tags[project_name_with_namespace].branch,
-                                ...branches_tags[project_name_with_namespace].tag
-                            ]
+                            tags: branches_tags[project_name_with_namespace].tag,
+                            branches: branches_tags[project_name_with_namespace].branch
                         };
                     });
                     setModuleList(modules);
@@ -111,7 +111,7 @@ const App = (props: any = {}) => {
                         ...getModuleInfo(name, moduleList),
                         version: values["version." + name] || ""
                     };
-                    if (!!res.modules[name].version) {
+                    if (!res.modules[name].version) {
                         state = 0;
                     }
                 }
@@ -124,7 +124,7 @@ const App = (props: any = {}) => {
 
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
-        res.job_name = projectList.find((item) => (item.id = values.project))?.job_name;
+        res.job_name = projectList.find((item) => (item.id === Number(values.project)))?.job_name;
         res.creator = getUserInfo().id;
         // 接口集成数据处理流程：
         // 1.把module.以及version.开头的属性都放入modules中, 需要增加url属性，转为字符串存入数据库，
@@ -200,7 +200,6 @@ const App = (props: any = {}) => {
                             <Select
                                 disabled={!!editFormData}
                                 placeholder="请选择项目"
-                                allowClear
                                 onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id + ""}>
@@ -217,7 +216,7 @@ const App = (props: any = {}) => {
                             label="构建类型"
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
-                            <Select placeholder="请选择构建类型" allowClear>
+                            <Select placeholder="请选择构建类型">
                                 <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
                                 <Option value={"Release"}>Release</Option>
                                 <Option value={"Debug"}>Debug</Option>
@@ -245,11 +244,24 @@ const App = (props: any = {}) => {
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
                                         <Select placeholder="请选择版本号" allowClear>
-                                            {item.versions.map((v) => (
-                                                <Option key={item.name + v} value={v}>
-                                                    {v + ""}
-                                                </Option>
-                                            ))}
+                                            {item.tags.length && (
+                                                <OptGroup label="Tag">
+                                                    {item.tags.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
+                                            {item.branches.length && (
+                                                <OptGroup label="Branch">
+                                                    {item.branches.map((v) => (
+                                                        <Option key={item.name + v} value={v}>
+                                                            {v + ""}
+                                                        </Option>
+                                                    ))}
+                                                </OptGroup>
+                                            )}
                                         </Select>
                                     </Form.Item>
                                 </Form.Item>

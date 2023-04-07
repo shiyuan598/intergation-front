@@ -1,8 +1,9 @@
 import { get, post, del } from "./fetchTool";
 
-function list(pageNo: number, name: string = "", order = "", seq = "") {
+function list(pageNo: number, type: number = 1, name: string = "", order = "", seq = "") {
     return get("/app_process/list", {
         pageNo,
+        type,
         name: encodeURIComponent(name),
         order,
         seq
