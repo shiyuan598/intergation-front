@@ -57,10 +57,12 @@ export default function Api() {
         let base: any = {};
         let common: any = {};
         Object.keys(modules).forEach((k) => {
+            // 只保留url和version属性
             let item = {
                 url: modules[k].url,
                 version: modules[k].version || ""
             };
+            // 分为base和common两部分
             if (modules[k].type === 0) {
                 base[k] = item;
             } else if (modules[k].type === 2) {
@@ -127,7 +129,7 @@ export default function Api() {
             title: "描述",
             width: 120,
             ellipsis: true,
-            dataIndex: "release_note",
+            dataIndex: "desc",
             key: "release_note"
         },
         {
