@@ -84,8 +84,7 @@ const App = (props: any = {}) => {
             const rawData = raw.data.filter((item: any) => item.type !== 1);
 
             // 默认选择所有模块
-            !editFormData &&
-                rawData.forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            !editFormData && rawData.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
                 .getGitBranchesTagsOfMultiProjects(rawData.map((item: any) => item.git.split(":")[1].split(".git")[0]))
@@ -273,87 +272,95 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 Base信息
                             </Divider>
-                            {moduleList.filter((item:any) => item.type === 0).map((item) => (
-                                <Form.Item key={item.id} noStyle>
-                                    <Form.Item
-                                        name={"module." + item.name}
-                                        valuePropName="checked"
-                                        style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
-                                        <Checkbox disabled>{item.name}</Checkbox>
-                                    </Form.Item>
-                                    <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" showSearch allowClear>
-                                            {item.tags.length && (
-                                                <OptGroup label="Tag">
-                                                    {item.tags.map((v) => (
-                                                        <Option key={item.name + v} value={v}>
-                                                            {v + ""}
-                                                        </Option>
-                                                    ))}
-                                                </OptGroup>
-                                            )}
-                                            {item.branches.length && (
-                                                <OptGroup label="Branch">
-                                                    {item.branches.map((v) => (
-                                                        <Option key={item.name + v} value={v}>
-                                                            {v + ""}
-                                                        </Option>
-                                                    ))}
-                                                </OptGroup>
-                                            )}
-                                        </Select>
-                                    </Form.Item>
-                                    {/* <Form.Item
+                            {moduleList
+                                .filter((item: any) => item.type === 0)
+                                .map((item) => (
+                                    <Form.Item key={item.id} noStyle>
+                                        <Form.Item
+                                            name={"module." + item.name}
+                                            valuePropName="checked"
+                                            style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
+                                            <Checkbox disabled>{item.name}</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name={"version." + item.name}
+                                            label="版本号"
+                                            required={true}
+                                            rules={[{ required: true, message: "请选择版本号" }]}>
+                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                                {item.tags.length && (
+                                                    <OptGroup label="Tag">
+                                                        {item.tags.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                                {item.branches.length && (
+                                                    <OptGroup label="Branch">
+                                                        {item.branches.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                        {/* <Form.Item
                                         style={{ width: 0, height: 0 }}
                                         name={"release_note." + item.name}
                                         required={true}
                                         label="Release Note">
                                         <Input hidden placeholder="release note" />
                                     </Form.Item> */}
-                                </Form.Item>
-                            ))}
+                                    </Form.Item>
+                                ))}
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模块信息
                             </Divider>
-                            {moduleList.filter((item:any) => item.type === 2).map((item) => (
-                                <Form.Item key={item.id} noStyle>
-                                    <Form.Item
-                                        name={"module." + item.name}
-                                        valuePropName="checked"
-                                        style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
-                                        <Checkbox>{item.name}</Checkbox>
+                            {moduleList
+                                .filter((item: any) => item.type === 2)
+                                .map((item) => (
+                                    <Form.Item key={item.id} noStyle>
+                                        <Form.Item
+                                            name={"module." + item.name}
+                                            valuePropName="checked"
+                                            style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
+                                            <Checkbox>{item.name}</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item name={"version." + item.name} label="版本号">
+                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                                {item.tags.length && (
+                                                    <OptGroup label="Tag">
+                                                        {item.tags.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                                {item.branches.length && (
+                                                    <OptGroup label="Branch">
+                                                        {item.branches.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item
+                                            style={{ width: 0, height: 0 }}
+                                            name={"release_note." + item.name}
+                                            required={true}
+                                            label="Release Note">
+                                            <Input hidden placeholder="release note" />
+                                        </Form.Item>
                                     </Form.Item>
-                                    <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" showSearch allowClear>
-                                            {item.tags.length && (
-                                                <OptGroup label="Tag">
-                                                    {item.tags.map((v) => (
-                                                        <Option key={item.name + v} value={v}>
-                                                            {v + ""}
-                                                        </Option>
-                                                    ))}
-                                                </OptGroup>
-                                            )}
-                                            {item.branches.length && (
-                                                <OptGroup label="Branch">
-                                                    {item.branches.map((v) => (
-                                                        <Option key={item.name + v} value={v}>
-                                                            {v + ""}
-                                                        </Option>
-                                                    ))}
-                                                </OptGroup>
-                                            )}
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        style={{ width: 0, height: 0 }}
-                                        name={"release_note." + item.name}
-                                        required={true}
-                                        label="Release Note">
-                                        <Input hidden placeholder="release note" />
-                                    </Form.Item>
-                                </Form.Item>
-                            ))}
+                                ))}
                         </Spin>
                     </Form>
                 </Spin>
