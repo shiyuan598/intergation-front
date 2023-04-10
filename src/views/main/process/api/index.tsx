@@ -176,9 +176,9 @@ export default function Api() {
                 if (v.state === 0) {
                     return <Tag color="#666">{v.state_name}</Tag>;
                 } else if (v.state === 1) {
-                    return <Tag color="#48D1CC">{v.state_name}</Tag>;
+                    return <Tag color="#48d1cc">{v.state_name}</Tag>;
                 } else if (v.state === 2) {
-                    return <Tag color="#1677ff">{v.state_name}</Tag>;
+                    return <Tag color="#177ddc">{v.state_name}</Tag>;
                 } else if (v.state === 3) {
                     return <Tag color="#00b578">{v.state_name}</Tag>;
                 } else if (v.state === 4) {

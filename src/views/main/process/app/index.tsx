@@ -25,6 +25,7 @@ interface DataType {
     state: number;
     modules: string;
     state_name: string;
+    jenkins_url: string;
 }
 
 export default function Api() {
@@ -181,9 +182,9 @@ export default function Api() {
                 if (v.state === 0) {
                     return <Tag color="#666666">{v.state_name}</Tag>;
                 } else if (v.state === 1) {
-                    return <Tag color="#48D1CC">{v.state_name}</Tag>;
+                    return <Tag color="#48d1cc">{v.state_name}</Tag>;
                 } else if (v.state === 2) {
-                    return <Tag color="#1677ff">{v.state_name}</Tag>;
+                    return <Tag color="#177ddc">{v.state_name}</Tag>;
                 } else if (v.state === 3) {
                     return <Tag color="#00b578">{v.state_name}</Tag>;
                 } else if (v.state === 4) {
@@ -195,7 +196,7 @@ export default function Api() {
         },
         {
             title: "操作",
-            width: 120,
+            width: 180,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {
@@ -204,6 +205,16 @@ export default function Api() {
                         {v.state > 0 && (
                             <a href="#!" onClick={(e) => exportConfig(e, v)}>
                                 导出
+                            </a>
+                        )}
+                        {v.state > 1 && v.jenkins_url && (
+                            <a href={v.jenkins_url} rel="noreferrer" target="_blank">
+                               Jenkins
+                            </a>
+                        )}
+                        {v.state === 3 && (
+                            <a href={v.jenkins_url} rel="noreferrer" target="_blank">
+                               Artifacts
                             </a>
                         )}
                         {getUserInfo().id === Number(v.creator) && (
