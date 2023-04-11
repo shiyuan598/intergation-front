@@ -10,6 +10,12 @@ function list(pageNo: number, user_id:number, name: string = "", order = "", seq
     });
 }
 
+function getModulesInfo(id:number) {
+    return get("/app_process/modules", {
+        id
+    });
+}
+
 function create(values: { [propName: string]: string | number }) {
     return post("/app_process/create", values);
 }
@@ -31,6 +37,7 @@ function remove(id: string) {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     list,
+    getModulesInfo,
     edit,
     create,
     update,

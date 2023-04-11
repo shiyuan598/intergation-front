@@ -1,4 +1,4 @@
-import { get } from "./fetchTool";
+import { get, post } from "./fetchTool";
 
 function list(user_id:number, pageNo: number, order = "", seq = "", state=0) {
     return get("/todo/list", {
@@ -10,7 +10,13 @@ function list(user_id:number, pageNo: number, order = "", seq = "", state=0) {
     });
 }
 
+function handle(values: { [propName: string]: string | number }) {
+    return post("/todo/handle", values);
+}
+
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    list
+    list,
+    handle
 };

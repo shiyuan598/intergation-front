@@ -1,25 +1,24 @@
-import { Input, Table, message } from "antd";
+import { Table, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { Fragment, useState, useEffect, useContext } from "react";
-import style from "./project.module.scss";
 import { ModalContext, DataContext } from "../../../context";
 import { isAdmin, getUserInfo } from "../../../common/user";
-import { todo as todoApi } from "../../../api";
-
-const { Search } = Input;
+import { appProcess as appProcessApi, todo as todoApi } from "../../../api";
+import HandleApp from "./handleApp";
 
 interface DataType {
     id: string;
+    process_id: number;
     username: string;
     name: string;
     role: number;
     roleName: string;
     telephone: number;
+    modules: object;
 }
 
 export default function App() {
     const [modalShow, setModalShow] = useState(false);
-
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [sorter, setSorter] = useState<any>(null);
@@ -30,15 +29,20 @@ export default function App() {
         todoNum: number;
     };
 
-    const edit = (e: any, v: DataType) => {
+    const handle = (e: any, v: DataType) => {
         e.stopPropagation();
-        setCurRow(v);
-        setModalShow(true);
-    };
-
-    const show = (e: any, v: DataType) => {
-        e.stopPropagation();
-        setCurRow(v);
+        setLoading(true);
+        // 获取选择的模块信息
+        appProcessApi.getModulesInfo(v.process_id).then((r) => {
+            const modules = JSON.parse(r.data.modules);
+            setCurRow({
+                ...v,
+                modules
+            });
+            setModalShow(true);
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     const columns: ColumnsType<DataType> = [
@@ -103,9 +107,11 @@ export default function App() {
             render: (v: DataType) => {
                 return (
                     <Fragment>
-                        <a href="#!" onClick={(e) => edit(e, v)}>
-                            处理
-                        </a>
+                        {isAdmin() && (
+                            <a href="#!" onClick={(e) => handle(e, v)}>
+                                处理
+                            </a>
+                        )}
                     </Fragment>
                 );
             }
@@ -163,14 +169,10 @@ export default function App() {
                 columns={columns}
                 dataSource={data}
                 onChange={onChange}
-                onRow={(record) => {
-                    return {
-                        onDoubleClick: (event) => {
-                            show(event, record);
-                        }
-                    };
-                }}
             />
+            <ModalContext.Provider value={{ modalShow, setModalShow }}>
+                {modalShow && <HandleApp data={curRow} />}
+            </ModalContext.Provider>
         </>
     );
 }

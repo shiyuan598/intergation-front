@@ -221,7 +221,7 @@ export default function Api() {
                         )}
                         {getUserInfo().id === Number(v.creator) && (
                             <>
-                                {v.state === 0 && (
+                                {v.state <= 1 && (
                                     <a href="#!" onClick={(e) => edit(e, v)}>
                                         编辑
                                     </a>

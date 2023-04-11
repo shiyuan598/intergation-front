@@ -24,8 +24,6 @@ const App = (props: any = {}) => {
     const { modalShow, setModalShow } = useContext(ModalContext) as {
         modalShow: boolean;
         setModalShow: Function;
-        curRow: object;
-        setCurRow: Function;
     };
     const [projectList, setProjectList] = useState(
         [] as { id: number; name: string; job_name: string; artifacts_path: string }[]
@@ -82,7 +80,7 @@ const App = (props: any = {}) => {
         projectApi.modulesAll(v).then((raw) => {
             const rawData = raw.data.filter((item: any) => item.type !== 1);
 
-            // 默认选择所有模块
+            // 创建时默认选择所有模块
             !editFormData && rawData.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
@@ -116,7 +114,7 @@ const App = (props: any = {}) => {
     };
 
     const handleOk = () => {
-        if (!loading) {
+        if (!loading && !moduleLoading) {
             form.submit();
         }
     };
@@ -217,9 +215,7 @@ const App = (props: any = {}) => {
                         wrapperCol={{ span: 6 }}
                         onFinish={onFinish}
                         initialValues={{
-                            ...initial,
-                            "release_note.zmap": Math.random(),
-                            "release_note.zloc": Math.random()
+                            ...initial
                         }}
                         autoComplete="off">
                         <Form.Item
@@ -229,7 +225,7 @@ const App = (props: any = {}) => {
                             rules={[{ required: true, message: "请选择项目" }]}>
                             <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange}>
                                 {projectList.map((item) => (
-                                    <Option key={item.id} value={item.id + ""}>
+                                    <Option key={item.id} value={item.id}>
                                         {item.name}
                                     </Option>
                                 ))}

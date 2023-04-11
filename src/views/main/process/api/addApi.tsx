@@ -24,8 +24,6 @@ const App = (props: any = {}) => {
     const { modalShow, setModalShow } = useContext(ModalContext) as {
         modalShow: boolean;
         setModalShow: Function;
-        curRow: object;
-        setCurRow: Function;
     };
     const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
     const [moduleList, setModuleList] = useState(
@@ -54,7 +52,7 @@ const App = (props: any = {}) => {
     const projectSelectChange = (v: any) => {
         setModuleLoading(true);
         projectApi.modulesAll(v).then((m) => {
-            // 默认选择所有模块
+            // 创建时默认选择所有模块
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
@@ -87,7 +85,7 @@ const App = (props: any = {}) => {
     };
 
     const handleOk = () => {
-        if (!loading) {
+        if (!loading && !moduleLoading) {
             form.submit();
         }
     };
@@ -202,7 +200,7 @@ const App = (props: any = {}) => {
                                 placeholder="请选择项目"
                                 onChange={projectSelectChange}>
                                 {projectList.map((item) => (
-                                    <Option key={item.id} value={item.id + ""}>
+                                    <Option key={item.id} value={item.id}>
                                         {item.name}
                                     </Option>
                                 ))}
