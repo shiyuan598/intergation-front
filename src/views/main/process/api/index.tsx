@@ -225,7 +225,7 @@ export default function Api() {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
         apiProcess
-            .list(pageNo, name, order, seq)
+            .list(pageNo, getUserInfo().id, name, order, seq)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);

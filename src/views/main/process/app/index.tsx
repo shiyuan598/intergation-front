@@ -242,9 +242,8 @@ export default function Api() {
     const getData = (pageNo: number, name: string = "", sorter: any) => {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
-        let type = isAdmin() ? 1 : 2;
         appProcess
-            .list(pageNo, type, name, order, seq)
+            .list(pageNo, getUserInfo().id, name, order, seq)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);

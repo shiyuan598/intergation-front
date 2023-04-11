@@ -1,8 +1,9 @@
 import { get, post, del } from "./fetchTool";
 
-function list(pageNo: number, name: string = "", order = "", seq = "") {
+function list(pageNo: number, user_id:number, name: string = "", order = "", seq = "") {
     return get("/api_process/list", {
         pageNo,
+        user_id,
         name: encodeURIComponent(name),
         order,
         seq

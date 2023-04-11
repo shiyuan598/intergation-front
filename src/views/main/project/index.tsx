@@ -62,7 +62,6 @@ export default function App() {
     const show = (e: any, v: DataType) => {
         e.stopPropagation();
         setCurRow(v);
-        console.info("double click");
         history.push("/main/module", {...v});
     };
     const editModalCallback = (res: boolean) => {

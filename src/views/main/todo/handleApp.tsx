@@ -1,9 +1,9 @@
-// 应用集成表单
+// 处理应用集成表单
 import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
-import { ModalContext, DataContext } from "../../../../context";
-import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
-import { getUserInfo, isAdmin } from "../../../../common/user";
+import { ModalContext, DataContext } from "../../../context";
+import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../api";
+import { getUserInfo, isAdmin } from "../../../common/user";
 
 const { Option, OptGroup } = Select;
 

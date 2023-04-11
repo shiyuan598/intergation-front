@@ -38,8 +38,6 @@ export default function App() {
         setUserNum: Function;
     };
 
-    console.info("route params:", history.location.state);
-
     const backToProject = () => {
         history.push("/main/project");
     };

@@ -3,7 +3,7 @@ import type { ColumnsType } from "antd/es/table";
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import style from "./project.module.scss";
 import { ModalContext, DataContext } from "../../../context";
-import { isAdmin } from "../../../common/user";
+import { isAdmin, getUserInfo } from "../../../common/user";
 import { todo as todoApi } from "../../../api";
 
 const { Search } = Input;
@@ -62,7 +62,7 @@ export default function App() {
         },
         {
             title: "模块",
-            dataIndex: "module",
+            dataIndex: "module_name",
             key: "module",
             sorter: true
         },
@@ -116,7 +116,7 @@ export default function App() {
         let { field: order = "", order: seq = "" } = sorter || {};
         setLoading(true);
         todoApi
-            .list(pageNo, order, seq, state)
+            .list(getUserInfo().id, pageNo, order, seq, state)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);
