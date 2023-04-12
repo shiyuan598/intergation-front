@@ -62,7 +62,7 @@ export default function App() {
     const show = (e: any, v: DataType) => {
         e.stopPropagation();
         setCurRow(v);
-        history.push("/main/module", {...v});
+        history.push("/main/module", { ...v });
     };
     const editModalCallback = (res: boolean) => {
         if (res) {
@@ -120,12 +120,16 @@ export default function App() {
             render: (v: DataType) => {
                 return (
                     <Fragment>
-                        <a href="#!" onClick={(e) => del(e, v)}>
-                            删除
-                        </a>
-                        <a href="#!" onClick={(e) => edit(e, v)}>
-                            编辑
-                        </a>
+                        {isAdmin() && (
+                            <>
+                                <a href="#!" onClick={(e) => del(e, v)}>
+                                    删除
+                                </a>
+                                <a href="#!" onClick={(e) => edit(e, v)}>
+                                    编辑
+                                </a>
+                            </>
+                        )}
                         <a href="#!" onClick={(e) => show(e, v)}>
                             查看模块
                         </a>

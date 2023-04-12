@@ -79,7 +79,8 @@ const App = (props: any = {}) => {
         if (match) {
             return {
                 url: match.git,
-                owner: match.owner
+                owner: match.owner,
+                owner_name: match.owner_name
             };
         }
         return null;

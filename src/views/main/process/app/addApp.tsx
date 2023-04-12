@@ -107,7 +107,8 @@ const App = (props: any = {}) => {
             return {
                 type: match.type,
                 url: match.git,
-                owner: match.owner
+                owner: match.owner,
+                owner_name: match.owner_name
             };
         }
         return null;

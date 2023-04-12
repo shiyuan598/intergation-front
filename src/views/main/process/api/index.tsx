@@ -159,7 +159,26 @@ export default function Api() {
                         color="#1677ff"
                         style={{ cursor: "pointer" }}
                         onClick={(e) => {
-                            setModuleInfo(JSON.parse(v.modules));
+                            const modules = JSON.parse(v.modules);
+                            let base: any = {};
+                            let common: any = {};
+                            Object.keys(modules).forEach((k) => {
+                                let item = {
+                                    owner: modules[k].owner_name,
+                                    url: modules[k].url,
+                                    version: modules[k].version || "",
+                                    release_note: modules[k].release_note || "",
+                                };
+                                // 分为base和common两部分
+                                if (modules[k].type === 0) {
+                                    base[k] = item;
+                                } else if (modules[k].type === 2) {
+                                    common[k] = item;
+                                }
+                            });
+                            setModuleInfo({
+                                base, modules: common
+                            });
                             setModuleInfoVisible(true);
                         }}>
                         查看
@@ -266,7 +285,7 @@ export default function Api() {
     return (
         <>
             <div className={style.tools}>
-                <Button type="primary" icon={<PlusOutlined />} onClick={createApi}>
+                <Button disabled type="primary" icon={<PlusOutlined />} onClick={createApi}>
                     创建接口集成
                 </Button>
                 <ModalContext.Provider value={{ modalShow, setModalShow }}>

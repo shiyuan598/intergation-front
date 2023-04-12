@@ -111,23 +111,25 @@ export default function App() {
         //     key: "telephone",
         //     sorter: true
         // },
-        {
-            title: "操作",
-            dataIndex: "",
-            key: "x",
-            render: (v: DataType) => {
-                return (
-                    <Fragment>
-                        <a href="#!" onClick={(e) => del(e, v)}>
-                            删除
-                        </a>
-                        <a href="#!" onClick={(e) => edit(e, v)}>
-                            编辑
-                        </a>
-                    </Fragment>
-                );
-            }
-        }
+        isAdmin()
+            ? {
+                  title: "操作",
+                  dataIndex: "",
+                  key: "x",
+                  render: (v: DataType) => {
+                      return (
+                          <Fragment>
+                              <a href="#!" onClick={(e) => del(e, v)}>
+                                  删除
+                              </a>
+                              <a href="#!" onClick={(e) => edit(e, v)}>
+                                  编辑
+                              </a>
+                          </Fragment>
+                      );
+                  }
+              }
+            : {}
     ];
 
     const getData = (projectId: number, pageNo: number, name: string = "", sorter: any) => {
