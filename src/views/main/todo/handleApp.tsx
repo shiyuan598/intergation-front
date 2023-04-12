@@ -250,7 +250,7 @@ const App = (props: any = {}) => {
                                 .filter((item: any) => item.type === 2)
                                 .map((item) => (
                                     <>
-                                        <Form.Item key={item.id} noStyle>
+                                        <Form.Item key={item.id + item.name} noStyle>
                                             <Form.Item
                                                 name={"module." + item.name}
                                                 valuePropName="checked"
@@ -294,7 +294,7 @@ const App = (props: any = {}) => {
                                             </Form.Item>
                                         </Form.Item>
                                         {item.name === editFormData.module_name && (
-                                            <Form.Item key={item.id + "note"} name="module_release_note" noStyle>
+                                            <Form.Item key={item.id + item.name + "_note"} name="module_release_note" noStyle>
                                                 <Form.Item
                                                     required
                                                     rules={[{ required: true, message: "请输入Release Note" }]}

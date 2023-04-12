@@ -58,17 +58,17 @@ const App = (props: any = {}) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (!project) {
-            return;
-        }
-        // 获取所有的接口版本
-        let path = projectList.find((item) => item.id === Number(project))?.artifacts_path;
-        path &&
-            toolsApi.getArtifactFiles(path).then((v) => {
-                setApiVersionList(v.data);
-            });
-    }, [projectList, project]);
+    // useEffect(() => {
+    //     if (!project) {
+    //         return;
+    //     }
+    //     // 获取所有的接口版本
+    //     let path = projectList.find((item) => item.id === Number(project))?.artifacts_path;
+    //     path &&
+    //         toolsApi.getArtifactFiles(path).then((v) => {
+    //             setApiVersionList(v.data);
+    //         });
+    // }, [projectList, project]);
 
     const projectSelectChange = (v: any) => {
         setProject(v);
