@@ -26,6 +26,8 @@ export default function HeaderComp() {
     <div className={headerStyle.header}>
       <div className={headerStyle.logo}></div>
       <div className={headerStyle.menu}>软件集成平台</div>
+      {/* TODO:查看所以用户信息的隐藏功能 */}
+      <button style={{marginLeft: "45%", opacity: 0}} onClick={()=>{window.open(window.globalConfig.api + "/user/list/all", "_blank")}}>查看所有用户</button>
       <Popover
         placement="leftTop"
         content={
