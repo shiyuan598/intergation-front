@@ -3,7 +3,7 @@ import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "an
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
 import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
-import { getUserInfo, isAdmin } from "../../../../common/user";
+import { getUserInfo } from "../../../../common/user";
 
 const { Option, OptGroup } = Select;
 
@@ -28,8 +28,8 @@ const App = (props: any = {}) => {
     const [projectList, setProjectList] = useState(
         [] as { id: number; name: string; job_name: string; artifacts_path: string }[]
     );
-    const [project, setProject] = useState();
-    const [apiVersionList, setApiVersionList] = useState([] as string[]);
+    // const [project, setProject] = useState();
+    // const [apiVersionList, setApiVersionList] = useState([] as string[]);
     const [moduleList, setModuleList] = useState(
         [] as {
             id: number;
@@ -71,7 +71,7 @@ const App = (props: any = {}) => {
     // }, [projectList, project]);
 
     const projectSelectChange = (v: any) => {
-        setProject(v);
+        // setProject(v);
         if (!v) {
             return;
         }
@@ -154,7 +154,8 @@ const App = (props: any = {}) => {
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
         res.creator = getUserInfo().id;
-        res.type = isAdmin() ? 1 : 2;
+        res.type = projectList.find((item:any) => item.id === values.project && item.owner === getUserInfo().id) ? 0 : 1; // 通过是否为项目负责人来判断
+        
         setLoading(true);
         let p = null;
         if (editFormData) {
@@ -190,8 +191,6 @@ const App = (props: any = {}) => {
             // } else {
             //     resolve("");
             // }
-            // TODO:
-            // 版本号不能重复
         });
     };
 

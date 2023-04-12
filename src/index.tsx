@@ -4,18 +4,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.scss";
 
-// 模拟登录
-localStorage.setItem(
-    "userInfo",
-    JSON.stringify({
-        id: 1,
-        name: "超级用户",
-        role: 1,
-        telephone: "13161507755",
-        token: "2023032902085784707394775",
-        username: "SuperVip"
-    })
-);
+// // 模拟登录
+// localStorage.setItem(
+//     "userInfo",
+//     JSON.stringify({
+//         id: 1,
+//         name: "超级用户",
+//         role: 0,
+//         telephone: "13161507755",
+//         token: "2023032902085784707394775",
+//         username: "SuperVip"
+//     })
+// );
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(

@@ -2,7 +2,7 @@ import { Table, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { ModalContext, DataContext } from "../../../context";
-import { isAdmin, getUserInfo } from "../../../common/user";
+import { getUserInfo } from "../../../common/user";
 import { appProcess as appProcessApi, todo as todoApi } from "../../../api";
 import HandleApp from "./handleApp";
 
@@ -15,6 +15,7 @@ interface DataType {
     roleName: string;
     telephone: number;
     modules: object;
+    handler: number;
 }
 
 export default function App() {
@@ -72,13 +73,13 @@ export default function App() {
         },
         {
             title: "发起人",
-            dataIndex: "creator",
+            dataIndex: "creator_name",
             key: "creator",
             sorter: true
         },
         {
             title: "处理人",
-            dataIndex: "handler",
+            dataIndex: "handler_name",
             key: "handler",
             sorter: true
         },
@@ -107,7 +108,7 @@ export default function App() {
             render: (v: DataType) => {
                 return (
                     <Fragment>
-                        {isAdmin() && (
+                        {getUserInfo().id === v.handler && (
                             <a href="#!" onClick={(e) => handle(e, v)}>
                                 处理
                             </a>

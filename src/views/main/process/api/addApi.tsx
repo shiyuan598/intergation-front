@@ -40,6 +40,7 @@ const App = (props: any = {}) => {
 
     useEffect(() => {
         // 获取所有的project
+        // TODO: 查询自己是模块负责人的项目
         projectApi.listAll().then((v) => {
             setProjectList(v.data);
         });
@@ -164,8 +165,6 @@ const App = (props: any = {}) => {
             // } else {
             //     resolve("");
             // }
-            // TODO:
-            // 版本号不能重复
         });
     };
 

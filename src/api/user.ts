@@ -1,7 +1,7 @@
 import { get, post, del } from "./fetchTool";
 
 function getUser(pageNo: number, name: string = "", order = "", seq = "") {
-    return get("/data/user.json", {
+    return get("/user/list", {
         pageNo,
         name: encodeURIComponent(name),
         order,

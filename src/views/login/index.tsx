@@ -25,11 +25,7 @@ export default function App() {
                 setUserInfo(v.data[0]);
                 // 将用户信息写入本地存储
                 localStorage.setItem("userInfo", JSON.stringify(v.data[0]));
-                if (v.data[0].role === 1 || v.data[0].role === 3) {
-                    history.push("/main");
-                } else if (v.data[0].role === 2) {
-                    history.push("/mobile");
-                }
+                history.push("/main");
             } else {
                 Toast.show({
                     icon: 'fail',
@@ -41,12 +37,8 @@ export default function App() {
         });
     }
     useEffect(() => {
-      if (userInfo && userInfo.role) {
-        if (userInfo.role === 1 || userInfo.role === 3) {
-            history.push("/main");
-        } else if (userInfo.role === 2) {
-            history.push("/mobile");
-        }
+      if (userInfo && userInfo.username) {
+        history.push("/main");
       }
     }, [userInfo, history]);
     
@@ -83,9 +75,9 @@ export default function App() {
                         </Form.Item>
                     </Form>
                     <div className='footer-btn'>
-                        <Button className='register-btn' color='primary' fill='none' onClick={()=>{
+                        {/* <Button className='register-btn' color='primary' fill='none' onClick={()=>{
                             history.push("/register");
-                        }}>注册用户</Button>
+                        }}>注册用户</Button> */}
                         <Button className='reset-btn' color='primary' fill='none' onClick={()=>{
                             history.push("/resetPassword");
                         }}>忘记密码</Button>

@@ -51,12 +51,8 @@ export default function App() {
         });
     }
     useEffect(() => {
-        if (userInfo && userInfo.role) {
-            if (userInfo.role === 1 || userInfo.role === 3) {
-                history.push("/main");
-            } else if (userInfo.role === 2) {
-                history.push("/mobile");
-            }
+        if (userInfo && userInfo.username) {
+            history.push("/main");
         }
     }, [userInfo, history]);
 

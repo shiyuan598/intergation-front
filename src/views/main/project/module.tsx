@@ -101,16 +101,16 @@ export default function App() {
         },
         {
             title: "负责人",
-            dataIndex: "owner",
+            dataIndex: "owner_name",
             key: "owner",
             sorter: true
         },
-        {
-            title: "电话",
-            dataIndex: "telephone",
-            key: "telephone",
-            sorter: true
-        },
+        // {
+        //     title: "电话",
+        //     dataIndex: "telephone",
+        //     key: "telephone",
+        //     sorter: true
+        // },
         {
             title: "操作",
             dataIndex: "",

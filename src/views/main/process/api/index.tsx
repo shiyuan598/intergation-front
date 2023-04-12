@@ -3,7 +3,7 @@ import { Modal, Input, Button, Table, message, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ReactJSONViewer from "react-json-view";
 import style from "../process.module.scss";
-import { getUserInfo, isAdmin } from "../../../../common/user";
+import { getUserInfo } from "../../../../common/user";
 import { saveFile } from "../../../../common/util";
 import type { ColumnsType } from "antd/es/table";
 import { apiProcess, tools as toolsApi } from "../../../../api";
@@ -18,7 +18,8 @@ interface DataType {
     version: string;
     build_type: string;
     release_note: string;
-    creator: string;
+    creator: number;
+    creator_name: string;
     create_time: string;
     update_time: string;
     state: number;
@@ -128,7 +129,7 @@ export default function Api() {
             title: "创建者",
             width: 120,
             ellipsis: true,
-            dataIndex: "creator",
+            dataIndex: "creator_name",
             key: "creator",
             sorter: true
         },
@@ -265,16 +266,12 @@ export default function Api() {
     return (
         <>
             <div className={style.tools}>
-                {isAdmin() && (
-                    <>
-                        <Button type="primary" icon={<PlusOutlined />} onClick={createApi}>
-                            创建接口集成
-                        </Button>
-                        <ModalContext.Provider value={{ modalShow, setModalShow }}>
-                            {modalShow && <AddApiModal data={curRow} />}
-                        </ModalContext.Provider>
-                    </>
-                )}
+                <Button type="primary" icon={<PlusOutlined />} onClick={createApi}>
+                    创建接口集成
+                </Button>
+                <ModalContext.Provider value={{ modalShow, setModalShow }}>
+                    {modalShow && <AddApiModal data={curRow} />}
+                </ModalContext.Provider>
                 <Search placeholder="输入关键字后按Enter键查询" onSearch={onSearch} enterButton />
             </div>
             <Table
