@@ -12,7 +12,7 @@ function getGitTags(project_name_with_namespace = "") {
     });
 }
 
-function getGitBranchesTagsOfMultiProjects(projects = "[]") {
+function getGitBranchesTagsOfMultiProjects(projects = "") {
     return get("/gitlab/multiple/branch_tag", {
         projects
     });

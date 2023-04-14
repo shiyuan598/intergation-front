@@ -80,7 +80,7 @@ const App = (props: any = {}) => {
         }
         setModuleLoading(true);
         // 获取所有模块信息
-        projectApi.modulesAll(v).then((raw) => {
+        projectApi.modulesAll(v, "0,2").then((raw) => {
             // 过滤掉没有勾选的模块
             let keys = Object.keys(editFormData.modules);
             const rawData = raw.data.filter((item: any) => item.type !== 1 && keys.includes(item.name));

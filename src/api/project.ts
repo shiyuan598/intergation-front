@@ -22,8 +22,8 @@ function modules(projectId: number, pageNo: number, name: string = "", order = "
     });
 }
 
-function modulesAll(projectId: number) {
-    return get(`/project/${projectId}/module_all`);
+function modulesAll(projectId: number, type="") {
+    return get(`/project/${projectId}/module_all`, {type});
 }
 
 function create(values: { [propName: string]: string | number }) {

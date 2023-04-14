@@ -52,7 +52,7 @@ const App = (props: any = {}) => {
 
     const projectSelectChange = (v: any) => {
         setModuleLoading(true);
-        projectApi.modulesAll(v).then((m) => {
+        projectApi.modulesAll(v, "0,1").then((m) => {
             // 创建时默认选择所有模块
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag

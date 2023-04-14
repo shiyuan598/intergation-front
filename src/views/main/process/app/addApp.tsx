@@ -77,7 +77,7 @@ const App = (props: any = {}) => {
         }
         setModuleLoading(true);
         // 获取所有模块信息
-        projectApi.modulesAll(v).then((raw) => {
+        projectApi.modulesAll(v, "0,2").then((raw) => {
             const rawData = raw.data.filter((item: any) => item.type !== 1);
 
             // 创建时默认选择所有模块
@@ -155,8 +155,10 @@ const App = (props: any = {}) => {
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
         res.creator = getUserInfo().id;
-        res.type = projectList.find((item:any) => item.id === values.project && item.owner === getUserInfo().id) ? 0 : 1; // 通过是否为项目负责人来判断
-        
+        res.type = projectList.find((item: any) => item.id === values.project && item.owner === getUserInfo().id)
+            ? 0
+            : 1; // 通过是否为项目负责人来判断
+
         setLoading(true);
         let p = null;
         if (editFormData) {

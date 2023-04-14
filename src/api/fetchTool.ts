@@ -33,7 +33,7 @@ const getAuthorization = () => {
     }
     return Authorization ? Authorization : "null";
 };
-export const get = (url: string, params?: { [propName: string]: string | number }, blob: boolean = false) => {
+export const get = (url: string, params?: { [propName: string]: string | number | number[] }, blob: boolean = false) => {
     url = baseUrl + url;
     if (params) {
         const paramStr = Object.keys(params)
