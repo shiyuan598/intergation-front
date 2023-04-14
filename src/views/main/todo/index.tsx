@@ -49,14 +49,14 @@ export default function App() {
     const columns: ColumnsType<DataType> = [
         {
             title: "流程类型",
-            dataIndex: "type",
+            dataIndex: "type_name",
             key: "type",
             sorter: true
         },
         {
-            title: "流程Id",
-            dataIndex: "process_id",
-            key: "process_id",
+            title: "项目名称",
+            dataIndex: "project_name",
+            key: "project_name",
             sorter: true
         },
         {
