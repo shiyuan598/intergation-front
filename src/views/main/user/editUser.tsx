@@ -37,6 +37,18 @@ const App = (props: any) => {
         });
     };
 
+    const checkName = (rule: any, value: any, cb: any) => {
+        return new Promise((resolve, reject) => {
+            if (!value) {
+                reject("请输入名称");
+            }
+            // 数字、字母、下划线
+            if (!/[\u4e00-\u9fa5\dA-Za-z]{2,}/.test(value)) {
+                reject("中文、数字、字母组成，至少两字符");
+            }
+        });
+    };
+
     const checkTelephone = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
             if (!value) {
@@ -84,12 +96,11 @@ const App = (props: any) => {
                                 placeholder="请选择角色"
                                 allowClear
                             >
-                                <Option value={1}>管理员</Option>
-                                <Option value={2}>司机</Option>
-                                <Option value={3}>普通用户</Option>
+                                <Option value={0}>平台管理员</Option>
+                                <Option value={1}>普通用户</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item name="name" label="名称" required={true} rules={[{ required: true, message: '请输入名称' }]}>
+                        <Form.Item name="name" label="名称" required={true}  rules={[{ validator: checkName }]}>
                             <Input placeholder='请输入名称' />
                         </Form.Item>
                         <Form.Item name="telephone" label="手机号" required={true} rules={[{ validator: checkTelephone }]}>

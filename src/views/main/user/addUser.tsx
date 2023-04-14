@@ -43,10 +43,14 @@ const App = () => {
         });
     };
 
-    const checkName = (rule: any, value: any, cb: any) => {
+    const checkUserName = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
             if (!value) {
                 reject("请输入用户名");
+            }
+            // 数字、字母、下划线
+            if (!/^[a-zA-Z]\w{1,15}$/.test(value)) {
+                reject("字母开头，数字、字母、下划线组成，至少两字符");
             }
             userApi.checkNoExist(value).then(v => {
                 if (v.data) {
@@ -57,6 +61,18 @@ const App = () => {
             }).catch(() => {
                 reject("验证用户名出错");
             });
+        });
+    };
+
+    const checkName = (rule: any, value: any, cb: any) => {
+        return new Promise((resolve, reject) => {
+            if (!value) {
+                reject("请输入名称");
+            }
+            // 数字、字母、下划线
+            if (!/[\u4e00-\u9fa5\dA-Za-z]{2,}/.test(value)) {
+                reject("中文、数字、字母组成，至少两字符");
+            }
         });
     };
 
@@ -90,7 +106,7 @@ const App = () => {
                             label="用户名"
                             name="username"
                             required={true}
-                            rules={[{ validator: checkName }]}
+                            rules={[{ validator: checkUserName }]}
                         >
                             <Input placeholder='请输入用户名' />
                         </Form.Item>
@@ -107,12 +123,11 @@ const App = () => {
                                 placeholder="请选择角色"
                                 allowClear
                             >
-                                <Option value={1}>管理员</Option>
-                                <Option value={2}>司机</Option>
-                                <Option value={3}>普通用户</Option>
+                                <Option value={0}>平台管理员</Option>
+                                <Option value={1}>普通用户</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item name="name" label="名称" required={true} rules={[{ required: true, message: '请输入名称' }]}>
+                        <Form.Item name="name" label="名称" required={true}  rules={[{ validator: checkName }]}>
                             <Input placeholder='请输入名称' />
                         </Form.Item>
                         <Form.Item name="telephone" label="手机号" required={true} rules={[{ validator: checkTelephone }]}>
