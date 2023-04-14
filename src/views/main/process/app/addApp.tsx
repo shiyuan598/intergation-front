@@ -1,5 +1,5 @@
 // 应用集成表单
-import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "antd";
+import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider, Empty } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
 import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
@@ -30,6 +30,14 @@ const App = (props: any = {}) => {
     );
     // const [project, setProject] = useState();
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
+    const [baseList, setBaseList] = useState(
+        [] as {
+            id: number;
+            name: string;
+            tags: { name: string }[];
+            branches: { name: string }[];
+        }[]
+    );
     const [moduleList, setModuleList] = useState(
         [] as {
             id: number;
@@ -43,7 +51,8 @@ const App = (props: any = {}) => {
         setAppProcessNum: Function;
     };
     const [loading, setLoading] = useState(false); // loading
-    const [moduleLoading, setModuleLoading] = useState(false); // loading
+    const [baseLoading, setBaseLoading] = useState(false); // baseModuleLoading
+    const [moduleLoading, setModuleLoading] = useState(false); // moduleLoading
 
     const [form] = Form.useForm();
 
@@ -75,19 +84,38 @@ const App = (props: any = {}) => {
         if (!v) {
             return;
         }
+        setBaseLoading(true);
         setModuleLoading(true);
         // 获取所有模块信息
         projectApi.modulesAll(v, "0,2").then((raw) => {
-            const rawData = raw.data.filter((item: any) => item.type !== 1);
+            const rawBase = raw.data.filter((item: any) => item.type === 0);
+            const rawModule = raw.data.filter((item: any) => item.type === 2);
 
             // 创建时默认选择所有模块
-            !editFormData && rawData.forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            !editFormData && [...rawBase, ...rawModule].forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(rawData.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .getGitBranchesTagsOfMultiProjects(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
-                    const modules = rawData.map((v: any) => {
+                    const modules = rawBase.map((v: any) => {
+                        const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
+                        return {
+                            ...v,
+                            tags: branches_tags[project_name_with_namespace].tag,
+                            branches: branches_tags[project_name_with_namespace].branch
+                        };
+                    });
+                    setBaseList(modules);
+                })
+                .finally(() => setBaseLoading(false));
+            toolsApi
+                .getGitBranchesTagsOfMultiProjects(
+                    rawModule.map((item: any) => item.git.split(":")[1].split(".git")[0])
+                )
+                .then((r) => {
+                    const branches_tags = r.data;
+                    const modules = rawModule.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
@@ -115,7 +143,7 @@ const App = (props: any = {}) => {
     };
 
     const handleOk = () => {
-        if (!loading && !moduleLoading) {
+        if (!loading && !baseLoading && !moduleLoading) {
             form.submit();
         }
     };
@@ -136,7 +164,7 @@ const App = (props: any = {}) => {
                     // 选择了该模块则添加到结果中并记录版本号等信息
                     let name = k.substring("module.".length);
                     res.modules[name] = {
-                        ...getModuleInfo(name, moduleList),
+                        ...getModuleInfo(name, [...baseList, ...moduleList]),
                         version: values["version." + name] || "",
                         release_note: values["release_note." + name] || ""
                     };
@@ -265,11 +293,12 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入描述" />
                         </Form.Item>
 
-                        <Spin spinning={moduleLoading}>
+                        <Spin spinning={baseLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 Base信息
                             </Divider>
-                            {moduleList
+                            {!baseList.length && <Empty description="请先选择项目" />}
+                            {baseList
                                 .filter((item: any) => item.type === 0)
                                 .map((item) => (
                                     <Form.Item key={item.id} noStyle>
@@ -314,9 +343,12 @@ const App = (props: any = {}) => {
                                     </Form.Item> */}
                                     </Form.Item>
                                 ))}
+                        </Spin>
+                        <Spin spinning={moduleLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模块信息
                             </Divider>
+                            {!moduleList.length && <Empty description="请先选择项目"/>}
                             {moduleList
                                 .filter((item: any) => item.type === 2)
                                 .map((item) => (
