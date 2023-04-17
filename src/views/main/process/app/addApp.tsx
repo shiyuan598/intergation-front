@@ -189,7 +189,7 @@ const App = (props: any = {}) => {
 
         setLoading(true);
         let p = null;
-        if (editFormData) {
+        if (editFormData?.opt === "edit") {
             p = appProcessApi.edit({
                 id: initial.id,
                 ...res
@@ -230,7 +230,7 @@ const App = (props: any = {}) => {
             <Modal
                 width={740}
                 destroyOnClose={true}
-                title={`${editFormData ? "编辑" : "创建"}应用集成`}
+                title={`${editFormData?.opt === "edit" ? "编辑" : "创建"}应用集成`}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}

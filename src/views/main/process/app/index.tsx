@@ -18,6 +18,7 @@ interface DataType {
     project_name: string;
     version: string;
     build_type: string;
+    type: number;
     api_version: string;
     creator: number;
     creator_name: string;
@@ -79,9 +80,16 @@ export default function Api() {
             modules: common
         };
     };
+    // 编辑
     const edit = (e: any, v: any) => {
         e.stopPropagation();
-        setCurRow(v);
+        setCurRow({...v, opt: "edit"});
+        setModalShow(true);
+    };
+    // 复制，初始值和编辑一样，去掉id,type,version,desc
+    const copy = (e: any, v: any) => {
+        e.stopPropagation();
+        setCurRow({...v, opt: "copy", id: undefined, type:undefined, version: undefined, desc: undefined});
         setModalShow(true);
     };
     const trigger = (e: any, v: any) => {
@@ -166,7 +174,7 @@ export default function Api() {
                                     owner: modules[k].owner_name,
                                     url: modules[k].url,
                                     version: modules[k].version || "",
-                                    release_note: modules[k].release_note || "",
+                                    release_note: modules[k].release_note || ""
                                 };
                                 // 分为base和common两部分
                                 if (modules[k].type === 0) {
@@ -176,7 +184,8 @@ export default function Api() {
                                 }
                             });
                             setModuleInfo({
-                                base, modules: common
+                                base,
+                                modules: common
                             });
                             setModuleInfoVisible(true);
                         }}>
@@ -216,9 +225,16 @@ export default function Api() {
                 return (
                     <Fragment>
                         {v.state > 0 && (
-                            <a href="#!" onClick={(e) => exportConfig(e, v)}>
-                                导出
-                            </a>
+                            <>
+                                <a href="#!" onClick={(e) => exportConfig(e, v)}>
+                                    导出
+                                </a>
+                                {
+                                    v.type === 0 && (<a href="#!" onClick={(e) => copy(e, v)}>
+                                    复制
+                                </a>)
+                                }
+                            </>
                         )}
                         {v.state > 1 && v.jenkins_url && (
                             <a href={v.jenkins_url} rel="noreferrer" target="_blank">
