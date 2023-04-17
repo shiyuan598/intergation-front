@@ -28,6 +28,7 @@ interface DataType {
     modules: string;
     state_name: string;
     jenkins_url: string;
+    artifacts_url: string;
 }
 
 export default function Api() {
@@ -241,11 +242,11 @@ export default function Api() {
                                 Jenkins
                             </a>
                         )}
-                        {/* {v.state === 3 && (
-                            <a href={v.jenkins_url} rel="noreferrer" target="_blank">
+                        {v.state === 3 && (
+                            <a href={v.artifacts_url} rel="noreferrer" target="_blank">
                                 Artifacts
                             </a>
-                        )} */}
+                        )}
                         {getUserInfo().id === Number(v.creator) && (
                             <>
                                 {v.state <= 1 && (

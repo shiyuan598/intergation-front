@@ -25,7 +25,7 @@ const App = (props: any = {}) => {
         modalShow: boolean;
         setModalShow: Function;
     };
-    const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string }[]);
+    const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string; artifacts_url: string }[]);
     const [moduleList, setModuleList] = useState(
         [] as { id: number; name: string; tags: { name: string }[]; branches: { name: string }[] }[]
     );
@@ -125,6 +125,7 @@ const App = (props: any = {}) => {
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => (item.id === Number(values.project)))?.job_name;
+        res.artifacts_url = projectList.find((item) => item.id === Number(values.project))?.artifacts_url;
         res.creator = getUserInfo().id;
         // 接口集成数据处理流程：
         // 1.把module.以及version.开头的属性都放入modules中, 需要增加url属性，转为字符串存入数据库，

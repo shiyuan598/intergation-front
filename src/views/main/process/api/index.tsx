@@ -25,6 +25,8 @@ interface DataType {
     state: number;
     modules: string;
     state_name: string;
+    jenkins_url: string;
+    artifacts_url: string;
 }
 
 export default function Api() {

@@ -26,7 +26,7 @@ const App = (props: any = {}) => {
         setModalShow: Function;
     };
     const [projectList, setProjectList] = useState(
-        [] as { id: number; name: string; job_name: string; artifacts_path: string }[]
+        [] as { id: number; name: string; job_name: string; artifacts_path: string; artifacts_url: string;  owner: number }[]
     );
     // const [project, setProject] = useState();
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
@@ -182,8 +182,9 @@ const App = (props: any = {}) => {
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
         res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
+        res.artifacts_url = projectList.find((item) => item.id === Number(values.project))?.artifacts_url;
         res.creator = getUserInfo().id;
-        res.type = projectList.find((item: any) => item.id === values.project && item.owner === getUserInfo().id)
+        res.type = projectList.find((item) => item.id === values.project && item.owner === getUserInfo().id)
             ? 0
             : 1; // 通过是否为项目负责人来判断
 
