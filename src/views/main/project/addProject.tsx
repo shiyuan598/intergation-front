@@ -78,15 +78,24 @@ const App = (props: any = {}) => {
                 reject("大写字母开头，数字、大写字母、下划线组成，至少4字符");
             }
             resolve("");
-            // userApi.checkNoExist(value).then(v => {
-            //     if (v.data) {
-            //         resolve("");
-            //     } else {
-            //         reject("用户名已存在");
-            //     }
-            // }).catch(() => {
-            //     reject("验证用户名出错");
-            // });
+        });
+    };
+
+    const checkExist = (rule: any, value: any, cb: any) => {
+        return new Promise((resolve, reject) => {
+            projectApi
+                .checkNameNoExist(value)
+                .then((v) => {
+                    console.info("校验结果：", v.data);
+                    if (v.data) {
+                        resolve("");
+                    } else {
+                        reject("名称已存在");
+                    }
+                })
+                .catch(() => {
+                    reject("验证名称出错");
+                });
         });
     };
 
@@ -94,7 +103,7 @@ const App = (props: any = {}) => {
         <Fragment>
             <Modal
                 destroyOnClose={true}
-                title={ editFormData ? "编辑项目" : "创建项目" }
+                title={editFormData ? "编辑项目" : "创建项目"}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -109,7 +118,12 @@ const App = (props: any = {}) => {
                         onFinish={onFinish}
                         initialValues={editFormData}
                         autoComplete="off">
-                        <Form.Item label="名称" name="name" required={true} rules={[{ validator: checkName }]}>
+                        <Form.Item
+                            label="名称"
+                            name="name"
+                            required={true}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[{ validator: checkName }, { validator: checkExist, validateTrigger: "onBlur" }]}>
                             <Input placeholder="请输入项目名称，如GSL4_X86" />
                         </Form.Item>
                         <Form.Item
@@ -144,7 +158,11 @@ const App = (props: any = {}) => {
                             rules={[{ required: true, message: "请选择负责人" }]}>
                             <Select placeholder="请选择负责人" allowClear showSearch>
                                 {userList.length &&
-                                    userList.map((item) => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                                    userList.map((item) => (
+                                        <Option key={item.id} value={item.id}>
+                                            {item.name}
+                                        </Option>
+                                    ))}
                             </Select>
                         </Form.Item>
                     </Form>

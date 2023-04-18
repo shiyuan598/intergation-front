@@ -26,7 +26,14 @@ const App = (props: any = {}) => {
         setModalShow: Function;
     };
     const [projectList, setProjectList] = useState(
-        [] as { id: number; name: string; job_name: string; artifacts_path: string; artifacts_url: string;  owner: number }[]
+        [] as {
+            id: number;
+            name: string;
+            job_name: string;
+            artifacts_path: string;
+            artifacts_url: string;
+            owner: number;
+        }[]
     );
     // const [project, setProject] = useState();
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
@@ -92,7 +99,8 @@ const App = (props: any = {}) => {
             const rawModule = raw.data.filter((item: any) => item.type === 2);
 
             // 创建时默认选择所有模块
-            !editFormData && [...rawBase, ...rawModule].forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            !editFormData &&
+                [...rawBase, ...rawModule].forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
                 .getGitBranchesTagsOfMultiProjects(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
@@ -184,9 +192,7 @@ const App = (props: any = {}) => {
         res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
         res.artifacts_url = projectList.find((item) => item.id === Number(values.project))?.artifacts_url;
         res.creator = getUserInfo().id;
-        res.type = projectList.find((item) => item.id === values.project && item.owner === getUserInfo().id)
-            ? 0
-            : 1; // 通过是否为项目负责人来判断
+        res.type = projectList.find((item) => item.id === values.project && item.owner === getUserInfo().id) ? 0 : 1; // 通过是否为项目负责人来判断
 
         setLoading(true);
         let p = null;
@@ -220,6 +226,27 @@ const App = (props: any = {}) => {
                 reject("版本号格式不正确");
             }
             resolve("");
+        });
+    };
+
+    const checkVersionExist = (rule: any, value: any, cb: any) => {
+        const project = form.getFieldValue("project");
+        if (!project) {
+            return Promise.resolve("");
+        }
+        return new Promise((resolve, reject) => {
+            appProcessApi
+                .checkVersionNoExist(project, getUserInfo().id, value)
+                .then((v) => {
+                    if (v.data) {
+                        resolve("");
+                    } else {
+                        reject("版本号已存在");
+                    }
+                })
+                .catch(() => {
+                    reject("验证版本号出错");
+                });
         });
     };
 
@@ -259,7 +286,16 @@ const App = (props: any = {}) => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="版本号" name="version" required={true} validateTrigger="onBlur" rules={[{ validator: checkVersion }]}>
+                        <Form.Item
+                            label="版本号"
+                            name="version"
+                            required={true}
+                            dependencies={["project"]}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[
+                                { validator: checkVersion },
+                                { validator: checkVersionExist, validateTrigger: "onBlur" }
+                            ]}>
                             <Input placeholder="请输入版本号" />
                         </Form.Item>
                         <Form.Item
@@ -295,7 +331,9 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 Base信息
                             </Divider>
-                            {!baseList.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />}
+                            {!baseList.length && (
+                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />
+                            )}
                             {baseList
                                 .filter((item: any) => item.type === 0)
                                 .map((item) => (
@@ -346,7 +384,9 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模块信息
                             </Divider>
-                            {!moduleList.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目"/>}
+                            {!moduleList.length && (
+                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />
+                            )}
                             {moduleList
                                 .filter((item: any) => item.type === 2)
                                 .map((item) => (

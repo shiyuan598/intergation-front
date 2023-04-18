@@ -26,6 +26,10 @@ function modulesAll(projectId: number, type = "") {
     return get(`/project/${projectId}/module_all`, { type });
 }
 
+function checkNameNoExist(name:string) {
+    return get("/project/check/noexist", {name})
+}
+
 function create(values: { [propName: string]: string | number }) {
     return post("/project/create", values);
 }
@@ -46,6 +50,7 @@ export default {
     listAll,
     modules,
     modulesAll,
+    checkNameNoExist,
     create,
     edit,
     remove

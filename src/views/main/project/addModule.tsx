@@ -81,15 +81,23 @@ const App = (props: any = {}) => {
                 reject("字母开头，数字、字母、下划线组成，至少两字符");
             }
             resolve("");
-            // userApi.checkNoExist(value).then(v => {
-            //     if (v.data) {
-            //         resolve("");
-            //     } else {
-            //         reject("用户名已存在");
-            //     }
-            // }).catch(() => {
-            //     reject("验证用户名出错");
-            // });
+        });
+    };
+
+    const checkExist = (rule: any, value: any, cb: any) => {
+        return new Promise((resolve, reject) => {
+            moduleApi
+                .checkNameNoExist(project, value)
+                .then((v) => {
+                    if (v.data) {
+                        resolve("");
+                    } else {
+                        reject("名称已存在");
+                    }
+                })
+                .catch(() => {
+                    reject("验证名称出错");
+                });
         });
     };
 
@@ -110,7 +118,7 @@ const App = (props: any = {}) => {
         <Fragment>
             <Modal
                 destroyOnClose={true}
-                title={ editFormData ? "编辑模块" : "创建模块" }
+                title={editFormData ? "编辑模块" : "创建模块"}
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -125,7 +133,12 @@ const App = (props: any = {}) => {
                         onFinish={onFinish}
                         initialValues={editFormData}
                         autoComplete="off">
-                        <Form.Item label="名称" name="name" required={true} validateTrigger="onBlur" rules={[{ validator: checkName }]}>
+                        <Form.Item
+                            label="名称"
+                            name="name"
+                            required={true}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[{ validator: checkName }, { validator: checkExist, validateTrigger: "onBlur" }]}>
                             <Input placeholder="请输入模块名称" />
                         </Form.Item>
                         <Form.Item
@@ -139,12 +152,7 @@ const App = (props: any = {}) => {
                                 <Option value={2}>应用集成</Option>
                             </Select>
                         </Form.Item>
-                        <Form.Item
-                            name="git"
-                            label="git地址"
-                            required={true}
-                            validateTrigger="onBlur"
-                            rules={[{validator: checkGit}]}>
+                        <Form.Item name="git" label="git地址" required={true} rules={[{ validator: checkGit }]}>
                             <Input placeholder="请输入git ssh地址" />
                         </Form.Item>
                         <Form.Item
@@ -154,7 +162,11 @@ const App = (props: any = {}) => {
                             rules={[{ required: true, message: "请选择负责人" }]}>
                             <Select placeholder="请选择负责人" allowClear showSearch>
                                 {userList.length &&
-                                    userList.map((item) => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                                    userList.map((item) => (
+                                        <Option key={item.id} value={item.id}>
+                                            {item.name}
+                                        </Option>
+                                    ))}
                             </Select>
                         </Form.Item>
                     </Form>

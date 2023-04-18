@@ -1,6 +1,6 @@
 import { get, post, del } from "./fetchTool";
 
-function list(pageNo: number, user_id:number, name: string = "", order = "", seq = "") {
+function list(pageNo: number, user_id: number, name: string = "", order = "", seq = "") {
     return get("/app_process/list", {
         pageNo,
         user_id,
@@ -10,9 +10,17 @@ function list(pageNo: number, user_id:number, name: string = "", order = "", seq
     });
 }
 
-function getModulesInfo(id:number) {
+function getModulesInfo(id: number) {
     return get("/app_process/modules", {
         id
+    });
+}
+
+function checkVersionNoExist(project: number, creator: number, version: string) {
+    return get("/app_process/version/noexist", {
+        project,
+        creator,
+        version
     });
 }
 
@@ -40,6 +48,7 @@ export default {
     getModulesInfo,
     edit,
     create,
+    checkVersionNoExist,
     update,
     remove
 };
