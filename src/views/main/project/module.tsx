@@ -8,6 +8,8 @@ import showDeleteConfirm from "../../../components/common/deleteConfirm";
 import { ModalContext, DataContext } from "../../../context";
 import { isAdmin } from "../../../common/user";
 import { project as projectApi, module as moduleApi } from "../../../api";
+import AddModule from "./addModule";
+import { updateVariableDeclarationList } from "typescript";
 
 const { Search } = Input;
 
@@ -31,15 +33,26 @@ export default function App() {
     const [sorter, setSorter] = useState<any>(null);
     const [pageNo, setPageNo] = useState(1);
     const [pagination, setPagination] = useState({});
-    const [editModalShow, setEditModalShow] = useState(false);
     const [curRow, setCurRow] = useState<DataType | null>(null);
-    const { userNum, setUserNum } = useContext(DataContext) as {
-        userNum: number;
-        setUserNum: Function;
+    const { moduleNum, setModuleNum } = useContext(DataContext) as {
+        moduleNum: number;
+        setModuleNum: Function;
     };
+
+    // 没有参数时回退到项目列表
+    useEffect(() => {
+        if (!routeParam) {
+            history.push("/main/project");
+        }
+    }, [routeParam, history]);
 
     const backToProject = () => {
         history.push("/main/project");
+    };
+
+    const createModule = () => {
+        setCurRow(null);
+        setModalShow(true);
     };
 
     const del = (e: any, v: DataType) => {
@@ -47,13 +60,13 @@ export default function App() {
         showDeleteConfirm({
             title: "删除用户",
             onOk: () => {
-                // userApi.deleteUser(v.id).then((v) => {
-                //     if (v.code === 0) {
-                //         setUserNum(userNum + 1);
-                //     } else {
-                //         message.error(v.msg);
-                //     }
-                // });
+                moduleApi.remove(v.id).then((v) => {
+                    if (v.code === 0) {
+                        setModuleNum(moduleNum + 1);
+                    } else {
+                        message.error(v.msg);
+                    }
+                });
             }
         });
     };
@@ -61,17 +74,7 @@ export default function App() {
     const edit = (e: any, v: DataType) => {
         e.stopPropagation();
         setCurRow(v);
-        setEditModalShow(true);
-    };
-
-    const show = (e: any, v: DataType) => {
-        e.stopPropagation();
-        setCurRow(v);
-    };
-    const editModalCallback = (res: boolean) => {
-        if (res) {
-            setUserNum(userNum + 1);
-        }
+        setModalShow(true);
     };
 
     const columns: ColumnsType<DataType> = [
@@ -82,7 +85,7 @@ export default function App() {
             sorter: true
         },
         {
-            title: "集成类型",
+            title: "模块类型",
             dataIndex: "type_name",
             key: "type_name",
             sorter: true
@@ -178,7 +181,7 @@ export default function App() {
 
     useEffect(() => {
         getData(routeParam.id, pageNo, keyword, sorter);
-    }, [routeParam, pageNo, userNum, keyword, sorter]);
+    }, [routeParam, pageNo, moduleNum, keyword, sorter]);
 
     const onSearch = (value: string) => {
         setKeyword(value);
@@ -193,11 +196,14 @@ export default function App() {
             </Breadcrumb>
             <div className={style.tools}>
                 {isAdmin() && (
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => {}}>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={createModule}>
                         添加模块
                     </Button>
                 )}
                 <Search placeholder="输入关键字后按Enter键查询" onSearch={onSearch} enterButton />
+                <ModalContext.Provider value={{ modalShow, setModalShow }}>
+                    {modalShow && <AddModule data={curRow} project={routeParam.id} />}
+                </ModalContext.Provider>
             </div>
             <Table
                 loading={loading}

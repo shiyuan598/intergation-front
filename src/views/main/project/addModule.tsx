@@ -1,21 +1,21 @@
 import { Modal, Form, Input, Select, message, Spin } from "antd";
 import React, { Fragment, useEffect, useContext, useState } from "react";
 import { ModalContext, DataContext } from "../../../context";
-import { project as projectApi, user as userApi } from "../../../api";
+import { module as moduleApi, user as userApi } from "../../../api";
 
 const { Option } = Select;
 
 const App = (props: any = {}) => {
-    const { data: editFormData } = props;
+    const { data: editFormData, project } = props;
     const { modalShow, setModalShow } = useContext(ModalContext) as {
         modalShow: boolean;
         setModalShow: Function;
         curRow: object;
         setCurRow: Function;
     };
-    const { projectNum, setProjectNum } = useContext(DataContext) as {
-        projectNum: number;
-        setProjectNum: Function;
+    const { moduleNum, setModuleNum } = useContext(DataContext) as {
+        moduleNum: number;
+        setModuleNum: Function;
     };
     const [loading, setLoading] = useState(false); // loading
 
@@ -48,9 +48,12 @@ const App = (props: any = {}) => {
         setLoading(true);
         let p = null;
         if (!editFormData) {
-            p = projectApi.create(values);
+            p = moduleApi.create({
+                ...values,
+                project
+            });
         } else {
-            p = projectApi.edit({
+            p = moduleApi.edit({
                 ...values,
                 id: editFormData.id
             });
@@ -59,7 +62,7 @@ const App = (props: any = {}) => {
             if (v.code === 0) {
                 setModalShow(false);
                 form.resetFields();
-                setProjectNum(projectNum + 1);
+                setModuleNum(moduleNum + 1);
             } else {
                 message.error(v.msg);
             }
@@ -71,11 +74,11 @@ const App = (props: any = {}) => {
     const checkName = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
             if (!value) {
-                reject("请输入项目名称");
+                reject("请输入名称");
             }
             // 数字、字母、下划线
-            if (!/^[A-Z][A-Z0-9_]{3,}$/.test(value)) {
-                reject("大写字母开头，数字、大写字母、下划线组成，至少4字符");
+            if (!/^[a-zA-Z]\w{1,15}$/.test(value)) {
+                reject("字母开头，数字、字母、下划线组成，至少两字符");
             }
             resolve("");
             // userApi.checkNoExist(value).then(v => {
@@ -90,11 +93,24 @@ const App = (props: any = {}) => {
         });
     };
 
+    const checkGit = (rule: any, value: any, cb: any) => {
+        return new Promise((resolve, reject) => {
+            if (!value) {
+                reject("请输入git ssh地址");
+            }
+            // 数字、字母、下划线
+            if (!/^git@[\w.]+:[\w./-]+\.git$/.test(value)) {
+                reject("git ssh地址");
+            }
+            resolve("");
+        });
+    };
+
     return (
         <Fragment>
             <Modal
                 destroyOnClose={true}
-                title={ editFormData ? "编辑项目" : "创建项目" }
+                title={ editFormData ? "编辑模块" : "创建模块" }
                 open={modalShow}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -109,33 +125,27 @@ const App = (props: any = {}) => {
                         onFinish={onFinish}
                         initialValues={editFormData}
                         autoComplete="off">
-                        <Form.Item label="名称" name="name" required={true} rules={[{ validator: checkName }]}>
-                            <Input placeholder="请输入项目名称，如GSL4_X86" />
+                        <Form.Item label="名称" name="name" required={true} validateTrigger="onBlur" rules={[{ validator: checkName }]}>
+                            <Input placeholder="请输入模块名称" />
                         </Form.Item>
                         <Form.Item
-                            name="platform"
-                            label="平台"
+                            name="type"
+                            label="模块类型"
                             required={true}
-                            rules={[{ required: true, message: "请选择平台" }]}>
-                            <Select placeholder="请选择平台" allowClear>
-                                <Option value={"X86"}>X86</Option>
-                                <Option value={"V3NA"}>V3NA</Option>
-                                <Option value={"ORIN"}>ORIN</Option>
+                            rules={[{ required: true, message: "请选择模块类型" }]}>
+                            <Select placeholder="请选择模块类型" allowClear>
+                                <Option value={0}>基础模块</Option>
+                                <Option value={1}>接口集成</Option>
+                                <Option value={2}>应用集成</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="job_name"
-                            label="Job"
+                            name="git"
+                            label="git地址"
                             required={true}
-                            rules={[{ required: true, message: "请输入jenkins job名称" }]}>
-                            <Input placeholder="请输入jenkins job名称" />
-                        </Form.Item>
-                        <Form.Item
-                            name="artifacts_path"
-                            label="Artifacts"
-                            required={true}
-                            rules={[{ required: true, message: "请输入artifacts路径" }]}>
-                            <Input placeholder="请输入artifacts路径" />
+                            validateTrigger="onBlur"
+                            rules={[{validator: checkGit}]}>
+                            <Input placeholder="请输入git ssh地址" />
                         </Form.Item>
                         <Form.Item
                             name="owner"
