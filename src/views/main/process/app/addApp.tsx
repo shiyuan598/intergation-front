@@ -211,18 +211,15 @@ const App = (props: any = {}) => {
         });
     };
 
-    const checkName = (rule: any, value: any, cb: any) => {
+    const checkVersion = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
             if (!value) {
                 reject("请输入版本号");
-            } else {
-                resolve("");
             }
-            // if (!/^[vV][._A-Z0-9]{2,15}$/g.test(value)) {
-            //     reject("请以大写字母开头，只能使用大写字母、数字、下划线");
-            // } else {
-            //     resolve("");
-            // }
+            if (!/^[vV]?(\d+)(\.\d+){0,2}(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$/g.test(value)) {
+                reject("版本号格式不正确");
+            }
+            resolve("");
         });
     };
 
@@ -262,7 +259,7 @@ const App = (props: any = {}) => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="版本号" name="version" required={true} rules={[{ validator: checkName }]}>
+                        <Form.Item label="版本号" name="version" required={true} validateTrigger="onBlur" rules={[{ validator: checkVersion }]}>
                             <Input placeholder="请输入版本号" />
                         </Form.Item>
                         <Form.Item
