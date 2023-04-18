@@ -22,8 +22,8 @@ function modules(projectId: number, pageNo: number, name: string = "", order = "
     });
 }
 
-function modulesAll(projectId: number, type="") {
-    return get(`/project/${projectId}/module_all`, {type});
+function modulesAll(projectId: number, type = "") {
+    return get(`/project/${projectId}/module_all`, { type });
 }
 
 function create(values: { [propName: string]: string | number }) {
@@ -31,7 +31,7 @@ function create(values: { [propName: string]: string | number }) {
 }
 
 function edit(values: { [propName: string]: string | number }) {
-    return post("/project/update", values);
+    return post("/project/edit", values);
 }
 
 function remove(id: string) {
@@ -46,7 +46,7 @@ export default {
     listAll,
     modules,
     modulesAll,
-    edit,
     create,
+    edit,
     remove
 };

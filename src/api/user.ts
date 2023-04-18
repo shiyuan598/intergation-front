@@ -9,6 +9,14 @@ function getUser(pageNo: number, name: string = "", order = "", seq = "") {
     });
 }
 
+function getAllUser() {
+    return get("/user/list/all");
+}
+
+function getUserByRole(roleId:number=1) {
+    return get(`/user/role/${roleId}`);
+}
+
 function addUser(values: { [propName: string]: string | number }) {
     return post("/user/add", values);
 }
@@ -64,6 +72,8 @@ function resetPassword(values: { [propName: string]: string | number }) {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     getUser,
+    getAllUser,
+    getUserByRole,
     addUser,
     editUser,
     deleteUser,

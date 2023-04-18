@@ -1,41 +1,22 @@
-import { get, post, del } from "./fetchTool";
+import { post, del } from "./fetchTool";
 
-function list(pageNo: number, name: string = "", order = "", seq = "") {
-    return get("/data/module.json", {
-        pageNo,
-        name: encodeURIComponent(name),
-        order,
-        seq
-    });
-}
-
-function version(name: string = "", order = "", seq = "") {
-    return get("/data/version.json", {
-        name: encodeURIComponent(name),
-        order,
-        seq
-    });
-}
-
-function add(values: { [propName: string]: string | number }) {
-    return post("/project/add", values);
+function create(values: { [propName: string]: string | number }) {
+    return post("/module/create", values);
 }
 
 function edit(values: { [propName: string]: string | number }) {
-    return post("/project/update", values);
+    return post("/module/edit", values);
 }
 
 function remove(id: string) {
-    return del("/project/delete", {
+    return del("/module/delete", {
         id
     });
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    list,
-    version,
+    create,
     edit,
-    add,
     remove
 };

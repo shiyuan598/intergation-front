@@ -8,6 +8,7 @@ import showDeleteConfirm from "../../../components/common/deleteConfirm";
 import { ModalContext, DataContext } from "../../../context";
 import { isAdmin } from "../../../common/user";
 import { project as projectApi } from "../../../api";
+import AddProject from "./addProject";
 
 const { Search } = Input;
 
@@ -30,25 +31,29 @@ export default function App() {
     const [sorter, setSorter] = useState<any>(null);
     const [pageNo, setPageNo] = useState(1);
     const [pagination, setPagination] = useState({});
-    const [editModalShow, setEditModalShow] = useState(false);
     const [curRow, setCurRow] = useState<DataType | null>(null);
-    const { userNum, setUserNum } = useContext(DataContext) as {
-        userNum: number;
-        setUserNum: Function;
+    const { projectNum, setProjectNum } = useContext(DataContext) as {
+        projectNum: number;
+        setProjectNum: Function;
+    };
+
+    const createProject = () => {
+        setCurRow(null);
+        setModalShow(true);
     };
 
     const del = (e: any, v: DataType) => {
         e.stopPropagation();
         showDeleteConfirm({
-            title: "删除用户",
+            title: "删除项目",
             onOk: () => {
-                // userApi.deleteUser(v.id).then((v) => {
-                //     if (v.code === 0) {
-                //         setUserNum(userNum + 1);
-                //     } else {
-                //         message.error(v.msg);
-                //     }
-                // });
+                projectApi.remove(v.id).then((v) => {
+                    if (v.code === 0) {
+                        setProjectNum(projectNum + 1);
+                    } else {
+                        message.error(v.msg);
+                    }
+                });
             }
         });
     };
@@ -56,18 +61,13 @@ export default function App() {
     const edit = (e: any, v: DataType) => {
         e.stopPropagation();
         setCurRow(v);
-        setEditModalShow(true);
+        setModalShow(true);
     };
 
     const show = (e: any, v: DataType) => {
         e.stopPropagation();
         setCurRow(v);
         history.push("/main/module", { ...v });
-    };
-    const editModalCallback = (res: boolean) => {
-        if (res) {
-            setUserNum(userNum + 1);
-        }
     };
 
     const columns: ColumnsType<DataType> = [
@@ -179,7 +179,7 @@ export default function App() {
 
     useEffect(() => {
         getData(pageNo, keyword, sorter);
-    }, [pageNo, userNum, keyword, sorter]);
+    }, [pageNo, projectNum, keyword, sorter]);
 
     const onSearch = (value: string) => {
         setKeyword(value);
@@ -189,11 +189,14 @@ export default function App() {
             <h4>项目列表</h4>
             <div className={style.tools}>
                 {isAdmin() && (
-                    <Button type="primary" icon={<PlusOutlined />} onClick={() => {}}>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={createProject}>
                         添加项目
                     </Button>
                 )}
                 <Search placeholder="输入关键字后按Enter键查询" onSearch={onSearch} enterButton />
+                <ModalContext.Provider value={{ modalShow, setModalShow }}>
+                    {modalShow && <AddProject data={curRow} />}
+                </ModalContext.Provider>
             </div>
             <Table
                 loading={loading}

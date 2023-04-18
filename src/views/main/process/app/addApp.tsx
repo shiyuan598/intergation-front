@@ -298,7 +298,7 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 Base信息
                             </Divider>
-                            {!baseList.length && <Empty description="请先选择项目" />}
+                            {!baseList.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />}
                             {baseList
                                 .filter((item: any) => item.type === 0)
                                 .map((item) => (
@@ -349,7 +349,7 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模块信息
                             </Divider>
-                            {!moduleList.length && <Empty description="请先选择项目"/>}
+                            {!moduleList.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目"/>}
                             {moduleList
                                 .filter((item: any) => item.type === 2)
                                 .map((item) => (
