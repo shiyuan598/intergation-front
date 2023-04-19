@@ -20,6 +20,7 @@ const App = (props: any) => {
     };
 
     const onFinish = (values: any) => {
+        console.info("ha ha ha...");
         setLoading(true);
         userApi.editUser({
             ...values,
@@ -46,6 +47,7 @@ const App = (props: any) => {
             if (!/[\u4e00-\u9fa5\dA-Za-z]{2,}/.test(value)) {
                 reject("中文、数字、字母组成，至少两字符");
             }
+            resolve("");
         });
     };
 
