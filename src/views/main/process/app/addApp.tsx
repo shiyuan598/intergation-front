@@ -101,7 +101,7 @@ const App = (props: any = {}) => {
             // 创建时默认选择所有模块
             !editFormData &&
                 [...rawBase, ...rawModule].forEach((item: any) => form.setFieldValue("module." + item.name, true));
-            // 获取所有模块的branch/tag
+            // 获取基础模块的branch/tag
             toolsApi
                 .getGitBranchesTagsOfMultiProjects(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
@@ -110,13 +110,14 @@ const App = (props: any = {}) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
-                            tags: branches_tags[project_name_with_namespace].tag,
-                            branches: branches_tags[project_name_with_namespace].branch
+                            tags: branches_tags[project_name_with_namespace]?.tag || [],
+                            branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
                     });
                     setBaseList(modules);
                 })
                 .finally(() => setBaseLoading(false));
+            // 获取模块的branch/tag
             toolsApi
                 .getGitBranchesTagsOfMultiProjects(
                     rawModule.map((item: any) => item.git.split(":")[1].split(".git")[0])
@@ -127,8 +128,8 @@ const App = (props: any = {}) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
-                            tags: branches_tags[project_name_with_namespace].tag,
-                            branches: branches_tags[project_name_with_namespace].branch
+                            tags: branches_tags[project_name_with_namespace]?.tag || [],
+                            branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
                     });
                     setModuleList(modules);

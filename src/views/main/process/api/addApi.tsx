@@ -25,7 +25,9 @@ const App = (props: any = {}) => {
         modalShow: boolean;
         setModalShow: Function;
     };
-    const [projectList, setProjectList] = useState([] as { id: number; name: string; job_name: string; artifacts_url: string }[]);
+    const [projectList, setProjectList] = useState(
+        [] as { id: number; name: string; job_name: string; artifacts_url: string }[]
+    );
     const [moduleList, setModuleList] = useState(
         [] as { id: number; name: string; tags: { name: string }[]; branches: { name: string }[] }[]
     );
@@ -64,8 +66,8 @@ const App = (props: any = {}) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
-                            tags: branches_tags[project_name_with_namespace].tag,
-                            branches: branches_tags[project_name_with_namespace].branch
+                            tags: branches_tags[project_name_with_namespace]?.tag || [],
+                            branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
                     });
                     setModuleList(modules);
@@ -124,7 +126,7 @@ const App = (props: any = {}) => {
 
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
-        res.job_name = projectList.find((item) => (item.id === Number(values.project)))?.job_name;
+        res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
         res.artifacts_url = projectList.find((item) => item.id === Number(values.project))?.artifacts_url;
         res.creator = getUserInfo().id;
         // 接口集成数据处理流程：
@@ -155,18 +157,15 @@ const App = (props: any = {}) => {
         });
     };
 
-    const checkName = (rule: any, value: any, cb: any) => {
+    const checkVersion = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
             if (!value) {
                 reject("请输入版本号");
-            } else {
-                resolve("");
             }
-            // if (!/^[vV][._A-Z0-9]{2,15}$/g.test(value)) {
-            //     reject("请以大写字母开头，只能使用大写字母、数字、下划线");
-            // } else {
-            //     resolve("");
-            // }
+            if (!/^[vV]?(\d+)(\.\d+){0,2}(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$/g.test(value)) {
+                reject("版本号格式不正确");
+            }
+            resolve("");
         });
     };
 
@@ -196,10 +195,7 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select
-                                disabled={!!editFormData}
-                                placeholder="请选择项目"
-                                onChange={projectSelectChange}>
+                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}
@@ -207,7 +203,13 @@ const App = (props: any = {}) => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="版本号" name="version" required={true} rules={[{ validator: checkName }]}>
+                        <Form.Item
+                            label="版本号"
+                            name="version"
+                            required={true}
+                            dependencies={["project"]}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[{ validator: checkVersion }]}>
                             <Input placeholder="请输入版本号" />
                         </Form.Item>
                         <Form.Item
