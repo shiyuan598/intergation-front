@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect, useContext } from "react";
-import { Modal, Input, Button, Table, message, Tag } from "antd";
+import { Modal, Input, Button, Table, message, Tag, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ReactJSONViewer from "react-json-view";
 import style from "../process.module.scss";
@@ -9,6 +9,10 @@ import type { ColumnsType } from "antd/es/table";
 import { appProcess, tools as toolsApi } from "../../../../api";
 import { ModalContext, DataContext } from "../../../../context";
 import AddApiModal from "./addApp";
+import configImg from "../../../../assets/config.svg";
+import jenkinsImg from "../../../../assets/jenkins.png";
+import artifactsImg from "../../../../assets/artifacts.svg";
+import confluenceImg from "../../../../assets/confluence.svg";
 
 const { Search } = Input;
 
@@ -29,6 +33,7 @@ interface DataType {
     state_name: string;
     jenkins_url: string;
     artifacts_url: string;
+    confluence_url: string;
 }
 
 export default function Api() {
@@ -68,7 +73,7 @@ export default function Api() {
             // 分为base和common两部分
             if (modules[k].type === 0) {
                 base[k] = item;
-            } else if (modules[k].type === 2) {
+            } else {
                 common[k] = item;
             }
         });
@@ -84,13 +89,13 @@ export default function Api() {
     // 编辑
     const edit = (e: any, v: any) => {
         e.stopPropagation();
-        setCurRow({...v, opt: "edit"});
+        setCurRow({ ...v, opt: "edit" });
         setModalShow(true);
     };
     // 复制，初始值和编辑一样，去掉id,type,version,desc
     const copy = (e: any, v: any) => {
         e.stopPropagation();
-        setCurRow({...v, opt: "copy", id: undefined, type:undefined, version: undefined, desc: undefined});
+        setCurRow({ ...v, opt: "copy", id: undefined, type: undefined, version: undefined, desc: undefined });
         setModalShow(true);
     };
     const trigger = (e: any, v: any) => {
@@ -157,45 +162,6 @@ export default function Api() {
             sorter: true
         },
         {
-            title: "模块配置",
-            width: 170,
-            ellipsis: true,
-            key: "modules",
-            render: (v: DataType) => {
-                return (
-                    <Tag
-                        color="#1677ff"
-                        style={{ cursor: "pointer" }}
-                        onClick={(e) => {
-                            const modules = JSON.parse(v.modules);
-                            let base: any = {};
-                            let common: any = {};
-                            Object.keys(modules).forEach((k) => {
-                                let item = {
-                                    owner: modules[k].owner_name,
-                                    url: modules[k].url,
-                                    version: modules[k].version || "",
-                                    release_note: modules[k].release_note || ""
-                                };
-                                // 分为base和common两部分
-                                if (modules[k].type === 0) {
-                                    base[k] = item;
-                                } else if (modules[k].type === 2) {
-                                    common[k] = item;
-                                }
-                            });
-                            setModuleInfo({
-                                base,
-                                modules: common
-                            });
-                            setModuleInfoVisible(true);
-                        }}>
-                        查看
-                    </Tag>
-                );
-            }
-        },
-        {
             title: "状态",
             width: 120,
             ellipsis: true,
@@ -218,8 +184,87 @@ export default function Api() {
             }
         },
         {
+            title: "查看",
+            width: 160,
+            key: "modules",
+            render: (v: DataType) => {
+                return (
+                    <>
+                        <Tooltip title="模块配置">
+                            <img
+                                className={style.imgBtn}
+                                onClick={() => {
+                                    const modules = JSON.parse(v.modules);
+                                    let base: any = {};
+                                    let common: any = {};
+                                    Object.keys(modules).forEach((k) => {
+                                        let item = {
+                                            owner: modules[k].owner_name,
+                                            url: modules[k].url,
+                                            version: modules[k].version || "",
+                                            release_note: modules[k].release_note || ""
+                                        };
+                                        // 分为base和common两部分
+                                        if (modules[k].type === 0) {
+                                            base[k] = item;
+                                        } else if (modules[k].type === 2) {
+                                            common[k] = item;
+                                        }
+                                    });
+                                    setModuleInfo({
+                                        base,
+                                        modules: common
+                                    });
+                                    setModuleInfoVisible(true);
+                                }}
+                                src={configImg}
+                                alt="模块配置"
+                            />
+                        </Tooltip>
+
+                        {v.state > 1 && v.jenkins_url && (
+                            <Tooltip title="Jenkins">
+                                <img
+                                    className={style.imgBtn}
+                                    onClick={() => {
+                                        window.open(v.jenkins_url, "_blank");
+                                    }}
+                                    src={jenkinsImg}
+                                    alt="Jenkins"
+                                />
+                            </Tooltip>
+                        )}
+                        {v.state > 1 && v.confluence_url && (
+                            <Tooltip title="Confluence">
+                                <img
+                                    className={style.imgBtn + " " + style.imgBtnSmall}
+                                    onClick={() => {
+                                        window.open(v.confluence_url, "_blank");
+                                    }}
+                                    src={confluenceImg}
+                                    alt="Confluence"
+                                />
+                            </Tooltip>
+                        )}
+                        {v.state === 3 && (
+                            <Tooltip title="Artifacts">
+                                <img
+                                    className={style.imgBtn + " " + style.imgBtnLarge}
+                                    onClick={() => {
+                                        window.open(v.artifacts_url, "_blank");
+                                    }}
+                                    src={artifactsImg}
+                                    alt="Artifacts"
+                                />
+                            </Tooltip>
+                        )}
+                    </>
+                );
+            }
+        },
+        {
             title: "操作",
-            width: 180,
+            width: 160,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {
@@ -230,23 +275,14 @@ export default function Api() {
                                 <a href="#!" onClick={(e) => exportConfig(e, v)}>
                                     导出
                                 </a>
-                                {
-                                    v.type === 0 && (<a href="#!" onClick={(e) => copy(e, v)}>
-                                    复制
-                                </a>)
-                                }
+                                {v.type === 0 && (
+                                    <a href="#!" onClick={(e) => copy(e, v)}>
+                                        复制
+                                    </a>
+                                )}
                             </>
                         )}
-                        {v.state > 1 && v.jenkins_url && (
-                            <a href={v.jenkins_url} rel="noreferrer" target="_blank">
-                                Jenkins
-                            </a>
-                        )}
-                        {v.state === 3 && (
-                            <a href={v.artifacts_url} rel="noreferrer" target="_blank">
-                                Artifacts
-                            </a>
-                        )}
+
                         {getUserInfo().id === Number(v.creator) && (
                             <>
                                 {v.state <= 1 && (
