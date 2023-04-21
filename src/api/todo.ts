@@ -14,9 +14,14 @@ function handle(values: { [propName: string]: string | number }) {
     return post("/todo/handle", values);
 }
 
+function prompt(values: { [propName: string]: string | number }) {
+    return post("/todo/prompt", values);
+}
+
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     list,
-    handle
+    handle,
+    prompt
 };

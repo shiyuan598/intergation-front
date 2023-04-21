@@ -15,7 +15,9 @@ interface DataType {
     roleName: string;
     telephone: number;
     modules: object;
+    creator: number;
     handler: number;
+    handler_phone: string;
 }
 
 export default function App() {
@@ -34,16 +36,34 @@ export default function App() {
         e.stopPropagation();
         setLoading(true);
         // 获取选择的模块信息
-        appProcessApi.getModulesInfo(v.process_id).then((r) => {
-            const modules = JSON.parse(r.data.modules);
-            setCurRow({
-                ...v,
-                modules
+        appProcessApi
+            .getModulesInfo(v.process_id)
+            .then((r) => {
+                const modules = JSON.parse(r.data.modules);
+                setCurRow({
+                    ...v,
+                    modules
+                });
+                setModalShow(true);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-            setModalShow(true);
-        }).finally(() => {
-            setLoading(false);
-        });
+    };
+
+    const prompt = (e: any, v: DataType) => {
+        e.stopPropagation();
+        setLoading(true);
+        todoApi
+            .prompt({ phone: v.handler_phone })
+            .then((r) => {
+                if (r.code === 0) {
+                    message.success("已通知模块负责人尽快处理！");
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const columns: ColumnsType<DataType> = [
@@ -111,6 +131,11 @@ export default function App() {
                         {getUserInfo().id === v.handler && (
                             <a href="#!" onClick={(e) => handle(e, v)}>
                                 处理
+                            </a>
+                        )}
+                        {getUserInfo().id === v.creator && (
+                            <a href="#!" onClick={(e) => prompt(e, v)}>
+                                催办
                             </a>
                         )}
                     </Fragment>
