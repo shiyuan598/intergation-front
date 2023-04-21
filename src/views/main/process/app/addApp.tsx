@@ -145,7 +145,8 @@ const App = (props: any = {}) => {
                 type: match.type,
                 url: match.git,
                 owner: match.owner,
-                owner_name: match.owner_name
+                owner_name: match.owner_name,
+                owner_phone: match.owner_phone
             };
         }
         return null;
@@ -236,7 +237,7 @@ const App = (props: any = {}) => {
             return Promise.resolve("");
         }
         return new Promise((resolve, reject) => {
-            if (value === editFormData.version) {
+            if (value === editFormData?.version) {
                 resolve("");
             } else {
                 appProcessApi

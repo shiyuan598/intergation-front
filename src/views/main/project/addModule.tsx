@@ -86,7 +86,7 @@ const App = (props: any = {}) => {
 
     const checkExist = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
-            if (value === editFormData.name) {
+            if (value === editFormData?.name) {
                 resolve("");
             } else {
                 moduleApi
