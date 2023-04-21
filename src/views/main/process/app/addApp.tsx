@@ -236,18 +236,22 @@ const App = (props: any = {}) => {
             return Promise.resolve("");
         }
         return new Promise((resolve, reject) => {
-            appProcessApi
-                .checkVersionNoExist(project, getUserInfo().id, value)
-                .then((v) => {
-                    if (v.data) {
-                        resolve("");
-                    } else {
-                        reject("版本号已存在");
-                    }
-                })
-                .catch(() => {
-                    reject("验证版本号出错");
-                });
+            if (value === editFormData.version) {
+                resolve("");
+            } else {
+                appProcessApi
+                    .checkVersionNoExist(project, getUserInfo().id, value)
+                    .then((v) => {
+                        if (v.data) {
+                            resolve("");
+                        } else {
+                            reject("版本号已存在");
+                        }
+                    })
+                    .catch(() => {
+                        reject("验证版本号出错");
+                    });
+            }
         });
     };
 

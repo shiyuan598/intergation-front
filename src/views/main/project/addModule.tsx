@@ -86,18 +86,22 @@ const App = (props: any = {}) => {
 
     const checkExist = (rule: any, value: any, cb: any) => {
         return new Promise((resolve, reject) => {
-            moduleApi
-                .checkNameNoExist(project, value)
-                .then((v) => {
-                    if (v.data) {
-                        resolve("");
-                    } else {
-                        reject("名称已存在");
-                    }
-                })
-                .catch(() => {
-                    reject("验证名称出错");
-                });
+            if (value === editFormData.name) {
+                resolve("");
+            } else {
+                moduleApi
+                    .checkNameNoExist(project, value)
+                    .then((v) => {
+                        if (v.data) {
+                            resolve("");
+                        } else {
+                            reject("名称已存在");
+                        }
+                    })
+                    .catch(() => {
+                        reject("验证名称出错");
+                    });
+            }
         });
     };
 

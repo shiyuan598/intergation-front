@@ -10,5 +10,5 @@ window.globalConfig = Object.freeze({
         path_api: "interface_integration",
         path_app: "app_release_integration",
         path_app_dev: "app_dev_integration"
-    },
+    }
 });
