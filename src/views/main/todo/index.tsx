@@ -18,6 +18,7 @@ interface DataType {
     creator: number;
     handler: number;
     handler_phone: string;
+    enable_prompt: boolean;
 }
 
 export default function App() {
@@ -28,8 +29,9 @@ export default function App() {
     const [pageNo, setPageNo] = useState(1);
     const [pagination, setPagination] = useState({});
     const [curRow, setCurRow] = useState<DataType | null>(null);
-    const { todoNum } = useContext(DataContext) as {
+    const { todoNum, setTodoNum } = useContext(DataContext) as {
         todoNum: number;
+        setTodoNum: Function;
     };
 
     const handle = (e: any, v: DataType) => {
@@ -53,12 +55,16 @@ export default function App() {
 
     const prompt = (e: any, v: DataType) => {
         e.stopPropagation();
+        if (!v.enable_prompt) {
+            return;
+        }
         setLoading(true);
         todoApi
-            .prompt({ phone: v.handler_phone })
+            .prompt({ id: v.id, phone: v.handler_phone })
             .then((r) => {
                 if (r.code === 0) {
                     message.success("已通知模块负责人尽快处理！");
+                    setTodoNum(todoNum + 1);
                 }
             })
             .finally(() => {
@@ -128,14 +134,17 @@ export default function App() {
             render: (v: DataType) => {
                 return (
                     <Fragment>
+                        {getUserInfo().id === v.creator &&
+                            (v.enable_prompt ? (
+                                <a href="#!" onClick={(e) => prompt(e, v)}>
+                                    催办
+                                </a>
+                            ) : (
+                                <span style={{ color: "#666", cursor: "not-allowed", paddingRight: "4px" }}>催办</span>
+                            ))}
                         {getUserInfo().id === v.handler && (
                             <a href="#!" onClick={(e) => handle(e, v)}>
                                 处理
-                            </a>
-                        )}
-                        {getUserInfo().id === v.creator && (
-                            <a href="#!" onClick={(e) => prompt(e, v)}>
-                                催办
                             </a>
                         )}
                     </Fragment>
