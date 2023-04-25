@@ -62,19 +62,22 @@ export default function Api() {
     };
     const generatorBuildConfig = (v: DataType) => {
         let modules = JSON.parse(v.modules);
+        let config: any = {};
         let base: any = {};
         let common: any = {};
         Object.keys(modules).forEach((k) => {
             // 只保留url和version属性
             let item = {
                 url: modules[k].url,
-                version: modules[k].version || ""
+                branch: modules[k].version || ""
             };
             // 分为base和common两部分
             if (modules[k].type === 0) {
                 base[k] = item;
-            } else {
+            } else if (modules[k].type === 2) {
                 common[k] = item;
+            } else if (modules[k].type === 3) {
+                config[k] = item;
             }
         });
 
@@ -82,6 +85,7 @@ export default function Api() {
             project: v.project_name,
             version: v.version,
             build_type: v.build_type,
+            config,
             base,
             modules: common
         };
@@ -195,23 +199,29 @@ export default function Api() {
                                 className={style.imgBtn}
                                 onClick={() => {
                                     const modules = JSON.parse(v.modules);
+                                    let config: any = {};
                                     let base: any = {};
                                     let common: any = {};
                                     Object.keys(modules).forEach((k) => {
                                         let item = {
                                             owner: modules[k].owner_name,
                                             url: modules[k].url,
-                                            version: modules[k].version || "",
+                                            branch: modules[k].version || "",
                                             release_note: modules[k].release_note || ""
                                         };
                                         // 分为base和common两部分
                                         if (modules[k].type === 0) {
+                                            delete item.release_note;
                                             base[k] = item;
                                         } else if (modules[k].type === 2) {
                                             common[k] = item;
+                                        } else if (modules[k].type === 3) {
+                                            delete item.release_note;
+                                            config[k] = item;
                                         }
                                     });
                                     setModuleInfo({
+                                        config,
                                         base,
                                         modules: common
                                     });

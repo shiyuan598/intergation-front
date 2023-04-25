@@ -154,6 +154,7 @@ const App = (props: any = {}) => {
                                 <Option value={0}>基础模块</Option>
                                 <Option value={1}>接口集成</Option>
                                 <Option value={2}>应用集成</Option>
+                                <Option value={3}>配置模块</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item name="git" label="git地址" required={true} rules={[{ validator: checkGit }]}>

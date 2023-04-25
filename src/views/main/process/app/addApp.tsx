@@ -37,6 +37,14 @@ const App = (props: any = {}) => {
     );
     // const [project, setProject] = useState();
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
+    const [configList, setConfigList] = useState(
+        [] as {
+            id: number;
+            name: string;
+            tags: { name: string }[];
+            branches: { name: string }[];
+        }[]
+    );
     const [baseList, setBaseList] = useState(
         [] as {
             id: number;
@@ -58,6 +66,7 @@ const App = (props: any = {}) => {
         setAppProcessNum: Function;
     };
     const [loading, setLoading] = useState(false); // loading
+    const [configLoading, setConfigLoading] = useState(false); // configModuleLoading
     const [baseLoading, setBaseLoading] = useState(false); // baseModuleLoading
     const [moduleLoading, setModuleLoading] = useState(false); // moduleLoading
 
@@ -94,13 +103,30 @@ const App = (props: any = {}) => {
         setBaseLoading(true);
         setModuleLoading(true);
         // 获取所有模块信息
-        projectApi.modulesAll(v, "0,2").then((raw) => {
+        projectApi.modulesAll(v, "0,2,3").then((raw) => {
+            const rawConfig = raw.data.filter((item: any) => item.type === 3);
             const rawBase = raw.data.filter((item: any) => item.type === 0);
             const rawModule = raw.data.filter((item: any) => item.type === 2);
 
             // 创建时默认选择所有模块
             !editFormData &&
-                [...rawBase, ...rawModule].forEach((item: any) => form.setFieldValue("module." + item.name, true));
+                [...rawBase, ...rawModule, ...rawConfig].forEach((item: any) => form.setFieldValue("module." + item.name, true));
+            // 获取配置模块的branch/tag
+            toolsApi
+                .getGitBranchesTagsOfMultiProjects(rawConfig.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .then((r) => {
+                    const branches_tags = r.data;
+                    const modules = rawConfig.map((v: any) => {
+                        const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
+                        return {
+                            ...v,
+                            tags: branches_tags[project_name_with_namespace]?.tag || [],
+                            branches: branches_tags[project_name_with_namespace]?.branch || []
+                        };
+                    });
+                    setConfigList(modules);
+                })
+                .finally(() => setConfigLoading(false));
             // 获取基础模块的branch/tag
             toolsApi
                 .getGitBranchesTagsOfMultiProjects(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
@@ -174,7 +200,7 @@ const App = (props: any = {}) => {
                     // 选择了该模块则添加到结果中并记录版本号等信息
                     let name = k.substring("module.".length);
                     res.modules[name] = {
-                        ...getModuleInfo(name, [...baseList, ...moduleList]),
+                        ...getModuleInfo(name, [...configList, ...baseList, ...moduleList]),
                         version: values["version." + name] || "",
                         release_note: values["release_note." + name] || ""
                     };
@@ -335,7 +361,54 @@ const App = (props: any = {}) => {
 
                         <Spin spinning={baseLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
-                                Base信息
+                                配置信息
+                            </Divider>
+                            {!configList.length && (
+                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />
+                            )}
+                            {configList
+                                .filter((item: any) => item.type === 3)
+                                .map((item) => (
+                                    <Form.Item key={item.id} noStyle>
+                                        <Form.Item
+                                            name={"module." + item.name}
+                                            valuePropName="checked"
+                                            style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
+                                            <Checkbox disabled>{item.name}</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name={"version." + item.name}
+                                            label="版本号"
+                                            required={true}
+                                            rules={[{ required: true, message: "请选择版本号" }]}>
+                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                                {item.tags.length && (
+                                                    <OptGroup label="Tag">
+                                                        {item.tags.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                                {item.branches.length && (
+                                                    <OptGroup label="Branch">
+                                                        {item.branches.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                    </Form.Item>
+                                ))}
+                        </Spin>
+
+                        <Spin spinning={baseLoading}>
+                            <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                                基础信息
                             </Divider>
                             {!baseList.length && (
                                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />
@@ -376,13 +449,6 @@ const App = (props: any = {}) => {
                                                 )}
                                             </Select>
                                         </Form.Item>
-                                        {/* <Form.Item
-                                        style={{ width: 0, height: 0 }}
-                                        name={"release_note." + item.name}
-                                        required={true}
-                                        label="Release Note">
-                                        <Input hidden placeholder="release note" />
-                                    </Form.Item> */}
                                     </Form.Item>
                                 ))}
                         </Spin>
