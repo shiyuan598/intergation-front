@@ -351,6 +351,22 @@ export default function Api() {
         setPageNo(1);
     }, [keyword]);
 
+    // 刷新页面
+    useEffect(() => {
+        let timer: any = null;
+        const refresh = () => {
+            timer = setTimeout(() => {
+                setAppProcessNum(appProcessNum + 1);
+            }, 3000);
+        };
+
+        refresh();
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [appProcessNum, setAppProcessNum]);
+
     useEffect(() => {
         getData(pageNo, keyword, sorter);
     }, [pageNo, keyword, sorter, appProcessNum]);
