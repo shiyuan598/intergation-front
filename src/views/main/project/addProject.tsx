@@ -149,13 +149,6 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入jenkins job名称" />
                         </Form.Item>
                         <Form.Item
-                            name="artifacts_path"
-                            label="Artifacts"
-                            required={true}
-                            rules={[{ required: true, message: "请输入artifacts路径" }]}>
-                            <Input placeholder="请输入artifacts路径" />
-                        </Form.Item>
-                        <Form.Item
                             name="owner"
                             label="负责人"
                             required={true}
