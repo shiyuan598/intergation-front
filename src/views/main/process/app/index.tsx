@@ -108,7 +108,7 @@ export default function Api() {
             .jenkinsBuildJob({
                 process_type: 1,
                 process_id: v.id,
-                job: v.job,
+                job: v.job_name,
                 parameters: generatorBuildConfig(v)
             })
             .then(() => {
