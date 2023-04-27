@@ -85,12 +85,16 @@ const App = (props: any = {}) => {
     };
 
     const checkExist = (rule: any, value: any, cb: any) => {
+        const type = form.getFieldValue("type");
+        if (!type) {
+            return Promise.resolve("");
+        }
         return new Promise((resolve, reject) => {
             if (value === editFormData?.name) {
                 resolve("");
             } else {
                 moduleApi
-                    .checkNameNoExist(project, value)
+                    .checkNameNoExist(project, type, value)
                     .then((v) => {
                         if (v.data) {
                             resolve("");
@@ -138,24 +142,25 @@ const App = (props: any = {}) => {
                         initialValues={editFormData}
                         autoComplete="off">
                         <Form.Item
-                            label="名称"
-                            name="name"
-                            required={true}
-                            validateTrigger={["onChange", "onBlur"]}
-                            rules={[{ validator: checkName }, { validator: checkExist, validateTrigger: "onBlur" }]}>
-                            <Input placeholder="请输入模块名称" />
-                        </Form.Item>
-                        <Form.Item
                             name="type"
                             label="模块类型"
                             required={true}
                             rules={[{ required: true, message: "请选择模块类型" }]}>
                             <Select placeholder="请选择模块类型" allowClear>
+                                <Option value={3}>配置模块</Option>
                                 <Option value={0}>基础模块</Option>
                                 <Option value={1}>接口集成</Option>
                                 <Option value={2}>应用集成</Option>
-                                <Option value={3}>配置模块</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item
+                            label="名称"
+                            name="name"
+                            required={true}
+                            dependencies={["type"]}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[{ validator: checkName }, { validator: checkExist, validateTrigger: "onBlur" }]}>
+                            <Input placeholder="请输入模块名称" />
                         </Form.Item>
                         <Form.Item name="git" label="git地址" required={true} rules={[{ validator: checkGit }]}>
                             <Input placeholder="请输入git ssh地址" />

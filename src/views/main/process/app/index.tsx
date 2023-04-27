@@ -125,7 +125,7 @@ export default function Api() {
             width: 120,
             ellipsis: true,
             dataIndex: "project_name",
-            key: "project_name",
+            key: "project",
             sorter: true
         },
         {
@@ -314,7 +314,7 @@ export default function Api() {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
         appProcess
             .list(pageNo, getUserInfo().id, name, order, seq)

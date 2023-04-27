@@ -1,7 +1,7 @@
 import { get, post, del } from "./fetchTool";
 
-function checkNameNoExist(project:number, name:string) {
-    return get("/module/check/noexist", {project, name})
+function checkNameNoExist(project:number, type: number, name:string) {
+    return get("/module/check/noexist", {project, type, name})
 }
 
 function create(values: { [propName: string]: string | number }) {
