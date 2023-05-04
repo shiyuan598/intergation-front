@@ -121,12 +121,12 @@ export default function App() {
             key: "create_time",
             sorter: true
         },
-        {
-            title: "更新时间",
-            dataIndex: "update_time",
-            key: "update_time",
-            sorter: true
-        },
+        // {
+        //     title: "更新时间",
+        //     dataIndex: "update_time",
+        //     key: "update_time",
+        //     sorter: true
+        // },
         {
             title: "操作",
             dataIndex: "",
