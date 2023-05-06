@@ -4,7 +4,7 @@ import AppList from "./app/index";
 import { Tabs } from "antd";
 
 export default function App() {
-    let activeKey = localStorage.getItem("process_active_key") || "1";
+    let activeKey = localStorage.getItem("process_active_key") || "2";
     const handleTabClick = (key: string) => {
         localStorage.setItem("process_active_key", key);
     };
