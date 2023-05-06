@@ -82,7 +82,7 @@ export default function App() {
         {
             title: "项目名称",
             dataIndex: "project_name",
-            key: "project_name",
+            key: "project",
             sorter: true
         },
         {
@@ -94,7 +94,7 @@ export default function App() {
         {
             title: "模块",
             dataIndex: "module_name",
-            key: "module",
+            key: "module_name",
             sorter: true
         },
         {
@@ -112,8 +112,7 @@ export default function App() {
         {
             title: "描述",
             dataIndex: "desc",
-            key: "desc",
-            sorter: true
+            key: "desc"
         },
         {
             title: "创建时间",

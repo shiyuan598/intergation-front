@@ -67,7 +67,7 @@ const App = (props: { keyword: string }) => {
         {
             title: "角色",
             dataIndex: "role_name",
-            key: "role_name",
+            key: "role",
             sorter: true
         },
         {
@@ -104,7 +104,7 @@ const App = (props: { keyword: string }) => {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order, order: seq = "" } = sorter || {};
         setLoading(true);
         userApi.getUser(pageNo, name, order, seq).then((v) => {
             if (v.code === 0) {

@@ -109,7 +109,7 @@ export default function Api() {
             width: 120,
             ellipsis: true,
             dataIndex: "project_name",
-            key: "project_name",
+            key: "project",
             sorter: true
         },
         {
@@ -192,7 +192,7 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            key: "state_name",
+            key: "state",
             sorter: true,
             render: (v: DataType) => {
                 if (v.state === 0) {

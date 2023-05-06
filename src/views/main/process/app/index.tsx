@@ -169,7 +169,7 @@ export default function Api() {
             title: "状态",
             width: 120,
             ellipsis: true,
-            key: "state_name",
+            key: "state",
             sorter: true,
             render: (v: DataType) => {
                 if (v.state === 0) {
@@ -314,7 +314,7 @@ export default function Api() {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "id", order: seq = "descend" } = sorter || {};
+        let { field: order, order: seq = "descend" } = sorter || {};
         setLoading(true);
         appProcess
             .list(pageNo, getUserInfo().id, name, order, seq)

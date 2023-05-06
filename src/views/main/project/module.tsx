@@ -87,7 +87,7 @@ export default function App() {
         {
             title: "模块类型",
             dataIndex: "type_name",
-            key: "type_name",
+            key: "type",
             sorter: true
         },
         {
@@ -99,7 +99,7 @@ export default function App() {
         {
             title: "更新时间",
             dataIndex: "update_time",
-            key: "updateTime",
+            key: "update_time",
             sorter: true
         },
         {
