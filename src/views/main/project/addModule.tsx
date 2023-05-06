@@ -77,7 +77,7 @@ const App = (props: any = {}) => {
                 reject("请输入名称");
             }
             // 数字、字母、下划线
-            if (!/^[a-zA-Z]\w{1,15}$/.test(value)) {
+            if (!/^[a-zA-Z]\w{1,}$/.test(value)) {
                 reject("字母开头，数字、字母、下划线组成，至少两字符");
             }
             resolve("");
