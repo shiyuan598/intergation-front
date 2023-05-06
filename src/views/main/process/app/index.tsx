@@ -357,7 +357,7 @@ export default function Api() {
         const refresh = () => {
             timer = setTimeout(() => {
                 setAppProcessNum(appProcessNum + 1);
-            }, 3000);
+            }, 10000);
         };
 
         refresh();
