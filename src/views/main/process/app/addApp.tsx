@@ -1,5 +1,5 @@
 // 应用集成表单
-import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider, Empty } from "antd";
+import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider, Empty, Button, Space } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
 import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
@@ -41,24 +41,27 @@ const App = (props: any = {}) => {
         [] as {
             id: number;
             name: string;
-            tags: { name: string }[];
-            branches: { name: string }[];
+            project_name_with_namespace: string;
+            tags: string[];
+            branches: string[];
         }[]
     );
     const [baseList, setBaseList] = useState(
         [] as {
             id: number;
             name: string;
-            tags: { name: string }[];
-            branches: { name: string }[];
+            project_name_with_namespace: string;
+            tags: string[];
+            branches: string[];
         }[]
     );
     const [moduleList, setModuleList] = useState(
         [] as {
             id: number;
             name: string;
-            tags: { name: string }[];
-            branches: { name: string }[];
+            project_name_with_namespace: string;
+            tags: string[];
+            branches: string[];
         }[]
     );
     const { appProcessNum, setAppProcessNum } = useContext(DataContext) as {
@@ -116,15 +119,14 @@ const App = (props: any = {}) => {
                 );
             // 获取配置模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(
-                    rawConfig.map((item: any) => item.git.split(":")[1].split(".git")[0])
-                )
+                .multiGetBranchesTags(rawConfig.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
                     const modules = rawConfig.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
+                            project_name_with_namespace,
                             tags: branches_tags[project_name_with_namespace]?.tag || [],
                             branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
@@ -134,13 +136,14 @@ const App = (props: any = {}) => {
                 .finally(() => setConfigLoading(false));
             // 获取基础模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .multiGetBranchesTags(rawBase.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
                     const modules = rawBase.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
+                            project_name_with_namespace,
                             tags: branches_tags[project_name_with_namespace]?.tag || [],
                             branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
@@ -150,15 +153,14 @@ const App = (props: any = {}) => {
                 .finally(() => setBaseLoading(false));
             // 获取模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(
-                    rawModule.map((item: any) => item.git.split(":")[1].split(".git")[0])
-                )
+                .multiGetBranchesTags(rawModule.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
                     const modules = rawModule.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
+                            project_name_with_namespace,
                             tags: branches_tags[project_name_with_namespace]?.tag || [],
                             branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
@@ -167,6 +169,62 @@ const App = (props: any = {}) => {
                 })
                 .finally(() => setModuleLoading(false));
         });
+    };
+
+    const refreshBranch = (type: string, project_name_with_namespace: string) => {
+        if (type === "config") {
+            setConfigLoading(true);
+            // 获取模块的branch/tag
+            toolsApi
+                .multiGetBranchesTags(project_name_with_namespace, false)
+                .then((r) => {
+                    const branches_tags = r.data;
+                    configList.forEach((item) => {
+                        if (item.project_name_with_namespace === project_name_with_namespace) {
+                            item.tags = branches_tags[project_name_with_namespace]?.tag || [];
+                            item.branches = branches_tags[project_name_with_namespace]?.branch || [];
+                        }
+                    });
+                    setConfigList(configList);
+                })
+                .finally(() => setConfigLoading(false));
+        }
+        if (type === "base") {
+            setBaseLoading(true);
+            // 获取模块的branch/tag
+            toolsApi
+                .multiGetBranchesTags(project_name_with_namespace, false)
+                .then((r) => {
+                    const branches_tags = r.data;
+                    baseList.forEach((item) => {
+                        if (item.project_name_with_namespace === project_name_with_namespace) {
+                            item.tags = branches_tags[project_name_with_namespace]?.tag || [];
+                            item.branches = branches_tags[project_name_with_namespace]?.branch || [];
+                            // // 测试
+                            // item.tags = [...item.tags, "hahaha"];
+                        }
+                    });
+                    setBaseList(baseList);
+                })
+                .finally(() => setBaseLoading(false));
+        }
+        if (type === "module") {
+            setModuleLoading(true);
+            // 获取模块的branch/tag
+            toolsApi
+                .multiGetBranchesTags(project_name_with_namespace, false)
+                .then((r) => {
+                    const branches_tags = r.data;
+                    moduleList.forEach((item) => {
+                        if (item.project_name_with_namespace === project_name_with_namespace) {
+                            item.tags = branches_tags[project_name_with_namespace]?.tag || [];
+                            item.branches = branches_tags[project_name_with_namespace]?.branch || [];
+                        }
+                    });
+                    setModuleList(moduleList);
+                })
+                .finally(() => setModuleLoading(false));
+        }
     };
 
     const getModuleInfo = (name: string, moduleList: any[]) => {
@@ -396,7 +454,25 @@ const App = (props: any = {}) => {
                                                 placeholder="请选择版本号"
                                                 showSearch
                                                 allowClear
-                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                dropdownRender={(menu) => (
+                                                    <>
+                                                        {menu}
+                                                        <Divider style={{ margin: "8px 0" }} />
+                                                        <Space style={{ padding: "0 8px 4px" }}>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => {
+                                                                    refreshBranch(
+                                                                        "config",
+                                                                        item.project_name_with_namespace
+                                                                    );
+                                                                }}>
+                                                                新分支/标签未显示？刷新一下
+                                                            </Button>
+                                                        </Space>
+                                                    </>
+                                                )}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (
@@ -446,7 +522,25 @@ const App = (props: any = {}) => {
                                                 placeholder="请选择版本号"
                                                 showSearch
                                                 allowClear
-                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                dropdownRender={(menu) => (
+                                                    <>
+                                                        {menu}
+                                                        <Divider style={{ margin: "8px 0" }} />
+                                                        <Space style={{ padding: "0 8px 4px" }}>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => {
+                                                                    refreshBranch(
+                                                                        "base",
+                                                                        item.project_name_with_namespace
+                                                                    );
+                                                                }}>
+                                                                新分支/标签未显示？刷新一下
+                                                            </Button>
+                                                        </Space>
+                                                    </>
+                                                )}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (
@@ -492,7 +586,25 @@ const App = (props: any = {}) => {
                                                 placeholder="请选择版本号"
                                                 showSearch
                                                 allowClear
-                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                dropdownRender={(menu) => (
+                                                    <>
+                                                        {menu}
+                                                        <Divider style={{ margin: "8px 0" }} />
+                                                        <Space style={{ padding: "0 8px 4px" }}>
+                                                            <Button
+                                                                type="link"
+                                                                onClick={() => {
+                                                                    refreshBranch(
+                                                                        "module",
+                                                                        item.project_name_with_namespace
+                                                                    );
+                                                                }}>
+                                                                新分支/标签未显示？刷新一下
+                                                            </Button>
+                                                        </Space>
+                                                    </>
+                                                )}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (

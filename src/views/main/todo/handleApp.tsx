@@ -33,8 +33,8 @@ const App = (props: any = {}) => {
         [] as {
             id: number;
             name: string;
-            tags: { name: string }[];
-            branches: { name: string }[];
+            tags: string[];
+            branches: string[];
         }[]
     );
     const { todoNum, setTodoNum, appProcessNum, setAppProcessNum } = useContext(DataContext) as {
@@ -89,13 +89,14 @@ const App = (props: any = {}) => {
                 .split(":")[1]
                 .split(".git")[0];
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(project_name_with_namespace)
+                .multiGetBranchesTags(project_name_with_namespace, false)
                 .then((r) => {
                     const branches_tags = r.data;
                     const moduleList = rawData.map((v: any) => {
                         if (v.name === editFormData.module_name) {
                             return {
                                 ...v,
+                                project_name_with_namespace,
                                 tags: branches_tags[project_name_with_namespace].tag,
                                 branches: branches_tags[project_name_with_namespace].branch
                             };
@@ -202,7 +203,7 @@ const App = (props: any = {}) => {
                         </Form.Item>
 
                         <Spin spinning={moduleLoading}>
-                        <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                            <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 配置信息
                             </Divider>
                             {moduleList
@@ -335,7 +336,10 @@ const App = (props: any = {}) => {
                                             </Form.Item>
                                         </Form.Item>
                                         {item.name === editFormData.module_name && (
-                                            <Form.Item key={item.id + item.name + "_note"} name="module_release_note" noStyle>
+                                            <Form.Item
+                                                key={item.id + item.name + "_note"}
+                                                name="module_release_note"
+                                                noStyle>
                                                 <Form.Item
                                                     required
                                                     rules={[{ required: true, message: "请输入Release Note" }]}

@@ -29,7 +29,7 @@ const App = (props: any = {}) => {
         [] as { id: number; name: string; job_name: string; artifacts_url: string }[]
     );
     const [moduleList, setModuleList] = useState(
-        [] as { id: number; name: string; tags: { name: string }[]; branches: { name: string }[] }[]
+        [] as { id: number; name: string; project_name_with_namespace: string; tags: string[]; branches: string[] }[]
     );
     const { apiProcessNum, setApiProcessNum } = useContext(DataContext) as {
         apiProcessNum: number;
@@ -59,13 +59,14 @@ const App = (props: any = {}) => {
             !editFormData && m.data.forEach((item: any) => form.setFieldValue("module." + item.name, true));
             // 获取所有模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(m.data.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .multiGetBranchesTags(m.data.map((item: any) => item.git.split(":")[1].split(".git")[0]))
                 .then((r) => {
                     const branches_tags = r.data;
                     const modules = m.data.map((v: any) => {
                         const project_name_with_namespace = v.git.split(":")[1].split(".git")[0];
                         return {
                             ...v,
+                            project_name_with_namespace,
                             tags: branches_tags[project_name_with_namespace]?.tag || [],
                             branches: branches_tags[project_name_with_namespace]?.branch || []
                         };
@@ -196,7 +197,11 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange} getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                            <Select
+                                disabled={!!editFormData}
+                                placeholder="请选择项目"
+                                onChange={projectSelectChange}
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}
@@ -218,7 +223,9 @@ const App = (props: any = {}) => {
                             label="构建类型"
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
-                            <Select placeholder="请选择构建类型" getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                            <Select
+                                placeholder="请选择构建类型"
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
                                 <Option value={"Release"}>Release</Option>
                                 <Option value={"Debug"}>Debug</Option>
@@ -245,7 +252,10 @@ const App = (props: any = {}) => {
                                         <Checkbox>{item.name}</Checkbox>
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" allowClear getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                        <Select
+                                            placeholder="请选择版本号"
+                                            allowClear
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {item.tags.length && (
                                                 <OptGroup label="Tag">
                                                     {item.tags.map((v) => (
