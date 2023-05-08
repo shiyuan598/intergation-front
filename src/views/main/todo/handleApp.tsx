@@ -48,8 +48,6 @@ const App = (props: any = {}) => {
 
     const [form] = Form.useForm();
 
-    const ref = useRef(null);
-
     useEffect(() => {
         // 获取所有的project
         projectApi.listAll().then((v) => {
@@ -310,10 +308,9 @@ const App = (props: any = {}) => {
                                                 }>
                                                 <Select
                                                     disabled={item.name !== editFormData.module_name}
-                                                    ref={item.name === editFormData.module_name ? ref : undefined}
                                                     placeholder="请选择版本号"
                                                     showSearch
-                                                    allowClear>
+                                                    allowClear getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                                     {item.tags.length && (
                                                         <OptGroup label="Tag">
                                                             {item.tags.map((v) => (
