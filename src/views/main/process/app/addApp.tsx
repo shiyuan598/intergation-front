@@ -100,6 +100,7 @@ const App = (props: any = {}) => {
         if (!v) {
             return;
         }
+        setConfigLoading(true);
         setBaseLoading(true);
         setModuleLoading(true);
         // 获取所有模块信息
@@ -110,10 +111,14 @@ const App = (props: any = {}) => {
 
             // 创建时默认选择所有模块
             !editFormData &&
-                [...rawBase, ...rawModule, ...rawConfig].forEach((item: any) => form.setFieldValue("module." + item.name, true));
+                [...rawBase, ...rawModule, ...rawConfig].forEach((item: any) =>
+                    form.setFieldValue("module." + item.name, true)
+                );
             // 获取配置模块的branch/tag
             toolsApi
-                .getGitBranchesTagsOfMultiProjects(rawConfig.map((item: any) => item.git.split(":")[1].split(".git")[0]))
+                .getGitBranchesTagsOfMultiProjects(
+                    rawConfig.map((item: any) => item.git.split(":")[1].split(".git")[0])
+                )
                 .then((r) => {
                     const branches_tags = r.data;
                     const modules = rawConfig.map((v: any) => {
@@ -179,7 +184,7 @@ const App = (props: any = {}) => {
     };
 
     const handleOk = () => {
-        if (!loading && !baseLoading && !moduleLoading) {
+        if (!loading && !configLoading && !baseLoading && !moduleLoading) {
             form.submit();
         }
     };
@@ -310,7 +315,11 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange}>
+                            <Select
+                                disabled={!!editFormData}
+                                placeholder="请选择项目"
+                                onChange={projectSelectChange}
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}
@@ -335,7 +344,9 @@ const App = (props: any = {}) => {
                             label="构建类型"
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
-                            <Select placeholder="请选择构建类型">
+                            <Select
+                                placeholder="请选择构建类型"
+                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
                                 <Option value={"Release"}>Release</Option>
                                 <Option value={"Debug"}>Debug</Option>
@@ -346,7 +357,7 @@ const App = (props: any = {}) => {
                             label="接口版本"
                             required={true}
                             rules={[{ required: true, message: "请选择接口版本" }]}>
-                            <Select placeholder="请选择接口版本">
+                            <Select placeholder="请选择接口版本" getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 {apiVersionList.map((v) => (
                                     <Option key={v} value={v}>
                                         {v}
@@ -359,7 +370,7 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入描述" />
                         </Form.Item>
 
-                        <Spin spinning={baseLoading}>
+                        <Spin spinning={configLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 配置信息
                             </Divider>
@@ -381,7 +392,11 @@ const App = (props: any = {}) => {
                                             label="版本号"
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
-                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                            <Select
+                                                placeholder="请选择版本号"
+                                                showSearch
+                                                allowClear
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (
@@ -405,7 +420,6 @@ const App = (props: any = {}) => {
                                     </Form.Item>
                                 ))}
                         </Spin>
-
                         <Spin spinning={baseLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 基础信息
@@ -428,7 +442,11 @@ const App = (props: any = {}) => {
                                             label="版本号"
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
-                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                            <Select
+                                                placeholder="请选择版本号"
+                                                showSearch
+                                                allowClear
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (
@@ -470,7 +488,11 @@ const App = (props: any = {}) => {
                                             <Checkbox>{item.name}</Checkbox>
                                         </Form.Item>
                                         <Form.Item name={"version." + item.name} label="版本号">
-                                            <Select placeholder="请选择版本号" showSearch allowClear>
+                                            <Select
+                                                placeholder="请选择版本号"
+                                                showSearch
+                                                allowClear
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                                 {item.tags.length && (
                                                     <OptGroup label="Tag">
                                                         {item.tags.map((v) => (

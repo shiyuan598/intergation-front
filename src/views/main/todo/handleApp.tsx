@@ -80,7 +80,7 @@ const App = (props: any = {}) => {
         }
         setModuleLoading(true);
         // 获取所有模块信息
-        projectApi.modulesAll(v, "0,2").then((raw) => {
+        projectApi.modulesAll(v, "0,2,3").then((raw) => {
             // 过滤掉没有勾选的模块
             let keys = Object.keys(editFormData.modules);
             const rawData = raw.data.filter((item: any) => item.type !== 1 && keys.includes(item.name));
@@ -202,6 +202,47 @@ const App = (props: any = {}) => {
                         </Form.Item>
 
                         <Spin spinning={moduleLoading}>
+                        <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                                配置信息
+                            </Divider>
+                            {moduleList
+                                .filter((item: any) => item.type === 3)
+                                .map((item) => (
+                                    <Form.Item key={item.id} noStyle>
+                                        <Form.Item
+                                            name={"module." + item.name}
+                                            valuePropName="checked"
+                                            style={{ width: "36%", marginLeft: "14%", paddingLeft: "8px" }}>
+                                            <Checkbox disabled>{item.name}</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name={"version." + item.name}
+                                            label="版本号"
+                                            required={true}
+                                            rules={[{ required: true, message: "请选择版本号" }]}>
+                                            <Select disabled placeholder="请选择版本号" showSearch allowClear>
+                                                {item.tags.length && (
+                                                    <OptGroup label="Tag">
+                                                        {item.tags.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                                {item.branches.length && (
+                                                    <OptGroup label="Branch">
+                                                        {item.branches.map((v) => (
+                                                            <Option key={item.name + v} value={v}>
+                                                                {v + ""}
+                                                            </Option>
+                                                        ))}
+                                                    </OptGroup>
+                                                )}
+                                            </Select>
+                                        </Form.Item>
+                                    </Form.Item>
+                                ))}
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 Base信息
                             </Divider>

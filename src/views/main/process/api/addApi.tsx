@@ -196,7 +196,7 @@ const App = (props: any = {}) => {
                             name="project"
                             required={true}
                             rules={[{ required: true, message: "请选择项目" }]}>
-                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange}>
+                            <Select disabled={!!editFormData} placeholder="请选择项目" onChange={projectSelectChange} getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 {projectList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.name}
@@ -218,7 +218,7 @@ const App = (props: any = {}) => {
                             label="构建类型"
                             required={true}
                             rules={[{ required: true, message: "请选择构建类型" }]}>
-                            <Select placeholder="请选择构建类型">
+                            <Select placeholder="请选择构建类型" getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                 <Option value={"RelWithDebInfo"}>RelWithDebInfo</Option>
                                 <Option value={"Release"}>Release</Option>
                                 <Option value={"Debug"}>Debug</Option>
@@ -245,7 +245,7 @@ const App = (props: any = {}) => {
                                         <Checkbox>{item.name}</Checkbox>
                                     </Form.Item>
                                     <Form.Item name={"version." + item.name} label="版本号">
-                                        <Select placeholder="请选择版本号" allowClear>
+                                        <Select placeholder="请选择版本号" allowClear getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {item.tags.length && (
                                                 <OptGroup label="Tag">
                                                     {item.tags.map((v) => (
