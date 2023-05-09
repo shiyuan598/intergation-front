@@ -3,15 +3,49 @@ import Header from "../../components/header";
 import Sidebar from "../../components/sidebar";
 import RouteList from "../../components/routes";
 import { DataContext } from "../../context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/zh-cn";
 import zhCN from "antd/es/locale/zh_CN";
 import { ConfigProvider } from "antd";
+import { io } from "socket.io-client";
 
 moment.locale("zh");
 
 function App() {
+    const socketUrl = window.globalConfig.socketUrl;
+    useEffect(() => {
+        const socket = io(socketUrl, {
+            transports: ["websocket"],
+            path: "/socket.io",
+            upgrade: false,
+            forceNew: true,
+            reconnection: false,
+            secure: true,
+            rejectUnauthorized: false,
+            query: {
+                EIO: 1,
+                transport: "websocket"
+            }
+        });
+        socket.on("connect", function () {
+            console.log("Connected to Flask-SocketIO");
+        });
+
+        socket.on("disconnect", function () {
+            console.log("Disconnected from Flask-SocketIO");
+        });
+
+        socket.on("my_response", function (data) {
+            var message = data["message"];
+            console.info(message);
+        });
+
+        socket.on("update_process", function (data) {
+            console.info(data);
+        });
+    }, []);
+
     const [apiProcessNum, setApiProcessNum] = useState(0);
     const [appProcessNum, setAppProcessNum] = useState(0);
     const [projectNum, setProjectNum] = useState(0);
