@@ -14,6 +14,9 @@ interface DataType {
     role: number;
     roleName: string;
     telephone: number;
+    lidar: string;
+    camera: string;
+    map: string;
     modules: object;
     creator: number;
     handler: number;
@@ -39,12 +42,16 @@ export default function App() {
         setLoading(true);
         // 获取选择的模块信息
         appProcessApi
-            .getModulesInfo(v.process_id)
+            .getProcessInfo(v.process_id)
             .then((r) => {
-                const modules = JSON.parse(r.data.modules);
+                let { lidar, camera, map, modules } = r.data;
+                const modulesObj = JSON.parse(modules);
                 setCurRow({
                     ...v,
-                    modules
+                    lidar,
+                    camera,
+                    map,
+                    modules: modulesObj
                 });
                 setModalShow(true);
             })
@@ -75,47 +82,63 @@ export default function App() {
     const columns: ColumnsType<DataType> = [
         {
             title: "流程类型",
+            width: 120,
+            ellipsis: true,
             dataIndex: "type_name",
             key: "type",
             sorter: true
         },
         {
             title: "项目名称",
+            width: 120,
+            ellipsis: true,
             dataIndex: "project_name",
             key: "project",
             sorter: true
         },
         {
             title: "集成版本号",
+            width: 120,
+            ellipsis: true,
             dataIndex: "version",
             key: "version",
             sorter: true
         },
         {
             title: "模块",
+            width: 120,
+            ellipsis: true,
             dataIndex: "module_name",
             key: "module_name",
             sorter: true
         },
         {
             title: "发起人",
+            width: 120,
+            ellipsis: true,
             dataIndex: "creator_name",
             key: "creator",
             sorter: true
         },
         {
             title: "处理人",
+            width: 120,
+            ellipsis: true,
             dataIndex: "handler_name",
             key: "handler",
             sorter: true
         },
         {
             title: "描述",
+            width: 120,
+            ellipsis: true,
             dataIndex: "desc",
             key: "desc"
         },
         {
             title: "创建时间",
+            width: 120,
+            ellipsis: true,
             dataIndex: "create_time",
             key: "create_time",
             sorter: true
@@ -128,6 +151,7 @@ export default function App() {
         // },
         {
             title: "操作",
+            width: 120,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {

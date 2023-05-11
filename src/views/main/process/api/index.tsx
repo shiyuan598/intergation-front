@@ -212,7 +212,7 @@ export default function Api() {
         },
         {
             title: "操作",
-            width: 120,
+            width: 170,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {

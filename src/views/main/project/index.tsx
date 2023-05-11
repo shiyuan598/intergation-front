@@ -73,30 +73,63 @@ export default function App() {
     const columns: ColumnsType<DataType> = [
         {
             title: "名称",
+            width: 120,
+            ellipsis: true,
             dataIndex: "name",
             key: "name",
             sorter: true
         },
         {
             title: "平台",
+            width: 90,
+            ellipsis: true,
             dataIndex: "platform",
             key: "platform",
             sorter: true
         },
         {
-            title: "Job",
+            title: "Jenkins Job",
+            width: 160,
+            ellipsis: true,
             dataIndex: "job_name",
             key: "job_name",
             sorter: true
         },
         {
+            title: "激光模型路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "lidar_path",
+            key: "lidar_path",
+            sorter: true
+        },
+        {
+            title: "视觉模型路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "camera_path",
+            key: "camera_path",
+            sorter: true
+        },
+        {
+            title: "地图数据路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "map_path",
+            key: "map_path",
+            sorter: true
+        },
+        {
             title: "更新时间",
+            width: 160,
             dataIndex: "update_time",
             key: "update_time",
             sorter: true
         },
         {
             title: "负责人",
+            width: 110,
+            ellipsis: true,
             dataIndex: "owner_name",
             key: "owner",
             sorter: true
@@ -109,6 +142,7 @@ export default function App() {
         // },
         {
             title: "操作",
+            width: 170,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {

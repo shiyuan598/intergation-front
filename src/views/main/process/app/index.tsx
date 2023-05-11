@@ -13,6 +13,7 @@ import configImg from "../../../../assets/config.svg";
 import jenkinsImg from "../../../../assets/jenkins.png";
 import artifactsImg from "../../../../assets/artifacts.svg";
 import confluenceImg from "../../../../assets/confluence.svg";
+import { joinPath } from "../../../../common/util";
 
 const { Search } = Input;
 
@@ -29,6 +30,12 @@ interface DataType {
     create_time: string;
     update_time: string;
     state: number;
+    lidar: string;
+    camera: string;
+    map: string;
+    lidar_path: string;
+    camera_path: string;
+    map_path: string;
     modules: string;
     state_name: string;
     jenkins_url: string;
@@ -36,7 +43,7 @@ interface DataType {
     confluence_url: string;
 }
 
-export default function Api() {
+export default function App() {
     const [modalShow, setModalShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any>([]);
@@ -85,6 +92,9 @@ export default function Api() {
             project: v.project_name,
             version: v.version,
             build_type: v.build_type,
+            lidar_model: joinPath(v.lidar_path, v.lidar),
+            camera_model: joinPath(v.camera_path, v.camera),
+            map_data: joinPath(v.map_path, v.map),
             config,
             base,
             modules: common
@@ -221,6 +231,9 @@ export default function Api() {
                                         }
                                     });
                                     setModuleInfo({
+                                        lidar_model: joinPath(v.lidar_path, v.lidar),
+                                        camera_model: joinPath(v.camera_path, v.camera),
+                                        map_data: joinPath(v.map_path, v.map),
                                         config,
                                         base,
                                         modules: common
@@ -274,7 +287,7 @@ export default function Api() {
         },
         {
             title: "操作",
-            width: 160,
+            width: 180,
             dataIndex: "",
             key: "x",
             render: (v: DataType) => {

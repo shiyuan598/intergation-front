@@ -33,6 +33,12 @@ function getArtifactFiles(path: string) {
     });
 }
 
+function getArtifactFolders(path: string) {
+    return get("/artifacts/folders", {
+        path
+    });
+}
+
 function getArtifactUri(path: string) {
     return get("/artifacts/uri", {
         path
@@ -47,5 +53,6 @@ export default {
     jenkinsBuildJob,
     jenkinsBuildInfo,
     getArtifactFiles,
+    getArtifactFolders,
     getArtifactUri
 };

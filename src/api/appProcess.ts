@@ -10,8 +10,8 @@ function list(pageNo: number, user_id: number, name: string = "", order = "", se
     });
 }
 
-function getModulesInfo(id: number) {
-    return get("/app_process/modules", {
+function getProcessInfo(id: number) {
+    return get("/app_process/info", {
         id
     });
 }
@@ -45,7 +45,7 @@ function remove(id: string) {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
     list,
-    getModulesInfo,
+    getProcessInfo,
     edit,
     create,
     checkVersionNoExist,

@@ -149,6 +149,27 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入jenkins job名称" />
                         </Form.Item>
                         <Form.Item
+                            name="lidar_path"
+                            label="激光模型"
+                            required={true}
+                            rules={[{ required: true, message: "请输入激光模型的存放路径" }]}>
+                            <Input placeholder="请输入激光模型的存放路径" />
+                        </Form.Item>
+                        <Form.Item
+                            name="camera_path"
+                            label="视觉模型"
+                            required={true}
+                            rules={[{ required: true, message: "请输入视觉模型的存放路径" }]}>
+                            <Input placeholder="请输入视觉模型的存放路径" />
+                        </Form.Item>
+                        <Form.Item
+                            name="map_path"
+                            label="地图数据"
+                            required={true}
+                            rules={[{ required: true, message: "请输入地图数据的存放路径" }]}>
+                            <Input placeholder="请输入地图数据的存放路径" />
+                        </Form.Item>
+                        <Form.Item
                             name="owner"
                             label="负责人"
                             required={true}

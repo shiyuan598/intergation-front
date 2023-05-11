@@ -7,6 +7,18 @@ import { getUserInfo } from "../../../../common/user";
 
 const { Option, OptGroup } = Select;
 
+interface ProjectType {
+    id: number;
+    name: string;
+    job_name: string;
+    artifacts_path: string;
+    artifacts_url: string;
+    owner: number;
+    lidar_path: string;
+    camera_path: string;
+    map_path: string;
+};
+
 const App = (props: any = {}) => {
     const { data: editFormData } = props;
     let initial: any = {};
@@ -26,16 +38,15 @@ const App = (props: any = {}) => {
         setModalShow: Function;
     };
     const [projectList, setProjectList] = useState(
-        [] as {
-            id: number;
-            name: string;
-            job_name: string;
-            artifacts_path: string;
-            artifacts_url: string;
-            owner: number;
-        }[]
+        [] as ProjectType[]
     );
-    // const [project, setProject] = useState();
+    const [lidarPathList, setLidarPathList] = useState([] as string[]);
+    const [cameraPathList, setCameraPathList] = useState([] as string[]);
+    const [mapPathList, setMapPathList] = useState([] as string[]);
+    const [project, setProject] = useState(
+        undefined as
+            | ProjectType | undefined
+    );
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
     const [configList, setConfigList] = useState(
         [] as {
@@ -69,6 +80,7 @@ const App = (props: any = {}) => {
         setAppProcessNum: Function;
     };
     const [loading, setLoading] = useState(false); // loading
+    const [modelLoading, setModelLoading] = useState(false); // modelLoading
     const [configLoading, setConfigLoading] = useState(false); // configModuleLoading
     const [baseLoading, setBaseLoading] = useState(false); // baseModuleLoading
     const [moduleLoading, setModuleLoading] = useState(false); // moduleLoading
@@ -80,32 +92,45 @@ const App = (props: any = {}) => {
         projectApi.listAll().then((v) => {
             setProjectList(v.data);
         });
-        // 如果初始化时编辑模式，就主动触发一下模块查询
-        if (initial.project) {
-            projectSelectChange(initial.project);
-        }
     }, []);
 
-    // useEffect(() => {
-    //     if (!project) {
-    //         return;
-    //     }
-    //     // 获取所有的接口版本
-    //     let path = projectList.find((item) => item.id === Number(project))?.artifacts_path;
-    //     path &&
-    //         toolsApi.getArtifactFiles(path).then((v) => {
-    //             setApiVersionList(v.data);
-    //         });
-    // }, [projectList, project]);
+    useEffect(() => {
+        // 如果初始化时编辑模式，就主动触发一下模块查询
+        if (initial.project && projectList.length) {
+            projectSelectChange(initial.project);
+        }
+    }, [initial.project, projectList]);
 
     const projectSelectChange = (v: any) => {
-        // setProject(v);
-        if (!v) {
+        if (!v || !projectList.length) {
             return;
         }
+        let projectInfo = projectList.find((item) => item.id === Number(v));
+        setProject(projectInfo);
+
+        setModelLoading(true);
         setConfigLoading(true);
         setBaseLoading(true);
         setModuleLoading(true);
+
+        // 获取激光模型、视觉模型、地图数据的路径
+        let { lidar_path, camera_path, map_path } = projectInfo as {
+            lidar_path: string;
+            camera_path: string;
+            map_path: string;
+        };
+        Promise.all([
+            toolsApi.getArtifactFolders(lidar_path),
+            toolsApi.getArtifactFolders(camera_path),
+            toolsApi.getArtifactFolders(map_path)
+        ])
+            .then((v) => {
+                setLidarPathList(v[0].data);
+                setCameraPathList(v[1].data);
+                setMapPathList(v[2].data);
+            })
+            .finally(() => setModelLoading(false));
+
         // 获取所有模块信息
         projectApi.modulesAll(v, "0,2,3").then((raw) => {
             const rawConfig = raw.data.filter((item: any) => item.type === 3);
@@ -171,6 +196,7 @@ const App = (props: any = {}) => {
         });
     };
 
+    // 刷新分支
     const refreshBranch = (type: string, project_name_with_namespace: string) => {
         if (type === "config") {
             setConfigLoading(true);
@@ -253,6 +279,9 @@ const App = (props: any = {}) => {
     };
 
     const onFinish = (values: any) => {
+        if (!project) {
+            return;
+        }
         // 生成模块配置参数：
         // 识别出所有的模块属性及其对应的版本号
         let res: any = { modules: {} };
@@ -280,10 +309,11 @@ const App = (props: any = {}) => {
         });
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
-        res.job_name = projectList.find((item) => item.id === Number(values.project))?.job_name;
-        res.artifacts_url = projectList.find((item) => item.id === Number(values.project))?.artifacts_url;
+        let { job_name, artifacts_url, owner } = project;
+        res.job_name = job_name;
+        res.artifacts_url = artifacts_url;
         res.creator = getUserInfo().id;
-        res.type = projectList.find((item) => item.id === values.project && item.owner === getUserInfo().id) ? 0 : 1; // 通过是否为项目负责人来判断
+        res.type = owner === getUserInfo().id ? 0 : 1; // 通过是否为项目负责人来判断
 
         setLoading(true);
         let p = null;
@@ -427,7 +457,61 @@ const App = (props: any = {}) => {
                         <Form.Item name="desc" label="描述">
                             <Input placeholder="请输入描述" />
                         </Form.Item>
-
+                        <Spin spinning={modelLoading}>
+                            <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                                模型信息
+                            </Divider>
+                            {!project && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />}
+                            {project && (
+                                <>
+                                    <Form.Item
+                                        name="lidar"
+                                        label="激光模型"
+                                        required={true}
+                                        rules={[{ required: true, message: "请选择激光模型地址" }]}>
+                                        <Select
+                                            placeholder="请选择激光模型地址"
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                            {lidarPathList.map((v) => (
+                                                <Option key={v} value={v}>
+                                                    {v}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="camera"
+                                        label="视觉模型"
+                                        required={true}
+                                        rules={[{ required: true, message: "请选择视觉模型地址" }]}>
+                                        <Select
+                                            placeholder="请选择激光模型地址"
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                            {cameraPathList.map((v) => (
+                                                <Option key={v} value={v}>
+                                                    {v}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="map"
+                                        label="地图数据"
+                                        required={true}
+                                        rules={[{ required: true, message: "请选择地图数据地址" }]}>
+                                        <Select
+                                            placeholder="请选择地图数据地址"
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                            {mapPathList.map((v) => (
+                                                <Option key={v} value={v}>
+                                                    {v}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                </>
+                            )}
+                        </Spin>
                         <Spin spinning={configLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 配置信息

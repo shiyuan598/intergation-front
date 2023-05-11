@@ -23,3 +23,8 @@ export const saveFile = (v: string, name: string) => {
     a.download = name;
     a.click();
 };
+
+// 拼接两个路径，正确处理路径间的斜线
+export const joinPath = (pre: string, sub: string) => {
+    return  `${pre.replace(/\/$/, '')}/${sub.replace(/^\//, '')}`;
+}

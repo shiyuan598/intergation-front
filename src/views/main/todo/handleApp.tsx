@@ -1,6 +1,6 @@
 // 处理应用集成表单
 import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "antd";
-import React, { useRef, Fragment, useContext, useState, useEffect } from "react";
+import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../context";
 import { project as projectApi, tools as toolsApi, todo as todoApi } from "../../../api";
 
@@ -27,7 +27,6 @@ const App = (props: any = {}) => {
     const [projectList, setProjectList] = useState(
         [] as { id: number; name: string; job_name: string; artifacts_path: string }[]
     );
-    const [project, setProject] = useState();
 
     const [moduleList, setModuleList] = useState(
         [] as {
@@ -72,7 +71,6 @@ const App = (props: any = {}) => {
     }, [moduleList, form]);
 
     const projectSelectChange = (v: any) => {
-        setProject(v);
         if (!v) {
             return;
         }
@@ -202,6 +200,39 @@ const App = (props: any = {}) => {
 
                         <Spin spinning={moduleLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
+                                模型信息
+                            </Divider>
+                            <Form.Item
+                                name="lidar"
+                                label="激光模型"
+                                required={true}
+                                rules={[{ required: true, message: "请选择激光模型地址" }]}>
+                                <Select
+                                    disabled
+                                    placeholder="请选择激光模型地址"
+                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}></Select>
+                            </Form.Item>
+                            <Form.Item
+                                name="camera"
+                                label="视觉模型"
+                                required={true}
+                                rules={[{ required: true, message: "请选择视觉模型地址" }]}>
+                                <Select
+                                    disabled
+                                    placeholder="请选择激光模型地址"
+                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}></Select>
+                            </Form.Item>
+                            <Form.Item
+                                name="map"
+                                label="地图数据"
+                                required={true}
+                                rules={[{ required: true, message: "请选择地图数据地址" }]}>
+                                <Select
+                                    disabled
+                                    placeholder="请选择地图数据地址"
+                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}></Select>
+                            </Form.Item>
+                            <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 配置信息
                             </Divider>
                             {moduleList
@@ -220,24 +251,6 @@ const App = (props: any = {}) => {
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
                                             <Select disabled placeholder="请选择版本号" showSearch allowClear>
-                                                {item.tags.length && (
-                                                    <OptGroup label="Tag">
-                                                        {item.tags.map((v) => (
-                                                            <Option key={item.name + v} value={v}>
-                                                                {v + ""}
-                                                            </Option>
-                                                        ))}
-                                                    </OptGroup>
-                                                )}
-                                                {item.branches.length && (
-                                                    <OptGroup label="Branch">
-                                                        {item.branches.map((v) => (
-                                                            <Option key={item.name + v} value={v}>
-                                                                {v + ""}
-                                                            </Option>
-                                                        ))}
-                                                    </OptGroup>
-                                                )}
                                             </Select>
                                         </Form.Item>
                                     </Form.Item>
@@ -261,24 +274,6 @@ const App = (props: any = {}) => {
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
                                             <Select disabled placeholder="请选择版本号" showSearch allowClear>
-                                                {item.tags.length && (
-                                                    <OptGroup label="Tag">
-                                                        {item.tags.map((v) => (
-                                                            <Option key={item.name + v} value={v}>
-                                                                {v + ""}
-                                                            </Option>
-                                                        ))}
-                                                    </OptGroup>
-                                                )}
-                                                {item.branches.length && (
-                                                    <OptGroup label="Branch">
-                                                        {item.branches.map((v) => (
-                                                            <Option key={item.name + v} value={v}>
-                                                                {v + ""}
-                                                            </Option>
-                                                        ))}
-                                                    </OptGroup>
-                                                )}
                                             </Select>
                                         </Form.Item>
                                     </Form.Item>
@@ -310,7 +305,8 @@ const App = (props: any = {}) => {
                                                     disabled={item.name !== editFormData.module_name}
                                                     placeholder="请选择版本号"
                                                     showSearch
-                                                    allowClear getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                    allowClear
+                                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                                     {item.tags.length && (
                                                         <OptGroup label="Tag">
                                                             {item.tags.map((v) => (

@@ -60,24 +60,32 @@ const App = (props: { keyword: string }) => {
     const columns: ColumnsType<DataType> = [
         {
             title: "登录名",
+            width: 120,
+            ellipsis: true,
             dataIndex: "username",
             key: "username",
             sorter: true
         },
         {
             title: "角色",
+            width: 120,
+            ellipsis: true,
             dataIndex: "role_name",
             key: "role",
             sorter: true
         },
         {
             title: "名称",
+            width: 120,
+            ellipsis: true,
             dataIndex: "name",
             key: "name",
             sorter: true
         },
         {
             title: "电话",
+            width: 120,
+            ellipsis: true,
             dataIndex: "telephone",
             key: "telephone",
             sorter: true
@@ -85,6 +93,7 @@ const App = (props: { keyword: string }) => {
         isAdmin()
             ? {
                   title: "操作",
+                  width: 120,
                   dataIndex: "",
                   key: "x",
                   render: (v: DataType) => {

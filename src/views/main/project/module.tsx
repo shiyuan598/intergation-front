@@ -80,30 +80,40 @@ export default function App() {
     const columns: ColumnsType<DataType> = [
         {
             title: "模块名称",
+            width: 140,
+            ellipsis: true,
             dataIndex: "name",
             key: "name",
             sorter: true
         },
         {
             title: "模块类型",
+            width: 120,
+            ellipsis: true,
             dataIndex: "type_name",
             key: "type",
             sorter: true
         },
         {
             title: "GitLab",
+            width: 280,
+            ellipsis: true,
             dataIndex: "git",
             key: "git",
             sorter: true
         },
         {
             title: "更新时间",
+            width: 170,
+            ellipsis: true,
             dataIndex: "update_time",
             key: "update_time",
             sorter: true
         },
         {
             title: "负责人",
+            width: 120,
+            ellipsis: true,
             dataIndex: "owner_name",
             key: "owner",
             sorter: true
@@ -117,6 +127,7 @@ export default function App() {
         isAdmin()
             ? {
                   title: "操作",
+                  width: 120,
                   dataIndex: "",
                   key: "x",
                   render: (v: DataType) => {
