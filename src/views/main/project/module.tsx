@@ -1,7 +1,7 @@
 import { Input, Button, Table, message, Breadcrumb } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined } from "@ant-design/icons";
-import React, { Fragment, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import style from "./project.module.scss";
 import showDeleteConfirm from "../../../components/common/deleteConfirm";
@@ -9,7 +9,6 @@ import { ModalContext, DataContext } from "../../../context";
 import { isAdmin } from "../../../common/user";
 import { project as projectApi, module as moduleApi } from "../../../api";
 import AddModule from "./addModule";
-import { updateVariableDeclarationList } from "typescript";
 
 const { Search } = Input;
 
@@ -124,30 +123,30 @@ export default function App() {
         //     key: "telephone",
         //     sorter: true
         // },
-        isAdmin()
-            ? {
-                  title: "操作",
-                  width: 120,
-                  dataIndex: "",
-                  key: "x",
-                  render: (v: DataType) => {
-                      return (
-                          <Fragment>
-                              <a href="#!" onClick={(e) => del(e, v)}>
-                                  删除
-                              </a>
-                              <a href="#!" onClick={(e) => edit(e, v)}>
-                                  编辑
-                              </a>
-                          </Fragment>
-                      );
-                  }
-              }
-            : {}
+        {
+            title: "操作",
+            width: 120,
+            dataIndex: "",
+            key: "x",
+            render: (v: DataType) => {
+                return isAdmin() ? (
+                    <>
+                        <a href="#!" onClick={(e) => del(e, v)}>
+                            删除
+                        </a>
+                        <a href="#!" onClick={(e) => edit(e, v)}>
+                            编辑
+                        </a>
+                    </>
+                ) : (
+                    <></>
+                );
+            }
+        }
     ];
 
     const getData = (projectId: number, pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
         projectApi
             .modules(projectId, pageNo, name, order, seq)
@@ -169,8 +168,8 @@ export default function App() {
         if (action === "sort") {
             const { order, columnKey } = sorter;
             setSorter({
-                field: columnKey,
-                order: order
+                field: order ? columnKey : "id",
+                order: order || "descend"
             });
         }
     };

@@ -168,7 +168,7 @@ export default function App() {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "desc" } = sorter || {};
         setLoading(true);
         projectApi
             .list(pageNo, name, order, seq)
@@ -190,8 +190,8 @@ export default function App() {
         if (action === "sort") {
             const { order, columnKey } = sorter;
             setSorter({
-                field: columnKey,
-                order: order
+                field: order ? columnKey : "id",
+                order: order || "descend"
             });
         }
     };

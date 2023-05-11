@@ -244,7 +244,7 @@ export default function Api() {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
         apiProcess
             .list(pageNo, getUserInfo().id, name, order, seq)
@@ -266,8 +266,8 @@ export default function Api() {
         if (action === "sort") {
             const { order, columnKey } = sorter;
             setSorter({
-                field: columnKey,
-                order: order
+                field: order ? columnKey : "id",
+                order: order || "descend"
             });
         }
     };

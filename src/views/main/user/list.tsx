@@ -90,41 +90,44 @@ const App = (props: { keyword: string }) => {
             key: "telephone",
             sorter: true
         },
-        isAdmin()
-            ? {
-                  title: "操作",
-                  width: 120,
-                  dataIndex: "",
-                  key: "x",
-                  render: (v: DataType) => {
-                      return (
-                          <Fragment>
-                              <a href="#!" onClick={(e) => deleteUser(e, v)}>
-                                  删除
-                              </a>
-                              <a href="#!" onClick={(e) => editUser(e, v)}>
-                                  编辑
-                              </a>
-                          </Fragment>
-                      );
-                  }
-              }
-            : {}
+        {
+            title: "操作",
+            width: 120,
+            dataIndex: "",
+            key: "x",
+            render: (v: DataType) => {
+                return isAdmin() ? (
+                    <Fragment>
+                        <a href="#!" onClick={(e) => deleteUser(e, v)}>
+                            删除
+                        </a>
+                        <a href="#!" onClick={(e) => editUser(e, v)}>
+                            编辑
+                        </a>
+                    </Fragment>
+                ) : (
+                    <></>
+                );
+            }
+        }
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order, order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
-        userApi.getUser(pageNo, name, order, seq).then((v) => {
-            if (v.code === 0) {
-                setData(v.data);
-                setPagination(v.pagination);
-            } else {
-                message.error(v.msg);
-            }
-        }).finally(()=>{
-            setLoading(false);
-        });
+        userApi
+            .getUser(pageNo, name, order, seq)
+            .then((v) => {
+                if (v.code === 0) {
+                    setData(v.data);
+                    setPagination(v.pagination);
+                } else {
+                    message.error(v.msg);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
@@ -132,8 +135,8 @@ const App = (props: { keyword: string }) => {
         if (action === "sort") {
             const { order, columnKey } = sorter;
             setSorter({
-                field: columnKey,
-                order: order
+                field: order ? columnKey : "id",
+                order: order || "descend"
             });
         }
     };

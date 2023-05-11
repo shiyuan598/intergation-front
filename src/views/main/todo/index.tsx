@@ -177,7 +177,7 @@ export default function App() {
     ];
 
     const getData = (pageNo: number, sorter: any, state: number = 0) => {
-        let { field: order = "", order: seq = "" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
         todoApi
             .list(getUserInfo().id, pageNo, order, seq, state)
@@ -199,8 +199,8 @@ export default function App() {
         if (action === "sort") {
             const { order, columnKey } = sorter;
             setSorter({
-                field: columnKey,
-                order: order
+                field: order ? columnKey : "id",
+                order: order || "descend"
             });
         }
     };
