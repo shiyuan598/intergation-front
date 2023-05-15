@@ -9,8 +9,10 @@ function list(pageNo: number, name: string = "", order = "", seq = "") {
     });
 }
 
-function listAll() {
-    return get("/project/list_all");
+function listAll(username: string) {
+    return get("/project/list_all", {
+        user_name: username
+    });
 }
 
 function modules(projectId: number, pageNo: number, name: string = "", order = "", seq = "") {

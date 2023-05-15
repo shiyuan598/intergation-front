@@ -117,8 +117,8 @@ const App = (props: any = {}) => {
                     <Form
                         form={form}
                         name="basic"
-                        labelCol={{ span: 6 }}
-                        wrapperCol={{ span: 18 }}
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
                         onFinish={onFinish}
                         initialValues={editFormData}
                         autoComplete="off">
@@ -143,7 +143,14 @@ const App = (props: any = {}) => {
                         </Form.Item>
                         <Form.Item
                             name="job_name"
-                            label="Job"
+                            label="General Jenkins Job"
+                            required={true}
+                            rules={[{ required: true, message: "请输入jenkins job名称" }]}>
+                            <Input placeholder="请输入jenkins job名称" />
+                        </Form.Item>
+                        <Form.Item
+                            name="job_name_p"
+                            label="Personal Jenkins Job"
                             required={true}
                             rules={[{ required: true, message: "请输入jenkins job名称" }]}>
                             <Input placeholder="请输入jenkins job名称" />

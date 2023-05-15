@@ -81,18 +81,26 @@ export default function App() {
         },
         {
             title: "平台",
-            width: 90,
+            width: 80,
             ellipsis: true,
             dataIndex: "platform",
             key: "platform",
             sorter: true
         },
         {
-            title: "Jenkins Job",
-            width: 160,
+            title: "General Jenkins Job",
+            width: 190,
             ellipsis: true,
             dataIndex: "job_name",
             key: "job_name",
+            sorter: true
+        },
+        {
+            title: "Personal Jenkins Job",
+            width: 190,
+            ellipsis: true,
+            dataIndex: "job_name_p",
+            key: "job_name_p",
             sorter: true
         },
         {

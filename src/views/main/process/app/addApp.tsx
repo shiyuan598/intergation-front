@@ -11,8 +11,9 @@ interface ProjectType {
     id: number;
     name: string;
     job_name: string;
-    artifacts_path: string;
+    job_name_p: string;
     artifacts_url: string;
+    artifacts_url_p: string;
     owner: number;
     lidar_path: string;
     camera_path: string;
@@ -89,7 +90,7 @@ const App = (props: any = {}) => {
 
     useEffect(() => {
         // 获取所有的project
-        projectApi.listAll().then((v) => {
+        projectApi.listAll(getUserInfo().username).then((v) => {
             setProjectList(v.data);
         });
     }, []);
@@ -309,11 +310,12 @@ const App = (props: any = {}) => {
         });
         res.state = state;
         res.modules = JSON.stringify(res.modules, null, 4);
-        let { job_name, artifacts_url, owner } = project;
-        res.job_name = job_name;
-        res.artifacts_url = artifacts_url;
+        let { job_name, job_name_p, artifacts_url, artifacts_url_p, owner } = project;
+        const type = owner === getUserInfo().id ? 0 : 1; // 通过是否为项目负责人来判断
+        res.type = type;
+        res.job_name = type === 0 ? job_name : job_name_p;
+        res.artifacts_url = type === 0 ? artifacts_url : artifacts_url_p;
         res.creator = getUserInfo().id;
-        res.type = owner === getUserInfo().id ? 0 : 1; // 通过是否为项目负责人来判断
 
         setLoading(true);
         let p = null;

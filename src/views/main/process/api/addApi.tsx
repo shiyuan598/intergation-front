@@ -43,7 +43,7 @@ const App = (props: any = {}) => {
     useEffect(() => {
         // 获取所有的project
         // TODO: 查询自己是模块负责人的项目
-        projectApi.listAll().then((v) => {
+        projectApi.listAll(getUserInfo().username).then((v) => {
             setProjectList(v.data);
         });
         // 如果初始化时编辑模式，就主动触发一下模块查询

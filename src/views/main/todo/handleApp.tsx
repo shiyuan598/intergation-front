@@ -3,6 +3,7 @@ import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider } from "an
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../context";
 import { project as projectApi, tools as toolsApi, todo as todoApi } from "../../../api";
+import { getUserInfo } from "../../../common/user";
 
 const { Option, OptGroup } = Select;
 
@@ -49,7 +50,7 @@ const App = (props: any = {}) => {
 
     useEffect(() => {
         // 获取所有的project
-        projectApi.listAll().then((v) => {
+        projectApi.listAll(getUserInfo().username).then((v) => {
             setProjectList(v.data);
         });
         // 如果初始化时编辑模式，就主动触发一下模块查询
@@ -250,8 +251,7 @@ const App = (props: any = {}) => {
                                             label="版本号"
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
-                                            <Select disabled placeholder="请选择版本号" showSearch allowClear>
-                                            </Select>
+                                            <Select disabled placeholder="请选择版本号" showSearch allowClear></Select>
                                         </Form.Item>
                                     </Form.Item>
                                 ))}
@@ -273,8 +273,7 @@ const App = (props: any = {}) => {
                                             label="版本号"
                                             required={true}
                                             rules={[{ required: true, message: "请选择版本号" }]}>
-                                            <Select disabled placeholder="请选择版本号" showSearch allowClear>
-                                            </Select>
+                                            <Select disabled placeholder="请选择版本号" showSearch allowClear></Select>
                                         </Form.Item>
                                     </Form.Item>
                                 ))}
@@ -330,10 +329,11 @@ const App = (props: any = {}) => {
                                         </Form.Item>
                                         {item.name === editFormData.module_name && (
                                             <Form.Item
-                                                key={item.id + item.name + "_note"}
+                                                key={item.id + item.name + "_note_c"}
                                                 name="module_release_note"
                                                 noStyle>
                                                 <Form.Item
+                                                    key={item.id + item.name + "_note"}
                                                     required
                                                     rules={[{ required: true, message: "请输入Release Note" }]}
                                                     style={{ width: "100%" }}

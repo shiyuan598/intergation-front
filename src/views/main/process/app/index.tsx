@@ -92,6 +92,7 @@ export default function App() {
             project: v.project_name,
             version: v.version,
             build_type: v.build_type,
+            user: getUserInfo().username,
             lidar_model: joinPath(v.lidar_path, v.lidar),
             camera_model: joinPath(v.camera_path, v.camera),
             map_data: joinPath(v.map_path, v.map),
