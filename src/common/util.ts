@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const transformPhoneNumber = (mobile_phone: string) => {
     let res = mobile_phone.replace(/^(.{3})(.*)(.{4})$/, "$1-$2-$3");
     return res;
@@ -26,5 +28,9 @@ export const saveFile = (v: string, name: string) => {
 
 // 拼接两个路径，正确处理路径间的斜线
 export const joinPath = (pre: string, sub: string) => {
-    return  `${pre.replace(/\/$/, '')}/${sub.replace(/^\//, '')}`;
-}
+    return `${pre.replace(/\/$/, "")}/${sub.replace(/^\//, "")}`;
+};
+
+export const getCurDatetime = (dateStr: string) => {
+    return moment(dateStr).format("YYYYMMDD-HHmmss");
+};

@@ -13,7 +13,7 @@ import configImg from "../../../../assets/config.svg";
 import jenkinsImg from "../../../../assets/jenkins.png";
 import artifactsImg from "../../../../assets/artifacts.svg";
 import confluenceImg from "../../../../assets/confluence.svg";
-import { joinPath } from "../../../../common/util";
+import { joinPath, getCurDatetime } from "../../../../common/util";
 
 const { Search } = Input;
 
@@ -93,6 +93,7 @@ export default function App() {
             version: v.version,
             build_type: v.build_type,
             user: getUserInfo().username,
+            timestamp: getCurDatetime(v.create_time),
             lidar_model: joinPath(v.lidar_path, v.lidar),
             camera_model: joinPath(v.camera_path, v.camera),
             map_data: joinPath(v.map_path, v.map),
@@ -115,11 +116,13 @@ export default function App() {
     };
     const trigger = (e: any, v: any) => {
         e.stopPropagation();
+        const artifacts_url = `${v.artifacts_url}${v.project_name}-${v.version}-${getCurDatetime(v.create_time)}.tar.gz`;
         toolsApi
             .jenkinsBuildJob({
                 process_type: 1,
                 process_id: v.id,
                 job: v.job_name,
+                artifacts_url:  artifacts_url,
                 parameters: generatorBuildConfig(v)
             })
             .then(() => {
@@ -165,16 +168,26 @@ export default function App() {
         {
             title: "创建时间",
             width: 170,
-            dataIndex: "create_time",
+            // dataIndex: "create_time",
             key: "create_time",
-            sorter: true
+            sorter: true,
+            render: (v: DataType) => (
+                <>
+                    <span>{v.create_time.substring(0, v.create_time.length - 3)}</span>
+                </>
+            )
         },
         {
             title: "更新时间",
             width: 170,
-            dataIndex: "update_time",
+            // dataIndex: "update_time",
             key: "update_time",
-            sorter: true
+            sorter: true,
+            render: (v: DataType) => (
+                <>
+                    <span>{v.update_time.substring(0, v.update_time.length - 3)}</span>
+                </>
+            )
         },
         {
             title: "状态",
@@ -328,7 +341,7 @@ export default function App() {
     ];
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
-        let { field: order="id", order: seq="descend" } = sorter || {};
+        let { field: order = "id", order: seq = "descend" } = sorter || {};
         setLoading(true);
         appProcess
             .list(pageNo, getUserInfo().id, name, order, seq)
