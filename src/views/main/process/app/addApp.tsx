@@ -18,7 +18,7 @@ interface ProjectType {
     lidar_path: string;
     camera_path: string;
     map_path: string;
-};
+}
 
 const App = (props: any = {}) => {
     const { data: editFormData } = props;
@@ -38,16 +38,11 @@ const App = (props: any = {}) => {
         modalShow: boolean;
         setModalShow: Function;
     };
-    const [projectList, setProjectList] = useState(
-        [] as ProjectType[]
-    );
+    const [projectList, setProjectList] = useState([] as ProjectType[]);
     const [lidarPathList, setLidarPathList] = useState([] as string[]);
     const [cameraPathList, setCameraPathList] = useState([] as string[]);
     const [mapPathList, setMapPathList] = useState([] as string[]);
-    const [project, setProject] = useState(
-        undefined as
-            | ProjectType | undefined
-    );
+    const [project, setProject] = useState(undefined as ProjectType | undefined);
     // const [apiVersionList, setApiVersionList] = useState([] as string[]);
     const [configList, setConfigList] = useState(
         [] as {
@@ -466,12 +461,9 @@ const App = (props: any = {}) => {
                             {!project && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />}
                             {project && (
                                 <>
-                                    <Form.Item
-                                        name="lidar"
-                                        label="激光模型"
-                                        required={true}
-                                        rules={[{ required: true, message: "请选择激光模型地址" }]}>
+                                    <Form.Item name="lidar" label="激光模型">
                                         <Select
+                                            allowClear
                                             placeholder="请选择激光模型地址"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {lidarPathList.map((v) => (
@@ -481,12 +473,9 @@ const App = (props: any = {}) => {
                                             ))}
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item
-                                        name="camera"
-                                        label="视觉模型"
-                                        required={true}
-                                        rules={[{ required: true, message: "请选择视觉模型地址" }]}>
+                                    <Form.Item name="camera" label="视觉模型">
                                         <Select
+                                            allowClear
                                             placeholder="请选择激光模型地址"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {cameraPathList.map((v) => (
@@ -500,7 +489,7 @@ const App = (props: any = {}) => {
                                         name="map"
                                         label="地图数据"
                                         required={true}
-                                        rules={[{ required: true, message: "请选择地图数据地址" }]}>
+                                        rules={[{ required: true, message: "请选择版本号" }]}>
                                         <Select
                                             placeholder="请选择地图数据地址"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>

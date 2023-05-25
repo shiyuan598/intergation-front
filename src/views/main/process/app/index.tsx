@@ -88,19 +88,21 @@ export default function App() {
             }
         });
 
-        return {
+        const result: any = {
             project: v.project_name,
             version: v.version,
             build_type: v.build_type,
             user: getUserInfo().username,
             timestamp: getCurDatetime(v.create_time),
-            lidar_model: joinPath(v.lidar_path, v.lidar),
-            camera_model: joinPath(v.camera_path, v.camera),
-            map_data: joinPath(v.map_path, v.map),
             config,
             base,
             modules: common
         };
+        v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
+        v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
+        v.map && (result["map_data"] = joinPath(v.map_path, v.map));
+
+        return result;
     };
     // 编辑
     const edit = (e: any, v: any) => {
@@ -116,13 +118,15 @@ export default function App() {
     };
     const trigger = (e: any, v: any) => {
         e.stopPropagation();
-        const artifacts_url = `${v.artifacts_url}${v.project_name}-${v.version}-${getCurDatetime(v.create_time)}.tar.gz`;
+        const artifacts_url = `${v.artifacts_url}${v.project_name}-${v.version}-${getCurDatetime(
+            v.create_time
+        )}.tar.gz`;
         toolsApi
             .jenkinsBuildJob({
                 process_type: 1,
                 process_id: v.id,
                 job: v.job_name,
-                artifacts_url:  artifacts_url,
+                artifacts_url: artifacts_url,
                 parameters: generatorBuildConfig(v)
             })
             .then(() => {
@@ -244,14 +248,13 @@ export default function App() {
                                             config[k] = item;
                                         }
                                     });
-                                    setModuleInfo({
-                                        lidar_model: joinPath(v.lidar_path, v.lidar),
-                                        camera_model: joinPath(v.camera_path, v.camera),
-                                        map_data: joinPath(v.map_path, v.map),
-                                        config,
-                                        base,
-                                        modules: common
-                                    });
+                                    const result: any = { config, base, modules: common };
+
+                                    v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
+                                    v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
+                                    v.map && (result["map_data"] = joinPath(v.map_path, v.map));
+                                    
+                                    setModuleInfo(result);
                                     setModuleInfoVisible(true);
                                 }}
                                 src={configImg}
