@@ -203,21 +203,13 @@ const App = (props: any = {}) => {
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
                                 模型信息
                             </Divider>
-                            <Form.Item
-                                name="lidar"
-                                label="激光模型"
-                                required={true}
-                                rules={[{ required: true, message: "请选择激光模型地址" }]}>
+                            <Form.Item name="lidar" label="激光模型">
                                 <Select
                                     disabled
                                     placeholder="请选择激光模型地址"
                                     getPopupContainer={(triggerNode) => triggerNode.parentNode}></Select>
                             </Form.Item>
-                            <Form.Item
-                                name="camera"
-                                label="视觉模型"
-                                required={true}
-                                rules={[{ required: true, message: "请选择视觉模型地址" }]}>
+                            <Form.Item name="camera" label="视觉模型">
                                 <Select
                                     disabled
                                     placeholder="请选择激光模型地址"
