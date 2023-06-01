@@ -128,6 +128,14 @@ export default function App() {
             sorter: true
         },
         {
+            title: "驱动数据路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "driver_path",
+            key: "driver_path",
+            sorter: true
+        },
+        {
             title: "更新时间",
             width: 160,
             dataIndex: "update_time",

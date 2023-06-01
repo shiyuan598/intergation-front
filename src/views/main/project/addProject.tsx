@@ -177,6 +177,11 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入地图数据的存放路径" />
                         </Form.Item>
                         <Form.Item
+                            name="driver_path"
+                            label="驱动数据">
+                            <Input placeholder="请输入驱动数据的存放路径" />
+                        </Form.Item>
+                        <Form.Item
                             name="owner"
                             label="负责人"
                             required={true}

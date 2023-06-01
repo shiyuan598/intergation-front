@@ -33,9 +33,11 @@ interface DataType {
     lidar: string;
     camera: string;
     map: string;
+    driver: string;
     lidar_path: string;
     camera_path: string;
     map_path: string;
+    driver_path: string;
     modules: string;
     state_name: string;
     jenkins_url: string;
@@ -101,6 +103,7 @@ export default function App() {
         v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
         v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
         v.map && (result["map_data"] = joinPath(v.map_path, v.map));
+        v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
 
         return result;
     };
