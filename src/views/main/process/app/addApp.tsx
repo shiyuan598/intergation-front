@@ -1,5 +1,5 @@
 // 应用集成表单
-import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider, Empty, Button, Space } from "antd";
+import { Modal, Form, Input, Select, message, Spin, Checkbox, Divider, Empty, Button, Space, Radio } from "antd";
 import React, { Fragment, useContext, useState, useEffect } from "react";
 import { ModalContext, DataContext } from "../../../../context";
 import { appProcess as appProcessApi, project as projectApi, tools as toolsApi } from "../../../../api";
@@ -24,7 +24,7 @@ interface ProjectType {
 
 const App = (props: any = {}) => {
     const { data: editFormData } = props;
-    let initial: any = {};
+    let initial: any = { auto_test: 0 };
     if (editFormData) {
         initial = {
             ...editFormData,
@@ -448,6 +448,12 @@ const App = (props: any = {}) => {
                         </Form.Item>
                         <Form.Item name="desc" label="描述">
                             <Input placeholder="请输入描述" />
+                        </Form.Item>
+                        <Form.Item name="auto_test" label="自动化测试">
+                            <Radio.Group>
+                                <Radio value={0}>否</Radio>
+                                <Radio value={1}>是</Radio>
+                            </Radio.Group>
                         </Form.Item>
                         <Spin spinning={modelLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>

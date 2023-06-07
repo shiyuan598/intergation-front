@@ -152,8 +152,15 @@ const App = (props: any = {}) => {
                             name="job_name_p"
                             label="Personal Jenkins Job"
                             required={true}
-                            rules={[{ required: true, message: "请输入jenkins job名称" }]}>
-                            <Input placeholder="请输入jenkins job名称" />
+                            rules={[{ required: true, message: "请输入个人jenkins job名称" }]}>
+                            <Input placeholder="请输入个人jenkins job名称" />
+                        </Form.Item>
+                        <Form.Item
+                            name="job_name_test"
+                            label="Test Jenkins Job"
+                            required={true}
+                            rules={[{ required: true, message: "请输入测试jenkins job名称" }]}>
+                            <Input placeholder="请输入测试jenkins job名称" />
                         </Form.Item>
                         <Form.Item
                             name="lidar_path"

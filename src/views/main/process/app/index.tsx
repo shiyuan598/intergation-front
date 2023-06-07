@@ -124,9 +124,9 @@ export default function App() {
     };
     const trigger = (e: any, v: any) => {
         e.stopPropagation();
-        const artifacts_url = `${v.artifacts_url}${v.project_name}-${v.version}-${getCurDatetime(
-            v.create_time
-        )}.tar.gz`;
+        const artifacts_url = `${v.artifacts_url}${v.project_name}-${getCurDatetime(v.create_time)}-${
+            v.version
+        }.tar.gz`;
         toolsApi
             .jenkinsBuildJob({
                 process_type: 1,
@@ -210,11 +210,11 @@ export default function App() {
                     return <Tag color="#666666">{v.state_name}</Tag>;
                 } else if (v.state === 1) {
                     return <Tag color="#48d1cc">{v.state_name}</Tag>;
-                } else if (v.state === 2) {
+                } else if (v.state === 2 || v.state === 6) {
                     return <Tag color="#177ddc">{v.state_name}</Tag>;
-                } else if (v.state === 3) {
+                } else if (v.state === 3 || v.state === 7) {
                     return <Tag color="#00b578">{v.state_name}</Tag>;
-                } else if (v.state === 4) {
+                } else if (v.state === 4 || v.state === 8) {
                     return <Tag color="#ff3141">{v.state_name}</Tag>;
                 } else if (v.state === 5) {
                     return <Tag color="#ff8f1f">{v.state_name}</Tag>;
@@ -294,7 +294,7 @@ export default function App() {
                                 />
                             </Tooltip>
                         )}
-                        {v.state === 3 && (
+                        {[3, 6, 7, 8].includes(v.state) && (
                             <Tooltip title="Artifacts">
                                 <img
                                     className={style.imgBtn + " " + style.imgBtnLarge}

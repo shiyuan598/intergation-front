@@ -104,6 +104,14 @@ export default function App() {
             sorter: true
         },
         {
+            title: "Test Jenkins Job",
+            width: 190,
+            ellipsis: true,
+            dataIndex: "job_name_test",
+            key: "job_name_test",
+            sorter: true
+        },
+        {
             title: "激光模型路径",
             width: 160,
             ellipsis: true,
