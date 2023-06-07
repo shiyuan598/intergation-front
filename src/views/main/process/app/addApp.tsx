@@ -19,6 +19,7 @@ interface ProjectType {
     camera_path: string;
     map_path: string;
     driver_path: string;
+    sdc_path: string;
 }
 
 const App = (props: any = {}) => {
@@ -44,6 +45,7 @@ const App = (props: any = {}) => {
     const [cameraPathList, setCameraPathList] = useState([] as string[]);
     const [mapPathList, setMapPathList] = useState([] as string[]);
     const [driverPathList, setDriverPathList] = useState([] as string[]);
+    const [sdcPathList, setSDCPathList] = useState([] as string[]);
     const [project, setProject] = useState(undefined as ProjectType | undefined);
     const [configList, setConfigList] = useState(
         [] as {
@@ -111,23 +113,26 @@ const App = (props: any = {}) => {
         setModuleLoading(true);
 
         // 获取激光模型、视觉模型、地图数据、驱动数据的路径
-        let { lidar_path, camera_path, map_path, driver_path } = projectInfo as {
+        let { lidar_path, camera_path, map_path, driver_path, sdc_path } = projectInfo as {
             lidar_path: string;
             camera_path: string;
             map_path: string;
             driver_path: string;
+            sdc_path: string;
         };
         Promise.all([
             toolsApi.getArtifactFolders(lidar_path),
             toolsApi.getArtifactFolders(camera_path),
             toolsApi.getArtifactFolders(map_path),
-            toolsApi.getArtifactFiles(driver_path) // 查询目录下的文件
+            toolsApi.getArtifactFiles(driver_path), // 查询目录下的文件
+            toolsApi.getArtifactFiles(sdc_path) // 查询目录下的文件
         ])
             .then((v) => {
                 setLidarPathList(v[0].data);
                 setCameraPathList(v[1].data);
                 setMapPathList(v[2].data);
                 setDriverPathList(v[3].data);
+                setSDCPathList(v[4].data);
             })
             .finally(() => setModelLoading(false));
 
@@ -446,7 +451,7 @@ const App = (props: any = {}) => {
                         </Form.Item>
                         <Spin spinning={modelLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>
-                                模型信息
+                                制品信息
                             </Divider>
                             {!project && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="请先选择项目" />}
                             {project && (
@@ -490,6 +495,46 @@ const App = (props: any = {}) => {
                                             ))}
                                         </Select>
                                     </Form.Item>
+                                    {driverPathList?.length ? (
+                                        <>
+                                            <Form.Item
+                                                name="driver"
+                                                label="驱动程序"
+                                                required={true}
+                                                rules={[{ required: true, message: "请选择驱动程序" }]}>
+                                                <Select
+                                                    allowClear
+                                                    placeholder="请选择驱动数据地址"
+                                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                    {driverPathList.map((v) => (
+                                                        <Option key={v} value={v}>
+                                                            {v}
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </>
+                                    ) : null}
+                                    {sdcPathList?.length ? (
+                                        <>
+                                            <Form.Item
+                                                name="sdc"
+                                                label="SDC程序"
+                                                required={true}
+                                                rules={[{ required: true, message: "请选择SDC程序" }]}>
+                                                <Select
+                                                    allowClear
+                                                    placeholder="请选择SDC数据地址"
+                                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                    {sdcPathList.map((v) => (
+                                                        <Option key={v} value={v}>
+                                                            {v}
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </>
+                                    ) : null}
                                 </>
                             )}
                         </Spin>
@@ -628,24 +673,6 @@ const App = (props: any = {}) => {
                                         </Form.Item>
                                     </Form.Item>
                                 ))}
-
-                            { baseList.length && driverPathList?.length ?
-                                <>
-                                    <Form.Item></Form.Item>
-                                    <Form.Item name="driver" label="驱动数据">
-                                        <Select
-                                            allowClear
-                                            placeholder="请选择驱动数据地址"
-                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
-                                            {driverPathList.map((v) => (
-                                                <Option key={v} value={v}>
-                                                    {v}
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
-                                </> : null
-                            }
                         </Spin>
                         <Spin spinning={moduleLoading}>
                             <Divider orientation="left" style={{ margin: "0 0 12px 0" }}>

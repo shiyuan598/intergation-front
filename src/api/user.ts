@@ -31,16 +31,6 @@ function deleteUser(id: string) {
     });
 }
 
-function getDriver(username?: string) {
-    if (username) {
-        return get("/user/driver", {
-            username: username
-        });
-    } else {
-        return get("/user/driver");
-    }
-}
-
 function login(username: string, password: string) {
     return post("/user/login", {
         username,
@@ -80,7 +70,6 @@ export default {
     login,
     checkNoExist,
     checkCorrect,
-    getDriver,
     register,
     resetPassword
 };

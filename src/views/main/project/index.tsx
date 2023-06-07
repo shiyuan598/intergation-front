@@ -128,11 +128,19 @@ export default function App() {
             sorter: true
         },
         {
-            title: "驱动数据路径",
+            title: "驱动程序路径",
             width: 160,
             ellipsis: true,
             dataIndex: "driver_path",
             key: "driver_path",
+            sorter: true
+        },
+        {
+            title: "SDC程序路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "sdc_path",
+            key: "sdc_path",
             sorter: true
         },
         {

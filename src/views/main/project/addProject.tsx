@@ -178,8 +178,13 @@ const App = (props: any = {}) => {
                         </Form.Item>
                         <Form.Item
                             name="driver_path"
-                            label="驱动数据">
-                            <Input placeholder="请输入驱动数据的存放路径" />
+                            label="驱动程序">
+                            <Input placeholder="请输入驱动程序的存放路径" />
+                        </Form.Item>
+                        <Form.Item
+                            name="sdc_path"
+                            label="SDC程序">
+                            <Input placeholder="请输入SDC程序的存放路径" />
                         </Form.Item>
                         <Form.Item
                             name="owner"
