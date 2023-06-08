@@ -189,18 +189,18 @@ export default function App() {
                 </>
             )
         },
-        {
-            title: "更新时间",
-            width: 170,
-            // dataIndex: "update_time",
-            key: "update_time",
-            sorter: true,
-            render: (v: DataType) => (
-                <>
-                    <span>{v.update_time.substring(0, v.update_time.length - 3)}</span>
-                </>
-            )
-        },
+        // {
+        //     title: "更新时间",
+        //     width: 170,
+        //     // dataIndex: "update_time",
+        //     key: "update_time",
+        //     sorter: true,
+        //     render: (v: DataType) => (
+        //         <>
+        //             <span>{v.update_time.substring(0, v.update_time.length - 3)}</span>
+        //         </>
+        //     )
+        // },
         {
             title: "状态",
             width: 120,
@@ -225,7 +225,7 @@ export default function App() {
         },
         {
             title: "查看",
-            width: 180,
+            width: 190,
             key: "modules",
             render: (v: DataType) => {
                 return (
