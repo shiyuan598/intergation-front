@@ -13,6 +13,7 @@ import configImg from "../../../../assets/config.svg";
 import jenkinsImg from "../../../../assets/jenkins.png";
 import artifactsImg from "../../../../assets/artifacts.svg";
 import confluenceImg from "../../../../assets/confluence.svg";
+import testResultImg from "../../../../assets/autotest.png";
 import { joinPath, getCurDatetime } from "../../../../common/util";
 
 const { Search } = Input;
@@ -45,6 +46,7 @@ interface DataType {
     jenkins_url: string;
     artifacts_url: string;
     confluence_url: string;
+    test_result_url: string;
 }
 
 export default function App() {
@@ -223,7 +225,7 @@ export default function App() {
         },
         {
             title: "查看",
-            width: 160,
+            width: 180,
             key: "modules",
             render: (v: DataType) => {
                 return (
@@ -303,6 +305,18 @@ export default function App() {
                                     }}
                                     src={artifactsImg}
                                     alt="Artifacts"
+                                />
+                            </Tooltip>
+                        )}
+                        {v.state > 6 && v.test_result_url && (
+                            <Tooltip title="测试报告">
+                                <img
+                                    className={style.imgBtn + " " + style.imgBtnLarge}
+                                    onClick={() => {
+                                        window.open(v.test_result_url, "_blank");
+                                    }}
+                                    src={testResultImg}
+                                    alt="Jenkins"
                                 />
                             </Tooltip>
                         )}
