@@ -18,6 +18,7 @@ interface ProjectType {
     lidar_path: string;
     camera_path: string;
     map_path: string;
+    plan_map_path: string;
     driver_path: string;
     sdc_path: string;
 }
@@ -44,6 +45,7 @@ const App = (props: any = {}) => {
     const [lidarPathList, setLidarPathList] = useState([] as string[]);
     const [cameraPathList, setCameraPathList] = useState([] as string[]);
     const [mapPathList, setMapPathList] = useState([] as string[]);
+    const [planMapPathList, setPlanMapPathList] = useState([] as string[]);
     const [driverPathList, setDriverPathList] = useState([] as string[]);
     const [sdcPathList, setSDCPathList] = useState([] as string[]);
     const [project, setProject] = useState(undefined as ProjectType | undefined);
@@ -112,11 +114,12 @@ const App = (props: any = {}) => {
         setBaseLoading(true);
         setModuleLoading(true);
 
-        // 获取激光模型、视觉模型、地图数据、驱动数据的路径
-        let { lidar_path, camera_path, map_path, driver_path, sdc_path } = projectInfo as {
+        // 获取激光模型、视觉模型、地图数据、规划地图、驱动、SDC的路径
+        let { lidar_path, camera_path, map_path, plan_map_path, driver_path, sdc_path } = projectInfo as {
             lidar_path: string;
             camera_path: string;
             map_path: string;
+            plan_map_path: string;
             driver_path: string;
             sdc_path: string;
         };
@@ -124,6 +127,7 @@ const App = (props: any = {}) => {
             toolsApi.getArtifactFolders(lidar_path),
             toolsApi.getArtifactFolders(camera_path),
             toolsApi.getArtifactFolders(map_path),
+            toolsApi.getArtifactFolders(plan_map_path),
             toolsApi.getArtifactFiles(driver_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(sdc_path) // 查询目录下的文件
         ])
@@ -131,8 +135,9 @@ const App = (props: any = {}) => {
                 setLidarPathList(v[0].data);
                 setCameraPathList(v[1].data);
                 setMapPathList(v[2].data);
-                setDriverPathList(v[3].data);
-                setSDCPathList(v[4].data);
+                setPlanMapPathList(v[3].data);
+                setDriverPathList(v[4].data);
+                setSDCPathList(v[5].data);
             })
             .finally(() => setModelLoading(false));
 
@@ -490,11 +495,26 @@ const App = (props: any = {}) => {
                                         name="map"
                                         label="地图数据"
                                         required={true}
-                                        rules={[{ required: true, message: "请选择版本号" }]}>
+                                        rules={[{ required: true, message: "请选择地图数据地址" }]}>
                                         <Select
                                             placeholder="请选择地图数据地址"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {mapPathList.map((v) => (
+                                                <Option key={v} value={v}>
+                                                    {v}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="plan_map"
+                                        label="规划地图"
+                                        required={false}
+                                        rules={[{ required: true, message: "请选择规划地图地址" }]}>
+                                        <Select
+                                            placeholder="请选择规划地图地址"
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                            {planMapPathList.map((v) => (
                                                 <Option key={v} value={v}>
                                                     {v}
                                                 </Option>

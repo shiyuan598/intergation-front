@@ -136,6 +136,14 @@ export default function App() {
             sorter: true
         },
         {
+            title: "规划地图路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "plan_map_path",
+            key: "plan_map_path",
+            sorter: true
+        },
+        {
             title: "驱动程序路径",
             width: 160,
             ellipsis: true,

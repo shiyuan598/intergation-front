@@ -34,11 +34,13 @@ interface DataType {
     lidar: string;
     camera: string;
     map: string;
+    plan_map: string;
     driver: string;
     sdc: string;
     lidar_path: string;
     camera_path: string;
     map_path: string;
+    plan_map_path: string;
     driver_path: string;
     sdc_path: string;
     modules: string;
@@ -107,6 +109,7 @@ export default function App() {
         v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
         v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
         v.map && (result["map_data"] = joinPath(v.map_path, v.map));
+        v.plan_map && (result["plan_map_data"] = joinPath(v.plan_map_path, v.plan_map));
         v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
         v.sdc && (result["sdc_data"] = joinPath(v.sdc_path, v.sdc));
 
@@ -261,6 +264,7 @@ export default function App() {
                                     v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
                                     v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
                                     v.map && (result["map_data"] = joinPath(v.map_path, v.map));
+                                    v.plan_map && (result["plan_map_data"] = joinPath(v.plan_map_path, v.plan_map));
                                     v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
                                     v.sdc && (result["sdc_data"] = joinPath(v.sdc_path, v.sdc));
 
