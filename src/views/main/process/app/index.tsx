@@ -228,7 +228,7 @@ export default function App() {
         },
         {
             title: "查看",
-            width: 190,
+            width: 192,
             key: "modules",
             render: (v: DataType) => {
                 return (
