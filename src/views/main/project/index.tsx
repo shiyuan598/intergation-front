@@ -1,4 +1,4 @@
-import { Input, Button, Table, message } from "antd";
+import { Input, Button, Table, message, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined } from "@ant-design/icons";
 import React, { Fragment, useState, useEffect, useContext } from "react";
@@ -76,8 +76,10 @@ export default function App() {
             width: 120,
             ellipsis: true,
             dataIndex: "name",
+            fixed: "left",
             key: "name",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "平台",
@@ -85,7 +87,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "platform",
             key: "platform",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "General Jenkins Job",
@@ -93,7 +96,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "job_name",
             key: "job_name",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "Personal Jenkins Job",
@@ -101,7 +105,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "job_name_p",
             key: "job_name_p",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "Test Jenkins Job",
@@ -109,7 +114,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "job_name_test",
             key: "job_name_test",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "激光模型路径",
@@ -117,7 +123,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "lidar_path",
             key: "lidar_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "视觉模型路径",
@@ -125,7 +132,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "camera_path",
             key: "camera_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "地图数据路径",
@@ -133,7 +141,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "map_path",
             key: "map_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "规划地图路径",
@@ -141,7 +150,17 @@ export default function App() {
             ellipsis: true,
             dataIndex: "plan_map_path",
             key: "plan_map_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
+        },
+        {
+            title: "MCU路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "mcu_path",
+            key: "mcu_path",
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "驱动程序路径",
@@ -149,7 +168,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "driver_path",
             key: "driver_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "SDC程序路径",
@@ -157,14 +177,16 @@ export default function App() {
             ellipsis: true,
             dataIndex: "sdc_path",
             key: "sdc_path",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "更新时间",
             width: 160,
             dataIndex: "update_time",
             key: "update_time",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
             title: "负责人",
@@ -172,7 +194,8 @@ export default function App() {
             ellipsis: true,
             dataIndex: "owner_name",
             key: "owner",
-            sorter: true
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         // {
         //     title: "电话",
@@ -184,6 +207,7 @@ export default function App() {
             title: "操作",
             width: 170,
             dataIndex: "",
+            fixed: "right",
             key: "x",
             render: (v: DataType) => {
                 return (
@@ -267,6 +291,7 @@ export default function App() {
                 </ModalContext.Provider>
             </div>
             <Table
+                scroll={{x: 1440}}
                 loading={loading}
                 pagination={{
                     ...pagination,

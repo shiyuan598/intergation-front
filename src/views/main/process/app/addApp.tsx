@@ -19,6 +19,7 @@ interface ProjectType {
     camera_path: string;
     map_path: string;
     plan_map_path: string;
+    mcu_path: string;
     driver_path: string;
     sdc_path: string;
 }
@@ -46,6 +47,7 @@ const App = (props: any = {}) => {
     const [cameraPathList, setCameraPathList] = useState([] as string[]);
     const [mapPathList, setMapPathList] = useState([] as string[]);
     const [planMapPathList, setPlanMapPathList] = useState([] as string[]);
+    const [mcuPathList, setMcuPathList] = useState([] as string[]);
     const [driverPathList, setDriverPathList] = useState([] as string[]);
     const [sdcPathList, setSDCPathList] = useState([] as string[]);
     const [project, setProject] = useState(undefined as ProjectType | undefined);
@@ -114,12 +116,13 @@ const App = (props: any = {}) => {
         setBaseLoading(true);
         setModuleLoading(true);
 
-        // 获取激光模型、视觉模型、地图数据、规划地图、驱动、SDC的路径
-        let { lidar_path, camera_path, map_path, plan_map_path, driver_path, sdc_path } = projectInfo as {
+        // 获取激光模型、视觉模型、地图数据、规划地图、MCU、驱动、SDC的路径
+        let { lidar_path, camera_path, map_path, plan_map_path, mcu_path, driver_path, sdc_path } = projectInfo as {
             lidar_path: string;
             camera_path: string;
             map_path: string;
             plan_map_path: string;
+            mcu_path: string;
             driver_path: string;
             sdc_path: string;
         };
@@ -128,6 +131,7 @@ const App = (props: any = {}) => {
             toolsApi.getArtifactFolders(camera_path),
             toolsApi.getArtifactFolders(map_path),
             toolsApi.getArtifactFolders(plan_map_path),
+            toolsApi.getArtifactFiles(mcu_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(driver_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(sdc_path) // 查询目录下的文件
         ])
@@ -136,8 +140,9 @@ const App = (props: any = {}) => {
                 setCameraPathList(v[1].data);
                 setMapPathList(v[2].data);
                 setPlanMapPathList(v[3].data);
-                setDriverPathList(v[4].data);
-                setSDCPathList(v[5].data);
+                setMcuPathList(v[4].data);
+                setDriverPathList(v[5].data);
+                setSDCPathList(v[6].data);
             })
             .finally(() => setModelLoading(false));
 
@@ -521,6 +526,26 @@ const App = (props: any = {}) => {
                                             ))}
                                         </Select>
                                     </Form.Item>
+                                    {mcuPathList?.length ? (
+                                        <>
+                                            <Form.Item
+                                                name="mcu"
+                                                label="MCU版本"
+                                                required={true}
+                                                rules={[{ required: true, message: "请选择MCU版本" }]}>
+                                                <Select
+                                                    allowClear
+                                                    placeholder="请选择MCU版本"
+                                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                                    {mcuPathList.map((v) => (
+                                                        <Option key={v} value={v}>
+                                                            {v}
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </>
+                                    ) : null}
                                     {driverPathList?.length ? (
                                         <>
                                             <Form.Item
