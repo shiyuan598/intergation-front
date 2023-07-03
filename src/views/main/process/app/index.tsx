@@ -345,7 +345,7 @@ export default function App() {
                                 <a href="#!" onClick={(e) => exportConfig(e, v)}>
                                     导出
                                 </a>
-                                {v.type === 0 && (
+                                {(v.type === 0 || Number(v.creator) === getUserInfo().id)  && (
                                     <a href="#!" onClick={(e) => copy(e, v)}>
                                         复制
                                     </a>
