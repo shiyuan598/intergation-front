@@ -394,7 +394,7 @@ const App = (props: any = {}) => {
     return (
         <Fragment>
             <Modal
-                width={740}
+                width={960}
                 destroyOnClose={true}
                 title={`${editFormData?.opt === "edit" ? "编辑" : "创建"}应用集成`}
                 open={modalShow}
