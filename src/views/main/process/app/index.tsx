@@ -51,6 +51,7 @@ interface DataType {
     artifacts_url: string;
     confluence_url: string;
     test_result_url: string;
+    auto_test: string;
 }
 
 export default function App() {
@@ -106,7 +107,8 @@ export default function App() {
             timestamp: getCurDatetime(v.create_time),
             config,
             base,
-            modules: common
+            modules: common,
+            auto_test: v.auto_test
         };
         v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
         v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
