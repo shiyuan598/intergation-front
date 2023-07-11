@@ -155,11 +155,7 @@ const App = (props: any = {}) => {
                             rules={[{ required: true, message: "请输入个人jenkins job名称" }]}>
                             <Input placeholder="请输入个人jenkins job名称" />
                         </Form.Item>
-                        <Form.Item
-                            name="job_name_test"
-                            label="Test Jenkins Job"
-                            required={false}
-                            rules={[{ required: true, message: "请输入测试jenkins job名称" }]}>
+                        <Form.Item name="job_name_test" label="Test Jenkins Job" required={false}>
                             <Input placeholder="请输入测试jenkins job名称" />
                         </Form.Item>
                         <Form.Item
@@ -183,24 +179,16 @@ const App = (props: any = {}) => {
                             rules={[{ required: true, message: "请输入地图数据的存放路径" }]}>
                             <Input placeholder="请输入地图数据的存放路径" />
                         </Form.Item>
-                        <Form.Item
-                            name="plan_map_path"
-                            label="规划地图">
+                        <Form.Item name="plan_map_path" label="规划地图">
                             <Input placeholder="请输入规划地图的存放路径" />
                         </Form.Item>
-                        <Form.Item
-                            name="mcu_path"
-                            label="MCU版本">
+                        <Form.Item name="mcu_path" label="MCU版本">
                             <Input placeholder="请输入MCU的存放路径" />
                         </Form.Item>
-                        <Form.Item
-                            name="driver_path"
-                            label="驱动程序">
+                        <Form.Item name="driver_path" label="驱动程序">
                             <Input placeholder="请输入驱动程序的存放路径" />
                         </Form.Item>
-                        <Form.Item
-                            name="sdc_path"
-                            label="SDC程序">
+                        <Form.Item name="sdc_path" label="SDC程序">
                             <Input placeholder="请输入SDC程序的存放路径" />
                         </Form.Item>
                         <Form.Item
