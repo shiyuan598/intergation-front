@@ -318,12 +318,15 @@ export default function App() {
                                 />
                             </Tooltip>
                         )}
-                        {v.state > 6 && v.test_result_url && (
+                        {(v.state > 6 || (v.state === 3 && v.project_name.includes("ORIN"))) && v.test_result_url && (
                             <Tooltip title="测试报告">
                                 <img
                                     className={style.imgBtn + " " + style.imgBtnLarge}
                                     onClick={() => {
-                                        window.open(v.test_result_url, "_blank");
+                                        const urls = v.test_result_url.split(";");
+                                        urls.forEach((url) => {
+                                            window.open(url, "_blank");
+                                        });
                                     }}
                                     src={testResultImg}
                                     alt="Jenkins"
@@ -347,7 +350,7 @@ export default function App() {
                                 <a href="#!" onClick={(e) => exportConfig(e, v)}>
                                     导出
                                 </a>
-                                {(v.type === 0 || Number(v.creator) === getUserInfo().id)  && (
+                                {(v.type === 0 || Number(v.creator) === getUserInfo().id) && (
                                     <a href="#!" onClick={(e) => copy(e, v)}>
                                         复制
                                     </a>
