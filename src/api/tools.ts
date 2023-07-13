@@ -29,19 +29,19 @@ function jenkinsBuildInfo(values: { [propName: string]: string | number }) {
 
 function getArtifactFiles(path: string) {
     return get("/artifacts/files", {
-        path
+        path: !path ? "" : path
     });
 }
 
 function getArtifactFolders(path: string) {
     return get("/artifacts/folders", {
-        path
+        path: !path ? "" : path
     });
 }
 
 function getArtifactUri(path: string) {
     return get("/artifacts/uri", {
-        path
+        path: !path ? "" : path
     });
 }
 
