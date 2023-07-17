@@ -79,22 +79,48 @@ export default function App() {
         saveFile(JSON.stringify(generatorBuildConfig(v), null, 4), `${v.project_name}_${v.version}.json`);
     };
     const generatorBuildConfig = (v: DataType) => {
-        let modules = JSON.parse(v.modules);
+        const modules = JSON.parse(v.modules);
+        // 用户选择的三类模块
         let config: any = {};
         let base: any = {};
         let common: any = {};
+        let prebuild: any = {};
+        let perceptions: any = {};
         Object.keys(modules).forEach((k) => {
-            // 只保留url和version属性
             let item = {
                 url: modules[k].url,
-                branch: modules[k].version || ""
+                branch: modules[k].version || "",
+                owner: modules[k].owner_name,
+                release_note: modules[k].release_note || ""
             };
-            // 分为base和common两部分
+            // 分为base\common\config三部分
             if (modules[k].type === 0) {
-                base[k] = item;
+                delete item.release_note;
+                if (k === "perception_common") {
+                    prebuild[k] = item;
+                } else if (k === "adm" || k === "system_tools") {
+                    common[k] = item;
+                } else {
+                    base[k] = item;
+                }
             } else if (modules[k].type === 2) {
-                common[k] = item;
+                if (["zloc", "zmap", "prediction", "planning"].includes(k)) {
+                    prebuild[k] = item;
+                } else if (
+                    [
+                        "routing",
+                        "perception_camera_obs",
+                        "perception_radar",
+                        "perception_lidar",
+                        "perception_fusion"
+                    ].includes(k)
+                ) {
+                    perceptions[k] = item;
+                } else {
+                    common[k] = item;
+                }
             } else if (modules[k].type === 3) {
+                delete item.release_note;
                 config[k] = item;
             }
         });
@@ -107,6 +133,8 @@ export default function App() {
             timestamp: getCurDatetime(v.create_time),
             config,
             base,
+            prebuild,
+            perceptions,
             modules: common,
             auto_test: v.auto_test
         };
@@ -197,18 +225,6 @@ export default function App() {
                 </>
             )
         },
-        // {
-        //     title: "更新时间",
-        //     width: 170,
-        //     // dataIndex: "update_time",
-        //     key: "update_time",
-        //     sorter: true,
-        //     render: (v: DataType) => (
-        //         <>
-        //             <span>{v.update_time.substring(0, v.update_time.length - 3)}</span>
-        //         </>
-        //     )
-        // },
         {
             title: "状态",
             width: 120,
@@ -242,39 +258,8 @@ export default function App() {
                             <img
                                 className={style.imgBtn}
                                 onClick={() => {
-                                    const modules = JSON.parse(v.modules);
-                                    let config: any = {};
-                                    let base: any = {};
-                                    let common: any = {};
-                                    Object.keys(modules).forEach((k) => {
-                                        let item = {
-                                            owner: modules[k].owner_name,
-                                            url: modules[k].url,
-                                            branch: modules[k].version || "",
-                                            release_note: modules[k].release_note || ""
-                                        };
-                                        // 分为base和common两部分
-                                        if (modules[k].type === 0) {
-                                            delete item.release_note;
-                                            base[k] = item;
-                                        } else if (modules[k].type === 2) {
-                                            common[k] = item;
-                                        } else if (modules[k].type === 3) {
-                                            delete item.release_note;
-                                            config[k] = item;
-                                        }
-                                    });
-                                    const result: any = { config, base, modules: common };
-
-                                    v.lidar && (result["lidar_model"] = joinPath(v.lidar_path, v.lidar));
-                                    v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
-                                    v.map && (result["map_data"] = joinPath(v.map_path, v.map));
-                                    v.plan_map && (result["plan_map_data"] = joinPath(v.plan_map_path, v.plan_map));
-                                    v.mcu && (result["mcu_data"] = joinPath(v.mcu_path, v.mcu));
-                                    v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
-                                    v.sdc && (result["sdc_data"] = joinPath(v.sdc_path, v.sdc));
-
-                                    setModuleInfo(result);
+                                    const { config, base, prebuild, perceptions, modules } = generatorBuildConfig(v);
+                                    setModuleInfo({ config, base, prebuild, perceptions, modules });
                                     setModuleInfoVisible(true);
                                 }}
                                 src={configImg}
