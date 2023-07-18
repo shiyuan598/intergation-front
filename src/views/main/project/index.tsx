@@ -154,6 +154,15 @@ export default function App() {
             render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
+            title: "点云地图路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "lidar_point_path",
+            key: "lidar_point_path",
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
+        },
+        {
             title: "MCU路径",
             width: 160,
             ellipsis: true,

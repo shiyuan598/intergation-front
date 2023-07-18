@@ -35,6 +35,7 @@ interface DataType {
     camera: string;
     map: string;
     plan_map: string;
+    lidar_point: string;
     mcu: string;
     driver: string;
     sdc: string;
@@ -42,6 +43,7 @@ interface DataType {
     camera_path: string;
     map_path: string;
     plan_map_path: string;
+    lidar_point_path: string;
     mcu_path: string;
     driver_path: string;
     sdc_path: string;
@@ -142,6 +144,7 @@ export default function App() {
         v.camera && (result["camera_model"] = joinPath(v.camera_path, v.camera));
         v.map && (result["map_data"] = joinPath(v.map_path, v.map));
         v.plan_map && (result["plan_map_data"] = joinPath(v.plan_map_path, v.plan_map));
+        v.lidar_point && (result["lidar_point_data"] = joinPath(v.lidar_point_path, v.lidar_point));
         v.mcu && (result["mcu_data"] = joinPath(v.mcu_path, v.mcu));
         v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
         v.sdc && (result["sdc_data"] = joinPath(v.sdc_path, v.sdc));

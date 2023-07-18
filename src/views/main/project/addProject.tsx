@@ -182,6 +182,9 @@ const App = (props: any = {}) => {
                         <Form.Item name="plan_map_path" label="规划地图">
                             <Input placeholder="请输入规划地图的存放路径" />
                         </Form.Item>
+                        <Form.Item name="lidar_point_path" label="点云地图">
+                            <Input placeholder="请输入点云地图的存放路径" />
+                        </Form.Item>
                         <Form.Item name="mcu_path" label="MCU版本">
                             <Input placeholder="请输入MCU的存放路径" />
                         </Form.Item>
