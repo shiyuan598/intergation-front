@@ -36,6 +36,7 @@ interface DataType {
     map: string;
     plan_map: string;
     lidar_point: string;
+    webviz: string;
     mcu: string;
     driver: string;
     sdc: string;
@@ -44,6 +45,7 @@ interface DataType {
     map_path: string;
     plan_map_path: string;
     lidar_point_path: string;
+    webviz_path: string;
     mcu_path: string;
     driver_path: string;
     sdc_path: string;
@@ -148,6 +150,7 @@ export default function App() {
         v.mcu && (result["mcu_data"] = joinPath(v.mcu_path, v.mcu));
         v.driver && (result["driver_data"] = joinPath(v.driver_path, v.driver));
         v.sdc && (result["sdc_data"] = joinPath(v.sdc_path, v.sdc));
+        v.webviz && (result["webviz"] = joinPath(v.webviz_path, v.webviz));
 
         return result;
     };

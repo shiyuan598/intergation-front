@@ -20,6 +20,7 @@ interface ProjectType {
     map_path: string;
     plan_map_path: string;
     lidar_point_path: string;
+    webviz_path: string;
     mcu_path: string;
     driver_path: string;
     sdc_path: string;
@@ -52,6 +53,7 @@ const App = (props: any = {}) => {
     const [mcuPathList, setMcuPathList] = useState([] as string[]);
     const [driverPathList, setDriverPathList] = useState([] as string[]);
     const [sdcPathList, setSDCPathList] = useState([] as string[]);
+    const [webvizPathList, setWebvizPathList] = useState([] as string[]);
     const [project, setProject] = useState(undefined as ProjectType | undefined);
     const [configList, setConfigList] = useState(
         [] as {
@@ -118,13 +120,14 @@ const App = (props: any = {}) => {
         setBaseLoading(true);
         setModuleLoading(true);
 
-        // 获取激光模型、视觉模型、地图数据、规划地图、 点云地图、MCU、驱动、SDC的路径
-        let { lidar_path, camera_path, map_path, plan_map_path, lidar_point_path, mcu_path, driver_path, sdc_path } = projectInfo as {
+        // 获取激光模型、视觉模型、地图数据、规划地图、 点云地图、MCU、驱动、SDC的路径、可视化版本的路径
+        let { lidar_path, camera_path, map_path, plan_map_path, lidar_point_path, webviz_path, mcu_path, driver_path, sdc_path } = projectInfo as {
             lidar_path: string;
             camera_path: string;
             map_path: string;
             plan_map_path: string;
             lidar_point_path: string;
+            webviz_path: string;
             mcu_path: string;
             driver_path: string;
             sdc_path: string;
@@ -137,7 +140,8 @@ const App = (props: any = {}) => {
             toolsApi.getArtifactFolders(lidar_point_path),
             toolsApi.getArtifactFiles(mcu_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(driver_path), // 查询目录下的文件
-            toolsApi.getArtifactFiles(sdc_path) // 查询目录下的文件
+            toolsApi.getArtifactFiles(sdc_path), // 查询目录下的文件
+            toolsApi.getArtifactFiles(webviz_path) // 查询目录下的文件
         ])
             .then((v) => {
                 setLidarPathList(v[0].data);
@@ -148,6 +152,7 @@ const App = (props: any = {}) => {
                 setMcuPathList(v[5].data);
                 setDriverPathList(v[6].data);
                 setSDCPathList(v[7].data);
+                setWebvizPathList(v[8].data);
             })
             .finally(() => setModelLoading(false));
 
@@ -605,6 +610,21 @@ const App = (props: any = {}) => {
                                             </Form.Item>
                                         </>
                                     ) : null}
+                                    <Form.Item
+                                        name="webviz"
+                                        label="可视化"
+                                        required={true}
+                                        rules={[{ required: true, message: "请选择可视化版本" }]}>
+                                        <Select
+                                            placeholder="请选择可视化版本"
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}>
+                                            {webvizPathList.map((v) => (
+                                                <Option key={v} value={v}>
+                                                    {v}
+                                                </Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
                                 </>
                             )}
                         </Spin>

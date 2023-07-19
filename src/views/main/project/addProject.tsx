@@ -195,6 +195,13 @@ const App = (props: any = {}) => {
                             <Input placeholder="请输入SDC程序的存放路径" />
                         </Form.Item>
                         <Form.Item
+                            name="webviz_path"
+                            label="可视化程序"
+                            required={true}
+                            rules={[{ required: true, message: "请输入可视化的存放路径" }]}>
+                            <Input placeholder="请输入可视化的存放路径" />
+                        </Form.Item>
+                        <Form.Item
                             name="owner"
                             label="负责人"
                             required={true}

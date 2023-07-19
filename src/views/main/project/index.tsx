@@ -190,6 +190,15 @@ export default function App() {
             render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
         },
         {
+            title: "可视化路径",
+            width: 160,
+            ellipsis: true,
+            dataIndex: "webviz_path",
+            key: "webviz_path",
+            sorter: true,
+            render: (v: string) => <Tooltip title={v}><span>{v}</span></Tooltip>
+        },
+        {
             title: "更新时间",
             width: 160,
             dataIndex: "update_time",
