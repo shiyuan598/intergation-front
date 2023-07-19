@@ -106,7 +106,7 @@ const App = (props: any = {}) => {
         if (initial.project && projectList.length) {
             projectSelectChange(initial.project);
         }
-    }, [initial.project, projectList]);
+    }, [initial.project, projectList]);    
 
     const projectSelectChange = (v: any) => {
         if (!v || !projectList.length) {
@@ -141,7 +141,7 @@ const App = (props: any = {}) => {
             toolsApi.getArtifactFiles(mcu_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(driver_path), // 查询目录下的文件
             toolsApi.getArtifactFiles(sdc_path), // 查询目录下的文件
-            toolsApi.getArtifactFiles(webviz_path) // 查询目录下的文件
+            toolsApi.getArtifactFolders(webviz_path) // 查询目录下的文件
         ])
             .then((v) => {
                 setLidarPathList(v[0].data);
@@ -220,6 +220,14 @@ const App = (props: any = {}) => {
                 .finally(() => setModuleLoading(false));
         });
     };
+
+    // webviz的默认版本
+    useEffect(() => {
+      if(webvizPathList.length) {
+        form.setFieldValue("webviz", webvizPathList[0]);
+      }
+    }, [webvizPathList, form]);
+    
 
     // 刷新分支
     const refreshBranch = (type: string, project_name_with_namespace: string) => {
@@ -616,6 +624,8 @@ const App = (props: any = {}) => {
                                         required={true}
                                         rules={[{ required: true, message: "请选择可视化版本" }]}>
                                         <Select
+                                            value={webvizPathList[0]}
+                                            defaultValue={webvizPathList[0]}
                                             placeholder="请选择可视化版本"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {webvizPathList.map((v) => (
