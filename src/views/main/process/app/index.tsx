@@ -260,16 +260,16 @@ export default function App() {
             render: (v: DataType) => {
                 return (
                     <>
-                        <Tooltip title="模块配置">
+                        <Tooltip title="参数配置">
                             <img
                                 className={style.imgBtn}
                                 onClick={() => {
-                                    const { config, base, prebuild, perceptions, modules } = generatorBuildConfig(v);
-                                    setModuleInfo({ config, base, prebuild, perceptions, modules });
+                                    const params = generatorBuildConfig(v);
+                                    setModuleInfo(params);
                                     setModuleInfoVisible(true);
                                 }}
                                 src={configImg}
-                                alt="模块配置"
+                                alt="参数配置"
                             />
                         </Tooltip>
 
@@ -371,9 +371,10 @@ export default function App() {
 
     const getData = (pageNo: number, name: string = "", sorter: any) => {
         let { field: order = "id", order: seq = "descend" } = sorter || {};
+        let {id, role} = getUserInfo();
         setLoading(true);
         appProcess
-            .list(pageNo, getUserInfo().id, name, order, seq)
+            .list(pageNo, id, role, name, order, seq)
             .then((v) => {
                 if (v.code === 0) {
                     setData(v.data);

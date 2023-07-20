@@ -624,8 +624,6 @@ const App = (props: any = {}) => {
                                         required={true}
                                         rules={[{ required: true, message: "请选择可视化版本" }]}>
                                         <Select
-                                            value={webvizPathList[0]}
-                                            defaultValue={webvizPathList[0]}
                                             placeholder="请选择可视化版本"
                                             getPopupContainer={(triggerNode) => triggerNode.parentNode}>
                                             {webvizPathList.map((v) => (
