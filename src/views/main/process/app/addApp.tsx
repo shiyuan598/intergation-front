@@ -106,7 +106,16 @@ const App = (props: any = {}) => {
         if (initial.project && projectList.length) {
             projectSelectChange(initial.project);
         }
-    }, [initial.project, projectList]);    
+    }, [initial.project, projectList]);
+
+    useEffect(() => {
+        if (!project) {
+            return;
+        }
+        if (project.owner !== getUserInfo().id) {
+            form.setFieldValue("auto_test", 0);
+        }
+    }, [project]);
 
     const projectSelectChange = (v: any) => {
         if (!v || !projectList.length) {
@@ -224,7 +233,7 @@ const App = (props: any = {}) => {
     // webviz的默认版本
     useEffect(() => {
       if(webvizPathList.length) {
-        form.setFieldValue("webviz", webvizPathList[0]);
+        !form.getFieldValue("webviz") && form.setFieldValue("webviz", webvizPathList[0]);
       }
     }, [webvizPathList, form]);
     
